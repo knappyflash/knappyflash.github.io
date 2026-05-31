@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker</title>
+    <link href="color_picker.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.min.js"></script>
+  </head>
+  <body>
+    <div class="page" id="page" name="page">
+      <div class="color_picker_div" id="color_picker_div" name id="color_picker_div">
+        
+        <div id="hsv" name="hsv">
+          h:<input type="number" id="hsv_h" name="hsv_h" value="0" min="0" max="359"></input>
+          s:<input type="number" id="hsv_s" name="hsv_s" value="0" min="0" max="100"></input>
+          v:<input type="number" id="hsv_v" name="hsv_v" value="0" min="0" max="100"></input>
+        </div> 
+
+        <div id="rgb" name="rgb">
+          r:<input type="number" id="rgb_r" name="rgb_r" value="0" min="0" max="255"></input>
+          g:<input type="number" id="rgb_g" name="rgb_g" value="0" min="0" max="255"></input>
+          b:<input type="number" id="rgb_b" name="rgb_b" value="0" min="0" max="255"></input>
+        </div>
+
+        <div id="hex_1" name="hex_1">
+          hex:<input type="text" id="hex" name="hex" value="#FF0000"></input>
+        </div>
+
+      </div>
+    </div>
+
+    <script id="color_picker" name="color_picker" src="color_picker.js"></script>
+
+  </body>
+</html>

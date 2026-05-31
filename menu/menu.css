@@ -1,0 +1,62 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: Verdana;
+  background-image: url("images/bgImg1.gif");
+  background-repeat: repeat; /* this makes it tile */
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.menu_items {
+  height: calc(100vh - 20px);
+  margin-top: 10px;
+  margin-left: -8px;
+  border: 5px solid #E0943B; 
+  border-radius: 8px; /* Optional: rounds the corners */
+}
+
+.links {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  align-items: center;   /* optional: center horizontally */
+  gap: 10px;
+
+  max-width: 125px;
+  margin-top: 10px;
+  margin-left: 0px;
+}
+
+#homeLink,
+#p5TestLink,
+#colorPickerLink,
+#julianDateLink,
+#blogLink,
+#usLink,
+#catsLink,
+#youTubeLink,
+#aboutMeLink {
+  background-color: black;
+  color: white;
+  font-family: Verdana;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+
+
+.links a {
+  transition: all 0.2s ease; /* smooth animation */
+  display: inline-block;     /* needed for scaling */
+}
+
+.links a:hover {
+  transform: scale(1.2); /* makes it bigger */
+
+  text-shadow: 
+    0 0 5px #E0943B,
+    0 0 10px #E0943B,
+    0 0 20px #E0943B; /* glow effect */
+}
+
+

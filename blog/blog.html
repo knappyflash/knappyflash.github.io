@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link href="blog.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page" id="page">
+      <div class="filters">
+        <label for="subjectFilter">Subject:</label>
+        <select id="subjectFilter">
+          <option value="all">All Subjects</option>
+        </select>
+        <label for="startDate">From:</label>
+        <input type="date" id="startDate">
+        <label for="endDate">To:</label>
+        <input type="date" id="endDate">
+        <button id="clearFilters">Clear</button>
+        <div class="sortControls">
+          <label for="sortBy">Sort By:</label>
+          <select id="sortBy">
+            <option value="date">Date</option>
+            <option value="subject">Subject</option>
+          </select>
+          <label for="sortOrder">Order:</label>
+          <select id="sortOrder">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+      </div>
+      <div id="blogContainer"></div>
+    </div>
+    <script src="blog.js"></script>
+  </body>
+</html>
+``
