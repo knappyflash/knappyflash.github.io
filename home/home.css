@@ -30,6 +30,7 @@ body {
     top left;  /* dirt starts same position */
 }
 
-#neocitiesLogo {
+#kflashLogo {
+  width: 110px;
   position: absolute;
 }

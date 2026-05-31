@@ -1,4 +1,4 @@
-  const img = document.getElementById("neocitiesLogo");
+  const img = document.getElementById("kflashLogo");
 
   let x = 0;
   let y = 0;
