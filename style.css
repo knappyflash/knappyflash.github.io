@@ -1,0 +1,30 @@
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header (top) */
+        #header {
+            height: 120px; /* adjust as needed */
+            border: none;
+        }
+
+        /* Main area (below header) */
+        #main {
+            flex: 1;
+            display: flex;
+        }
+
+        /* Left menu */
+        #menu {
+            width: 150px; /* adjust as needed */
+            border: none;
+        }
+
+        /* Content area */
+        #content {
+            flex: 1;
+            border: none;
+        }
