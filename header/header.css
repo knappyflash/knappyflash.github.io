@@ -1,7 +1,8 @@
 body {
   background-color: black;
   color: white;
-  font-family: Verdana;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 15px;
   margin: 0;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -25,13 +26,13 @@ body {
 
 #topTitle {
   position: absolute; 
-  top: -15px;
+  top: 0px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 55px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 45px;
   background-color: black;
   color: white;
-  font-family: Verdana;
   text-decoration: none;
 }
 
