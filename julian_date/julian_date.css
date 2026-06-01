@@ -30,22 +30,15 @@ body {
     top left;  /* dirt starts same position */
 }
 
-#julianDateDiv {
-  top: 30px;
-  left: 5%;
-  margin-top: 10px;
-  position: absolute; 
-  display: block;
-  background-color: black;
-  color: white;
-}
+.inputFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 40px 15px 20px 15px;
+  padding: 12px;
 
-#dateDiv {
-  top: 60px;
-  left: 5%;
-  margin-top: 10px;
-  position: absolute; 
-  display: block;
-  background-color: black;
-  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 5px solid #E0943B;
+  border-radius: 8px;
 }
