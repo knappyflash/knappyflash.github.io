@@ -29,13 +29,3 @@ body {
     top left,  /* grass at the top */
     top left;  /* dirt starts same position */
 }
-
-.myHeaders {
-  position: relative;   /* NOT absolute */
-  text-align: center;   /* centers it nicely */
-  font-size: 28px;
-  color: white;
-  font-family: Verdana;
-  margin-top: 10px;
-  margin-bottom: 20px;  /* space under title */
-}
