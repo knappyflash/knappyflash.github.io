@@ -7,8 +7,13 @@
     <link href="guestbook.css" rel="stylesheet" type="text/css" media="all">
   </head>
   <body>
-    <div class="page" id="page" name="page"></div>
-      <script src="https://giscus.app/client.js"
+    <div class="page" id="page" name="page">
+      
+      <div class="myHeaders">
+        <h2 id="gbTitle">Guestbook</h2>
+        <p id="leaveMessage">Leave a message 👇</p>
+      </div>
+      <script id ="gbGuestbook" src="https://giscus.app/client.js"
               data-repo="knappyflash/knappyflash.github.io"
               data-repo-id="R_kgDOStBQSQ"
               data-category="General"
@@ -23,6 +28,8 @@
               crossorigin="anonymous"
               async>
       </script>
+      
+    </div>
     <script src="guestbook.js"></script>
   </body>
 </html>
