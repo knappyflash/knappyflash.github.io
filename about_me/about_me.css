@@ -29,3 +29,17 @@ body {
     top left,  /* grass at the top */
     top left;  /* dirt starts same position */
 }
+
+#post {
+  background-color: rgba(0, 0, 0, 0.7);
+  margin: 30px 15px;
+  border: 5px solid #E0943B;
+  border-radius: 8px;
+  padding: 12px;
+  margin-left: 15px;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  font-family: Verdana;
+  text-decoration: none;
+}
