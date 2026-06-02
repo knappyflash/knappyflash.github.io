@@ -30,7 +30,7 @@ body {
     top left;  /* dirt starts same position */
 }
 
-#color_picker_div {
+#colorPickerDiv {
   top: 70px;
   left: 25%;
   margin-top: 10px;
