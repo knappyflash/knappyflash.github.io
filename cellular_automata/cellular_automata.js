@@ -13,9 +13,19 @@ function setup() {
   colorOn = color(255, 204, 0);
   colorOff = color(88, 255, 237);
   
+  for (i = 0; i < (canvSize[0] / cellSize); i++) {
+      grid[0, i] = Math.floor(Math.random() * 2);
+      if (grid[0, i] == 0) {
+        fill(colorOn);
+      } else {
+        fill(colorOff);
+      }
+      rect(i*cellSize, 0, cellSize, cellSize);
+  }
+
   for (j = 0; j < (canvSize[1] / cellSize); j++) {
     for (i = 0; i < (canvSize[0] / cellSize); i++) {
-      grid[j, i] = Math.floor(Math.random() * 2);
+      grid[j+1, i-1] = grid[j, i] ;
       if (grid[j, i] == 0) {
         fill(colorOn);
       } else {

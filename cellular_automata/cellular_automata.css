@@ -3,8 +3,8 @@ body {
   color: white;
   font-family: Verdana;
   margin: 0;
-  /* overflow-y: hidden; */
-  /* overflow-x: hidden; */
+  /* overflow-y: hidden;
+  overflow-x: hidden; */
 }
 
 .page {
@@ -14,6 +14,20 @@ body {
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
+  position: relative;
+
+  background-image: 
+    url("/images/mc_grass.png"),   /* top layer */
+    url("/images/mc_dirt.png");    /* bottom layer */
+  background-repeat: 
+    repeat-x,  /* grass only repeats horizontally */
+    repeat;    /* dirt tiles everywhere */
+  background-size: 
+    50px 50px, /* grass size */
+    50px 50px; /* dirt size */
+  background-position: 
+    top left,  /* grass at the top */
+    top left;  /* dirt starts same position */
 }
 
 #cellularAutomataDiv {
