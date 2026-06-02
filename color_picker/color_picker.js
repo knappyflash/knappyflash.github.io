@@ -12,7 +12,7 @@ let vPickerY = 0;
 
 function setup() {
   let canvas = createCanvas(750, 410);
-  canvas.parent("color_picker_div");
+  canvas.parent("colorPickerDiv");
   background(40,40,80);
 
   hsImg = createImage(400, 400);
