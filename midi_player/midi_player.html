@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link href="midi_player.css" rel="stylesheet" type="text/css" media="all">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/midi.js/0.3.0/midi.min.js"></script>
-  </head>
-  <body>
-    <div class="page" id="page" name="page">
-      <img id="kflashLogo" src="/images/kFlashLogo.png" alt="kFlash Logo">
-    </div>
-    <script src="midi_player.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>MIDI Player</title>
+  <link href="midi_player.css" rel="stylesheet" type="text/css" media="all">
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/html-midi-player@1.5.0"></script>
+</head>
+<body>
+  <div class="page">
+    <h2>MIDI Player</h2>
+    <midi-player class="midiPlayer" id="midiPlayer" src="midi_files/Backstreet Boys - Everybody.mid" sound-font></midi-player>
+    <!-- <button id="playButton" type="button" onclick="play()">PLAY</button>
+    <button id="stopButton" type="button" onclick="stop()">STOP</button> -->
+    <ul id="fileList"></ul>
+  </div>
+  <script src="midi_player.js"></script>
+</body>
 </html>
