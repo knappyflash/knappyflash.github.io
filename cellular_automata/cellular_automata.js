@@ -22,7 +22,7 @@ function setup() {
     }
   }
 
-  grid[0][Math.floor(cols / 2)] = 1;
+  grid[0][37] = 1;
 
   for (let row = 0; row < rows - 1; row++) {
     for (let col = 0; col < cols; col++) {
