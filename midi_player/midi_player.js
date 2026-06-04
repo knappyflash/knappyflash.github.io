@@ -1,4 +1,6 @@
 const player = document.getElementById("midiPlayer");
+const list = document.getElementById("fileList");
+const fileNameDisplay = document.getElementById("fileNameDisplay");
 
 // function play() {
 //   player.start();
@@ -67,17 +69,16 @@ const files = [
   "Zelda - Ocarina of Time - Song of Time.mid"
 ];
 
-const list = document.getElementById("fileList");
-
 files.forEach(file => {
   const li = document.createElement("li");
   li.textContent = file;
   li.onclick = () => {
     player.src = "midi_files/" + file;
+    fileNameDisplay.textContent=file;
+    const fileName = document.createElement("li");
     sleep(500).then(() => {
         player.start();
     });
-    player.start();
   };
   list.appendChild(li);
 });
