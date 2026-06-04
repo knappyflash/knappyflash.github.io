@@ -1,14 +1,10 @@
 const player = document.getElementById("midiPlayer");
 const list = document.getElementById("fileList");
 const fileNameDisplay = document.getElementById("fileNameDisplay");
+const autoPlayButton = document.getElementById("autoPlayButton");
+let midiCounter = 0;
 
-// function play() {
-//   player.start();
-// }
-
-// function stop() {
-//   player.stop();
-// }
+autoPlayButton.addEventListener("click", ToggleAutoPlay);
 
 const files = [
   "A-Whole-New-World-(Theme-From-'Aladdin').mid",
@@ -73,16 +69,54 @@ files.forEach(file => {
   const li = document.createElement("li");
   li.textContent = file;
   li.onclick = () => {
+    PlaySong(file);
     player.src = "midi_files/" + file;
-    fileNameDisplay.textContent=file;
-    const fileName = document.createElement("li");
-    sleep(500).then(() => {
-        player.start();
-    });
   };
   list.appendChild(li);
 });
 
 function sleep (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+
+document.querySelector("midi-player").addEventListener("load", e => {
+  const p = e.target.player;
+  const orig = p.stop.bind(p);
+  p.stop = () => {
+    // call original stop FIRST
+    orig();
+    console.log("Playback finished");
+    console.log(files[midiCounter]);
+    // move to next
+    midiCounter++;
+    if (midiCounter >= files.length) {
+      midiCounter = 0;
+    }
+    // start next after a tiny delay (ensures clean reset)
+    setTimeout(() => {
+      if (autoPlayButton.textContent=="Auto Play On"){
+        PlaySong(files[midiCounter]);
+      }
+      
+    }, 100);
+  };
+});
+
+function PlaySong(midiName){
+  player.src = "midi_files/" + midiName;
+  fileNameDisplay.textContent=midiName;
+  const fileName = document.createElement("li");
+  sleep(500).then(() => {
+      player.start();
+  });
+}
+
+function ToggleAutoPlay(){
+  if (autoPlayButton.textContent=="Auto Play On"){
+    autoPlayButton.textContent="Auto Play Off";
+  } else{
+    autoPlayButton.textContent="Auto Play On";
+  }
+  
 }
