@@ -12,13 +12,36 @@ body {
   margin-top: 10px;
   margin-left: 0px;
   position: relative;
+}
 
+#fileNameDisplay { 
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
 
 #midiPlayer {
   width: 100%;
   margin-top: 20px;
 }
 
-li { cursor: pointer; }
-#playButton { cursor: pointer; }
-#stopButton { cursor: pointer; }
+#playButton { 
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+li{
+  padding: 3px;
+}
+
+#fileList { 
+  cursor: pointer; 
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+#autoPlayButton { 
+  cursor: pointer; 
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}

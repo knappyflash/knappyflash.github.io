@@ -95,7 +95,7 @@ document.querySelector("midi-player").addEventListener("load", e => {
     }
     // start next after a tiny delay (ensures clean reset)
     setTimeout(() => {
-      if (autoPlayButton.textContent=="Auto Play On"){
+      if (autoPlayButton.textContent=="Auto Play is On"){
         PlaySong(files[midiCounter]);
       }
       
@@ -113,10 +113,10 @@ function PlaySong(midiName){
 }
 
 function ToggleAutoPlay(){
-  if (autoPlayButton.textContent=="Auto Play On"){
-    autoPlayButton.textContent="Auto Play Off";
+  if (autoPlayButton.textContent=="Auto Play is On"){
+    autoPlayButton.textContent="Auto Play is Off";
   } else{
-    autoPlayButton.textContent="Auto Play On";
+    autoPlayButton.textContent="Auto Play is On";
   }
   
 }
