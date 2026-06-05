@@ -1,4 +1,5 @@
-import files from "./midiList.js";
+import Files from "./MidiList.js";
+import PlayerMidi from "./PlayerMidi.js";
 
 const player = document.getElementById("midiPlayer");
 const list = document.getElementById("fileList");
@@ -11,7 +12,7 @@ autoPlayButton.addEventListener("click", ToggleAutoPlay);
 
 
 
-files.forEach(file => {
+PlayerMidi.files.forEach(file => {
   const li = document.createElement("li");
   li.textContent = file;
   li.onclick = () => {
@@ -33,25 +34,25 @@ document.querySelector("midi-player").addEventListener("load", e => {
     // call original stop FIRST
     orig();
     if (randomizeTrackseButton.textContent=="Randomize is On"){
-      midiCounter = Math.floor(Math.random() * files.length);
+      midiCounter = Math.floor(Math.random() * PlayerMidi.files.length);
     }else{
       // move to next
-      for (let i = 0; i < files.length-1; i++) {
-        console.log("dispayName: " + fileNameDisplay.textContent + " file: " + files[i]);
-        if (files[i] == fileNameDisplay.textContent){
+      for (let i = 0; i < PlayerMidi.files.length-1; i++) {
+        console.log("dispayName: " + fileNameDisplay.textContent + " file: " + PlayerMidi.files[i]);
+        if (PlayerMidi.files[i] == fileNameDisplay.textContent){
           midiCounter=i;
           break;
         }
       }
       midiCounter++;
-      if (midiCounter >= files.length) {
+      if (midiCounter >= PlayerMidi.files.length) {
         midiCounter = 0;
       }
     }
     // start next after a tiny delay (ensures clean reset)
     setTimeout(() => {
       if (autoPlayButton.textContent=="Auto Play is On"){
-        PlaySong(files[midiCounter]);
+        PlaySong(PlayerMidi.files[midiCounter]);
       }
       
     }, 100);
