@@ -2,6 +2,7 @@ const player = document.getElementById("midiPlayer");
 const list = document.getElementById("fileList");
 const fileNameDisplay = document.getElementById("fileNameDisplay");
 const autoPlayButton = document.getElementById("autoPlayButton");
+const randomizeTrackseButton = document.getElementById("randomizeTrackseButton");
 let midiCounter = 0;
 
 autoPlayButton.addEventListener("click", ToggleAutoPlay);
@@ -86,12 +87,21 @@ document.querySelector("midi-player").addEventListener("load", e => {
   p.stop = () => {
     // call original stop FIRST
     orig();
-    console.log("Playback finished");
-    console.log(files[midiCounter]);
-    // move to next
-    midiCounter++;
-    if (midiCounter >= files.length) {
-      midiCounter = 0;
+    if (randomizeTrackseButton.textContent=="Randomize is On"){
+      midiCounter = Math.floor(Math.random() * files.length);
+    }else{
+      // move to next
+      for (let i = 0; i < files.length-1; i++) {
+        console.log("dispayName: " + fileNameDisplay.textContent + " file: " + files[i]);
+        if (files[i] == fileNameDisplay.textContent){
+          midiCounter=i;
+          break;
+        }
+      }
+      midiCounter++;
+      if (midiCounter >= files.length) {
+        midiCounter = 0;
+      }
     }
     // start next after a tiny delay (ensures clean reset)
     setTimeout(() => {
@@ -107,7 +117,7 @@ function PlaySong(midiName){
   player.src = "midi_files/" + midiName;
   fileNameDisplay.textContent=midiName;
   const fileName = document.createElement("li");
-  sleep(500).then(() => {
+  sleep(1000).then(() => {
       player.start();
   });
 }
@@ -118,5 +128,12 @@ function ToggleAutoPlay(){
   } else{
     autoPlayButton.textContent="Auto Play is On";
   }
-  
+}
+
+function RandomizeTracks(){
+  if (randomizeTrackseButton.textContent=="Randomize is On"){
+    randomizeTrackseButton.textContent="Randomize is Off";
+  } else{
+    randomizeTrackseButton.textContent="Randomize is On";
+  }
 }

@@ -29,14 +29,3 @@ body {
     top left,  /* grass at the top */
     top left;  /* dirt starts same position */
 }
-
-#cellularAutomataDiv {
-  top: 50px;
-  left: 25%;
-  margin-top: 0px;
-  position: absolute; 
-  display: block;
-  border: 5px solid #E0943B;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
