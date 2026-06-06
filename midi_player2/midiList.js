@@ -59,5 +59,6 @@ export default class MidiFilesList {
         "youre only lonely L.mid",
         "Zelda - Ocarina of Time - Song of Time.mid"
       ];
+      this.test = "Hello World!";
   }   
 }
