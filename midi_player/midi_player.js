@@ -1,6 +1,4 @@
-import midifiles from "./midiList.js";
-
-console.log("Hello World!");
+import midifiles from "./midi_list.js";
 
 const midiUlList = document.getElementById("midiUlList");
 const midiPlayer = document.getElementById("midiPlayer");
