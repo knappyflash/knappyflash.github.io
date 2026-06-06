@@ -1,139 +1,119 @@
-const player = document.getElementById("midiPlayer");
-const list = document.getElementById("fileList");
+import midifiles from "./midiList.js";
+
+const midiUlList = document.getElementById("midiUlList");
+const midiPlayer = document.getElementById("midiPlayer");
 const fileNameDisplay = document.getElementById("fileNameDisplay");
 const autoPlayButton = document.getElementById("autoPlayButton");
-const randomizeTrackseButton = document.getElementById("randomizeTrackseButton");
-let midiCounter = 0;
+const randomizeButton = document.getElementById("randomizeButton");
+const previousButton = document.getElementById("previousButton");
+const nextButton = document.getElementById("nextButton");
+
+let canAutoPlay = false;
+let canRandomize = false;
+
+let previousSongId = 0;
+let currentSongId = 0;
+let nextSongId = 0;
 
 autoPlayButton.addEventListener("click", ToggleAutoPlay);
+randomizeButton.addEventListener("click", ToggleRandomize);
+previousButton.addEventListener("click", ClickPrevious);
+nextButton.addEventListener("click", ClickNext);
+midiPlayer.addEventListener("stop", onMidiStopped);
 
-const files = [
-  "A-Whole-New-World-(Theme-From-'Aladdin').mid",
-  "Backstreet Boys - Everybody.mid",
-  "Backstreet Boys - I Want It That Way.mid",
-  "BassHunter - Dota.mid",
-  "Beethoven-Moonlight-Sonata.mid",
-  "Billy Joel - Piano Man.mid",
-  "Caribbean-Blue.mid",
-  "Coldplay - Viva La Vida.mid",
-  "Cranberries - Zombie.mid",
-  "Daft Punk - Around The World.mid",
-  "Daft Punk - Da Funk.mid",
-  "Daft Punk - One More Time.mid",
-  "Dance-Dance-Dance.mid",
-  "darude-sandstorm.mid",
-  "Don't-Stop-Me-Now.mid",
-  "Eye-Of-The-Tiger-(From-'Rocky').mid",
-  "faded.mid",
-  "Final Fantasy VII - Final Fantasy VII Main Theme.mid",
-  "Fly-Me-To-The-Moon.mid",
-  "Frozen.mid",
-  "Guns n Roses - Sweet Child O Mine.mid",
-  "Halo 2 - Menu.mid",
-  "harrypotter.mid",
-  "House-Of-The-Rising-Sun-2.mid",
-  "Imagine dragons - Radioactive.mid",
-  "In the hall of the Mountain King.mid",
-  "Jingle-Bells-1.mid",
-  "John Denver - Take Me Home Country Roads.mid",
-  "Just-The-Two-Of-Us.mid",
-  "Lynyrd Skynyrd - Sweet Home Alabama.mid",
-  "Maroon 5 ft. Christina Aguilera - Moves Like Jagger.mid",
-  "Michael Jackson - Beat It.mid",
-  "Michael Jackson - Billie Jean.mid",
-  "Michael Jackson - Thriller.mid",
-  "Mortal Kombat - Theme.mid",
-  "mozart-piano-concerto-21-2-elvira-madigan-piano-solo.mid",
-  "My-Heart-Will-Go-On-(From-'Titanic').mid",
-  "Never-Gonna-Give-You-Up-3.mid",
-  "OASIS.Wonderwall K.mid",
-  "Pirates of the Caribbean - He's a Pirate.mid",
-  "potter.mid",
-  "Queen - Bohemian Rhapsody.mid",
-  "Radiohead - Creep.mid",
-  "Red Hot Chili Peppers - Californication.mid",
-  "Somewhere-Over-The-Rainbow.mid",
-  "Sonata No.14 Op 27 Moonlight Sonata.mid",
-  "stairway_to_heaven.mid",
-  "Tetris - Tetris Main Theme.mid",
-  "THE EAGLES.Hotel California K.mid",
-  "The Elder Scrolls V Skyrim - Dragonborn Theme.mid",
-  "The-Final-Countdown.mid",
-  "TOTO.Africa K.mid",
-  "Under-The-Sea-(From-'The-Little-Mermaid')-1.mid",
-  "Wii Channels - Mii Channel.mid",
-  "youre only lonely L.mid",
-  "Zelda - Ocarina of Time - Song of Time.mid"
-];
-
-files.forEach(file => {
-  const li = document.createElement("li");
-  li.textContent = file;
-  li.onclick = () => {
-    PlaySong(file);
-    player.src = "midi_files/" + file;
-  };
-  list.appendChild(li);
+window.addEventListener("load", function () {
+    console.log("Page is loaded");
+    previousSongId = Number(localStorage.getItem("previousSongId")) || 0;
+    currentSongId  = Number(localStorage.getItem("currentSongId"))  || 0;
+    nextSongId     = Number(localStorage.getItem("nextSongId"))     || 0;
+    canAutoPlay  = localStorage.getItem("canAutoPlay") === "true";
+    canRandomize = localStorage.getItem("canRandomize") === "true";
+    autoPlayButton.textContent  = canAutoPlay  ? "Auto Play is On" : "Auto Play is Off";
+    randomizeButton.textContent = canRandomize ? "Randomize is On" : "Randomize is Off";
+    PlaySong(midifiles[currentSongId]);
+    if (canAutoPlay) {
+        startTimer();
+    }
 });
 
-function sleep (time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
+midifiles.forEach(function AddMidiToList(midiFile){
+    const myli = document.createElement("li");
+    myli.textContent = midiFile;
+    myli.onclick = () => {
+        PlaySong(midiFile);
+    };
+    midiUlList.appendChild(myli);
+});
+
+function ClickPrevious(){
+    PlaySong(midifiles[previousSongId]);
 }
 
-
-document.querySelector("midi-player").addEventListener("load", e => {
-  const p = e.target.player;
-  const orig = p.stop.bind(p);
-  p.stop = () => {
-    // call original stop FIRST
-    orig();
-    if (randomizeTrackseButton.textContent=="Randomize is On"){
-      midiCounter = Math.floor(Math.random() * files.length);
-    }else{
-      // move to next
-      for (let i = 0; i < files.length-1; i++) {
-        console.log("dispayName: " + fileNameDisplay.textContent + " file: " + files[i]);
-        if (files[i] == fileNameDisplay.textContent){
-          midiCounter=i;
-          break;
-        }
-      }
-      midiCounter++;
-      if (midiCounter >= files.length) {
-        midiCounter = 0;
-      }
-    }
-    // start next after a tiny delay (ensures clean reset)
-    setTimeout(() => {
-      if (autoPlayButton.textContent=="Auto Play is On"){
-        PlaySong(files[midiCounter]);
-      }
-      
-    }, 100);
-  };
-});
-
-function PlaySong(midiName){
-  player.src = "midi_files/" + midiName;
-  fileNameDisplay.textContent=midiName;
-  const fileName = document.createElement("li");
-  sleep(1000).then(() => {
-      player.start();
-  });
+function ClickNext(){
+    PlaySong(midifiles[nextSongId]);
 }
 
 function ToggleAutoPlay(){
-  if (autoPlayButton.textContent=="Auto Play is On"){
-    autoPlayButton.textContent="Auto Play is Off";
-  } else{
-    autoPlayButton.textContent="Auto Play is On";
-  }
+    if (canAutoPlay){
+        canAutoPlay = false;
+        autoPlayButton.textContent="Auto Play is Off";
+    } else{
+        canAutoPlay = true;
+        autoPlayButton.textContent="Auto Play is On";
+        startTimer();
+    }
+    localStorage.setItem("canAutoPlay", canAutoPlay);
 }
 
-function RandomizeTracks(){
-  if (randomizeTrackseButton.textContent=="Randomize is On"){
-    randomizeTrackseButton.textContent="Randomize is Off";
-  } else{
-    randomizeTrackseButton.textContent="Randomize is On";
-  }
+function ToggleRandomize(){
+    if (canRandomize){
+        canRandomize = false;
+        randomizeButton.textContent="Randomize is Off";
+    } else{
+        canRandomize = true;
+        randomizeButton.textContent="Randomize is On";
+        UpdateMidiIds();
+    }
+    localStorage.setItem("canRandomize", canRandomize);
 }
+
+async function PlaySong(midiName){
+  midiPlayer.src = "midi_files/" + midiName;
+  fileNameDisplay.textContent=midiName;
+  while (!midiPlayer.playing){
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    midiPlayer.stop();
+    midiPlayer.start();
+  }
+  UpdateMidiIds();
+}
+
+function UpdateMidiIds(){
+    previousSongId = currentSongId;
+    currentSongId = midifiles.indexOf(fileNameDisplay.textContent);
+    if (canRandomize){
+        nextSongId = Math.floor(Math.random() * midifiles.length);
+    } else{
+        nextSongId = currentSongId+1;
+    }
+    if (nextSongId > midifiles.length-1){nextSongId=0}
+    localStorage.setItem("previousSongId", previousSongId);
+    localStorage.setItem("currentSongId", currentSongId);
+    localStorage.setItem("nextSongId", nextSongId);
+    console.log("previousSongId: " + previousSongId + ", currentSongId:" + currentSongId + ", nextSongId: " + nextSongId);
+}
+
+async function startTimer() {
+    while (true) {
+        if (!canAutoPlay) {break;}
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if((midiPlayer.currentTime/midiPlayer.duration)>0.99){
+            PlaySong(midifiles[nextSongId]);
+        }
+    }
+}
+
+function onMidiStopped() {
+  console.log("MIDI Stopped");
+}
+

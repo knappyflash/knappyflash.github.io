@@ -3,45 +3,108 @@ body {
   color: white;
   font-family: Verdana;
   margin: 0;
-  /* overflow-y: hidden; */
-  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .page {
   height: calc(100vh - 10px); 
-  margin-top: 10px;
+  margin-top: 0px;
   margin-left: 0px;
+  padding-top: 40px;
   position: relative;
+
+  background-image: 
+    url("/images/mc_grass.png"),
+    url("/images/mc_dirt.png"); 
+  background-repeat: 
+    repeat-x,
+    repeat;
+  background-size: 
+    50px 50px,
+    50px 50px;
+  background-position: 
+    top left,
+    top left;
 }
+
+#midiPlayApp {
+  margin-left: 40px;
+  padding: 15px;
+  width: 500px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  border: 1px solid #E0943B;
+  background-color: #505090;
+}
+
+#trackList {
+  margin-top: 5px;
+  flex: 1;  
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #E0943B;;
+}
+
 
 #fileNameDisplay { 
   font-family: 'Press Start 2P', monospace;
-  font-size: 20px;
+  font-size: 10px;
+  padding: 5px;
+  border: 1px solid #E0943B;
 }
 
 #midiPlayer {
   width: 100%;
-  margin-top: 20px;
 }
 
 li{
+  white-space: nowrap;
   padding: 3px;
 }
 
-#fileList { 
+#midiUlList { 
   cursor: pointer; 
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
 }
 
-#autoPlayButton { 
+#previousButton { 
+  margin-top: 5px;
+  float: left;
+  width: 49%;
   cursor: pointer; 
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
 }
 
-#randomizeTrackseButton { 
+#nextButton { 
+  margin-top: 5px;
+  float: right;
+  width: 49%;
   cursor: pointer; 
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
 }
+
+#autoPlayButton {
+  margin-top: 5px;
+  float: left; 
+  width: 49%;
+  cursor: pointer; 
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+#randomizeButton { 
+  margin-top: 5px;
+  float: right;
+  width: 49%;
+  cursor: pointer; 
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
