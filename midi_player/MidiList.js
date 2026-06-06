@@ -1,3 +1,4 @@
+console.log("Hello World!");
 let midifiles  = [
   "A-Whole-New-World-(Theme-From-'Aladdin').mid",
   "Backstreet Boys - Everybody.mid",
