@@ -1,5 +1,7 @@
 import midifiles from "./midiList.js";
 
+console.log("Hello World!");
+
 const midiUlList = document.getElementById("midiUlList");
 const midiPlayer = document.getElementById("midiPlayer");
 const fileNameDisplay = document.getElementById("fileNameDisplay");
