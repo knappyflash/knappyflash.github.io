@@ -1,4 +1,4 @@
-const pageTitle = "US";
+const pageTitle = "Atabook";
 window.addEventListener("load", function () {
     console.log(pageTitle + " Page is loaded");
     changeTitle();
@@ -7,12 +7,4 @@ function changeTitle() {
   const headerFrame = parent.frames["header"];
   const title = headerFrame.document.getElementById("topTitle");
   title.textContent = pageTitle;
-}
-
-const gallery = document.querySelector(".gallery");
-
-for (let i = 1; i <= 22; i++) {
-  let img = document.createElement("img");
-  img.src = `/images/us/us${i}.png`;
-  gallery.appendChild(img);
 }

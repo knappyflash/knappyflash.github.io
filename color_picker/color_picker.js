@@ -1,3 +1,14 @@
+const pageTitle = "Color Picker";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
+
 let hsImg;
 let vImg;
 let rgb = { r: 255, g: 0, b: 0 };

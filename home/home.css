@@ -3,12 +3,12 @@ body {
   color: white;
   font-family: Verdana;
   margin: 0;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .page {
-  height: calc(100vh - 10px); /* 5px top + 5px bottom */
+  height: calc(100vh + 10);
   margin-top: 10px;
   margin-left: 0px;
   border: 5px solid #E0943B;
@@ -17,20 +17,49 @@ body {
   position: relative;
 
   background-image: 
-    url("/images/mc_grass.png"),   /* top layer */
-    url("/images/mc_dirt.png");    /* bottom layer */
+    url("/images/mc_grass.png"),  
+    url("/images/mc_dirt.png");   
   background-repeat: 
-    repeat-x,  /* grass only repeats horizontally */
-    repeat;    /* dirt tiles everywhere */
+    repeat-x, 
+    repeat;   
   background-size: 
-    50px 50px, /* grass size */
-    50px 50px; /* dirt size */
+    50px 50px, 
+    50px 50px; 
   background-position: 
-    top left,  /* grass at the top */
-    top left;  /* dirt starts same position */
+    top left,  
+    top left;  
 }
 
-#kflashLogo {
-  width: 110px;
-  position: absolute;
+.thumbnailDiv {
+  display: inline-block; 
+  text-align: center;    
+  border: 5px solid #E0943B;  
+  border-radius: 8px;   
+  margin: 10px;            
+  background-color: black;  
+  display: inline-block;
+  padding: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+
+.thumbLabel {
+  color: white;   
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+
+.myThumbnail {
+  border: 5px solid #E0943B; 
+  display: block;
+  width: 200; 
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }

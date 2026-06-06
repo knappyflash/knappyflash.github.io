@@ -21,8 +21,10 @@ previousButton.addEventListener("click", ClickPrevious);
 nextButton.addEventListener("click", ClickNext);
 midiPlayer.addEventListener("stop", onMidiStopped);
 
+const pageTitle = "Midi Player";
 window.addEventListener("load", function () {
-    console.log("Page is loaded");
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
     previousSongId = Number(localStorage.getItem("previousSongId")) || 0;
     currentSongId  = Number(localStorage.getItem("currentSongId"))  || 0;
     nextSongId     = Number(localStorage.getItem("nextSongId"))     || 0;
@@ -35,6 +37,11 @@ window.addEventListener("load", function () {
         startTimer();
     }
 });
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
 
 midifiles.forEach(function AddMidiToList(midiFile){
     const myli = document.createElement("li");
@@ -116,4 +123,3 @@ async function startTimer() {
 function onMidiStopped() {
   console.log("MIDI Stopped");
 }
-

@@ -1,3 +1,14 @@
+const pageTitle = "p5.js Test";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
+
 let x = 200;
 let y = 200;
 let vx = 3;  // velocity (speed) in x direction

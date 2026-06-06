@@ -1,3 +1,14 @@
+const pageTitle = "Cellular Automata";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
+
 let canvSize = [750, 400];
 let bg = [255, 0, 0, 100];
 let grid = [];

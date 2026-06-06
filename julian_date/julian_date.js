@@ -1,3 +1,14 @@
+const pageTitle = "Julian Date Converter";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
+
 document.getElementById("julianDate").addEventListener("input", (e) => {
   let input = e.target.value;
   if (input.length < 5) return;
