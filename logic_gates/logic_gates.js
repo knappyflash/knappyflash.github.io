@@ -73,8 +73,15 @@ function DrawButton(x, y, isOn){
   stroke(0, 0, 0);
   if (isOn){
     fill(255, 0, 0);
+    rect(x, y, 60, 60);
+    fill(255, 255, 255);
+    textSize(30);
+    text('1', x+22, y+40);
   } else {
     fill(200,200,200);
+    rect(x, y, 60, 60);
+    fill(255, 255, 255);
+    textSize(30);
+    text('0', x+22, y+40);
   }
-  rect(x, y, 60, 60);
 }
