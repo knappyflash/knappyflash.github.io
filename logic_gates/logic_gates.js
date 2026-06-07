@@ -43,6 +43,7 @@ window.mousePressed = () => {
 
 window.mouseReleased = () => {
   console.log("Mouse Relased");
+  background(bg[0], bg[1], bg[2], bg[3]);
   if (andGate1.isOn){
     andGate1.Draw(100, 50, false);
   } else{
