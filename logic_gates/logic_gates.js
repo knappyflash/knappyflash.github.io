@@ -27,8 +27,7 @@ window.setup = () => {
   canvas.parent("logicgateDiv");
   background(bg[0], bg[1], bg[2], bg[3]);
 
-  // DrawAndGate(100, 50, false);
-  andGate1.Draw();
+  andGate1.Draw(100, 50, true);
 
   strokeWeight(8);
   stroke(0, 0, 0);
