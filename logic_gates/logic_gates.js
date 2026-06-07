@@ -13,8 +13,6 @@ function changeTitle() {
 }
 
 let bg = [150, 150, 200, 255];
-let myState = 1;
-
 let andGate1 = new AndGate(100, 50, false);
 
 window.setup = () => {
@@ -39,72 +37,16 @@ window.setup = () => {
 window.draw = () => {
 }
 
-function mousePressed() {
+window.mousePressed = () => {
   console.log("Mouse Pressed");
 }
 
-function mouseReleased() {
+window.mouseReleased = () => {
   console.log("Mouse Relased");
-  console.log("myState: " + myState);
-  switch (myState) {
-    case 0:
-      DrawAndGate(68, 20, false);
-      DrawAndGate(30, 100, false);
-      DrawAndGate(100, 100, false);
-      myState=1;
-      break;
-    case 1:
-      DrawAndGate(68, 20, false);
-      DrawAndGate(30, 100, false);
-      DrawAndGate(100, 100, true);
-      myState=2;
-      break;
-    case 2:
-      DrawAndGate(68, 20, false);
-      DrawAndGate(30, 100, true);
-      DrawAndGate(100, 100, false);
-      myState=3;
-      break;
-    case 3:
-      DrawAndGate(68, 20, true);
-      DrawAndGate(30, 100, true);
-      DrawAndGate(100, 100, true);
-      myState=0;
-      break;
-    default:
-      console.log('Unknown animal.');
+  if (andGate1.isOn){
+    andGate1.Draw(100, 50, false);
+  } else{
+    andGate1.isOn = true;
+    andGate1.Draw(100, 50, true);
   }
-}
-
-function DrawButton(x, y, isOn){
-  strokeWeight(4);
-  stroke(0, 0, 0);
-  if (isOn){
-    fill(255, 0, 0);
-    rect(x, y, 60, 60);
-    fill(255, 255, 255);
-    textSize(30);
-    text('1', x+22, y+40);
-  } else {
-    fill(200,200,200);
-    rect(x, y, 60, 60);
-    fill(255, 255, 255);
-    textSize(30);
-    text('0', x+22, y+40);
-  }
-}
-
-function DrawAndGate(x, y, isOn){
-  strokeWeight(10);
-  stroke(0, 0, 0);
-  ellipse(x, y, 80, 80);
-  rect(x-40, y, 80, 40);
-  noStroke();
-  ellipse(x, y, 80, 80);
-  rect(x-40, y, 80, 40);
-  fill(255, 255, 255);
-  textSize(30);
-  strokeWeight(8);
-  stroke(0, 0, 0);
-  text('0', x-8, y+10);
 }
