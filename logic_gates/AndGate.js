@@ -10,13 +10,16 @@ export default class AndGate {
     }
 
     Draw(x, y, isOn){
+        let myOutput = 0;
         this.x = x;
         this.y = y;
         this.isOn = isOn;
         console.log("Drawing AndGate: x: " + this.x + ", y: " + this.y + ", isOn: " + this.isOn);
         if(this.isOn){
+            myOutput = 1;
             fill(255, 100, 100);
         } else{
+            myOutput = 0;
             fill(50, 50, 50);
         }
         stroke(0, 0, 0);
@@ -34,6 +37,6 @@ export default class AndGate {
         stroke(0, 0, 0);
         textSize(30);
         strokeWeight(8);
-        text('0', this.x+28, this.y+50);
+        text(myOutput, this.x+28, this.y+50);
     }
 }
