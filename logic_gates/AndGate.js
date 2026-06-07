@@ -38,7 +38,9 @@ export default class AndGate {
         fill(255, 255, 255);
         stroke(0, 0, 0);
         textSize(30);
-        strokeWeight(8);
+        strokeWeight(5);
         text(myOutput, this.x+110, this.y+49);
+        textSize(20);
+        text("AND", this.x+15, this.y+45);
     }
 }
