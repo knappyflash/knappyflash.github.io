@@ -1,3 +1,5 @@
+// Lets put text on the input and outputs lines
+
 export default class AndGate {
     constructor(x, y, isOn) {
         this.x = x;
