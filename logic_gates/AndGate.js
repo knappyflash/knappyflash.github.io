@@ -2,9 +2,15 @@ export default class AndGate {
     constructor() {
         this.x = 0;
         this.y = 0;
-        this.inputA = 0;
-        this.inputB = 0;
-        this.output = 0;
+        this.inputA_Value = 0;
+        this.inputA_X = 0;
+        this.inputA_Y = 0;
+        this.inputB_Value = 0;
+        this.inputB_X = 0;
+        this.inputB_Y = 0;
+        this.outputValue = 0;
+        this.outputX = 0;
+        this.outputY = 0;
     }
 
     PrintProperties() {
@@ -14,33 +20,57 @@ export default class AndGate {
     Update(x, y, inputA, inputB){
         this.x = x;
         this.y = y;
-        this.inputA = inputA;
-        this.inputB = inputB;
+        this.inputA_Value = inputA.outputValue;
+        this.inputA_X = inputA.outputX;
+        this.inputA_Y = inputA.outputY;
+        this.inputB_Value = inputB.outputValue;
+        this.inputB_X = inputB.outputX;
+        this.inputB_Y = inputB.outputY;
+        this.outputX = this.x+110;
+        this.outputY = this.y+38;
 
-        strokeWeight(8);
-        if(this.inputA == 1){
+
+        // inputA
+        strokeWeight(3);
+        if(this.inputA_Value == 1){
+            stroke(255,100,100);
+            line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
             stroke(255, 0, 0);
         }else{
+            stroke(50,50,100);
+            line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
             stroke(0, 0, 0);
         }
+        strokeWeight(8);
         line(this.x-40, this.y+20, this.x, this.y+20);
 
-        if(this.inputB == 1){
+
+        // inputB
+        strokeWeight(3);
+        if(this.inputB_Value == 1){
+            stroke(255,100,100);
+            line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
             stroke(255, 0, 0);
         }else{
+            stroke(50,50,100);
+            line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
             stroke(0, 0, 0);
         }
+        strokeWeight(8);
         line(this.x-40, this.y+60, this.x, this.y+60);
+        
 
-        if((this.inputA == 1)&&(this.inputB == 1)){
-            this.output = 1;
+        //  output
+        if((this.inputA_Value == 1)&&(this.inputB_Value == 1)){
+            this.outputValue = 1;
             stroke(255, 0, 0);
         }else{
-            this.output = 0;
+            this.outputValue = 0;
             stroke(0, 0, 0);
         }
-        line(this.x+80, this.y+38, this.x+110, this.y+38);
+        line(this.x+80, this.y+38, this.outputX, this.outputY);
 
+        // and gate
         stroke(0, 0, 0);
         fill(100, 110, 110);
         strokeWeight(15);

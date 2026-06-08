@@ -1,5 +1,6 @@
 import Bulb from "./Bulb.js";
 import AndGate from "./AndGate.js";
+import Lever from "./Lever.js";
 
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
@@ -13,8 +14,11 @@ function changeTitle() {
 }
 
 let bg = [150, 150, 200, 255];
-let bulb1 = new Bulb();
+
+let leverA = new Lever();
+let leverB = new Lever();
 let andGate1 = new AndGate();
+let bulb1 = new Bulb();
 
 
 window.setup = () => {
@@ -26,13 +30,7 @@ window.setup = () => {
   let canvas = createCanvas(w-20, h-20);
   canvas.parent("logicgateDiv");
   background(bg[0], bg[1], bg[2], bg[3]);
-
-  stroke(0, 0, 0);
-  strokeWeight(8);
-  line(315,129,400,160);
-  andGate1.Update(200,90,0,0);
-  bulb1.Update(400,90,andGate1.output);
-
+  UpdateLogicGates();
 }
 
 window.draw = () => {
@@ -42,33 +40,15 @@ window.mousePressed = () => {
   console.log("Mouse Pressed");
 }
 
-let tempCounter = 0;
 window.mouseReleased = () => {
   console.log("Mouse Relased");
+  UpdateLogicGates();
+}
+
+function UpdateLogicGates(){
   background(bg[0], bg[1], bg[2], bg[3]);
-  
-  switch(tempCounter){
-    case 0:
-      andGate1.Update(200,90,0,0)
-      break;
-    case 1:
-      andGate1.Update(200,90,0,1)
-      break;
-    case 2:
-      andGate1.Update(200,90,1,0)
-      break;
-    case 3:
-      andGate1.Update(200,90,1,1)
-      break;
-    default:
-      console.log("Unknown switch");
-  }
-
-  line(315,129,400,160);
-  bulb1.Update(400,90,andGate1.output);
-
-  tempCounter++;
-  if (tempCounter>3){
-    tempCounter=0;
-  }
+  leverA.Update(60,90);
+  leverB.Update(60,130);
+  andGate1.Update(200,90,leverA,leverB)
+  bulb1.Update(400,90,andGate1);
 }

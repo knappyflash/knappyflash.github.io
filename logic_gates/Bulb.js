@@ -2,7 +2,9 @@ export default class Bulb {
     constructor() {
         this.x = 0;
         this.y = 0;
-        this.input = 0;
+        this.inputValue = 0;
+        this.inputX = 0;
+        this.inputY = 0;
     }
 
     PrintProperties() {
@@ -12,20 +14,31 @@ export default class Bulb {
     Update(x, y, input){
         this.x = x;
         this.y = y;
-        this.input = input;
+        this.inputX = input.outputX;
+        this.inputY = input.outputY;
+        this.inputValue = input.outputValue;
+        console.log(this.input);
         let bublColor = color(255, 255, 100);
         let filamentColor = color(255, 100, 100);
         let inputColor = color(255, 255, 100);
-        
-        if(this.input == 1){
+        let inputWireColor = color(50,50,100);
+
+        if(this.inputValue == 1){
             bublColor = color(255, 255, 100);
             filamentColor = color(255, 100, 100);
             inputColor = color(255, 0, 0);
+            inputWireColor = color(255,100,100);
         }else{
             bublColor = color(100, 110, 110);
             filamentColor = color(0, 0, 0);
             inputColor = color(100, 110, 110);
+            inputWireColor = color(50,50,100);
         }
+
+        // wire to terminal
+        stroke(inputWireColor);
+        strokeWeight(3);
+        line(this.inputX, this.inputY, this.x, this.y+62)
 
         // bulb Terminals
         fill(inputColor);
