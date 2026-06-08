@@ -13,7 +13,7 @@ function changeTitle() {
 }
 
 let bg = [150, 150, 200, 255];
-let andGate1 = new AndGate(100, 50, false);
+let andGate1 = new AndGate();
 
 window.setup = () => {
   let currentTime = new Date();
@@ -25,13 +25,8 @@ window.setup = () => {
   canvas.parent("logicgateDiv");
   background(bg[0], bg[1], bg[2], bg[3]);
 
-  andGate1.Draw(100, 50, true);
+  andGate1.Update(200,90,1,1)
 
-  strokeWeight(8);
-  stroke(0, 0, 0);
-  fill(255, 255, 255);
-  textSize(30);
-  text('AND Gate', 25, 200);
 }
 
 window.draw = () => {
@@ -41,13 +36,30 @@ window.mousePressed = () => {
   console.log("Mouse Pressed");
 }
 
+let tempCounter = 0;
 window.mouseReleased = () => {
   console.log("Mouse Relased");
   background(bg[0], bg[1], bg[2], bg[3]);
-  if (andGate1.isOn){
-    andGate1.Draw(100, 50, false);
-  } else{
-    andGate1.isOn = true;
-    andGate1.Draw(100, 50, true);
+  
+  switch(tempCounter){
+    case 0:
+      andGate1.Update(200,90,0,0)
+      break;
+    case 1:
+      andGate1.Update(200,90,0,1)
+      break;
+    case 2:
+      andGate1.Update(200,90,1,0)
+      break;
+    case 3:
+      andGate1.Update(200,90,1,1)
+      break;
+    default:
+      console.log("Unknown switch");
+  }
+
+  tempCounter++;
+  if (tempCounter>3){
+    tempCounter=0;
   }
 }
