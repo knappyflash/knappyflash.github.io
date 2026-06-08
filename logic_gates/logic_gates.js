@@ -4,7 +4,7 @@ import AndGate from "./AndGate.js";
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
   console.log(pageTitle + " Page is loaded");
-  // changeTitle();
+  changeTitle();
 });
 function changeTitle() {
   const headerFrame = parent.frames["header"];
