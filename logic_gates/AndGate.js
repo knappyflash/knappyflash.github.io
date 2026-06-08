@@ -1,41 +1,38 @@
-// Lets put text on the input and outputs lines
-
 export default class AndGate {
     constructor() {
         this.x = 0;
         this.y = 0;
-        this.a = 0;
-        this.b = 0;
+        this.inputA = 0;
+        this.inputB = 0;
         this.output = 0;
     }
 
     PrintProperties() {
-        console.log("x: " + this.x + ", y:" + this.y + ", a: " + this.a + ", b: " + this.b);
+        console.log("x: " + this.x + ", y:" + this.y + ", a: " + this.inputA + ", b: " + this.inputB);
     }
 
-    Update(x, y, a, b){
+    Update(x, y, inputA, inputB){
         this.x = x;
         this.y = y;
-        this.a = a;
-        this.b = b;
-        console.log("Drawing AndGate: x: " + this.x + ", y: " + this.y + ", isOn: " + this.isOn);
+        this.inputA = inputA;
+        this.inputB = inputB;
 
         strokeWeight(8);
-        if(this.a == 1){
+        if(this.inputA == 1){
             stroke(255, 0, 0);
         }else{
             stroke(0, 0, 0);
         }
         line(this.x-40, this.y+20, this.x, this.y+20);
 
-        if(this.b == 1){
+        if(this.inputB == 1){
             stroke(255, 0, 0);
         }else{
             stroke(0, 0, 0);
         }
         line(this.x-40, this.y+60, this.x, this.y+60);
 
-        if((this.a == 1)&&(this.b == 1)){
+        if((this.inputA == 1)&&(this.inputB == 1)){
             this.output = 1;
             stroke(255, 0, 0);
         }else{

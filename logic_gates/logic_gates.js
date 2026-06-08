@@ -1,4 +1,4 @@
-
+import Bulb from "./Bulb.js";
 import AndGate from "./AndGate.js";
 
 const pageTitle = "Logic Gates";
@@ -13,7 +13,9 @@ function changeTitle() {
 }
 
 let bg = [150, 150, 200, 255];
+let bulb1 = new Bulb();
 let andGate1 = new AndGate();
+
 
 window.setup = () => {
   let currentTime = new Date();
@@ -25,7 +27,11 @@ window.setup = () => {
   canvas.parent("logicgateDiv");
   background(bg[0], bg[1], bg[2], bg[3]);
 
-  andGate1.Update(200,90,1,1)
+  stroke(0, 0, 0);
+  strokeWeight(8);
+  line(315,129,400,160);
+  andGate1.Update(200,90,0,0);
+  bulb1.Update(400,90,andGate1.output);
 
 }
 
@@ -57,6 +63,9 @@ window.mouseReleased = () => {
     default:
       console.log("Unknown switch");
   }
+
+  line(315,129,400,160);
+  bulb1.Update(400,90,andGate1.output);
 
   tempCounter++;
   if (tempCounter>3){
