@@ -24,7 +24,7 @@ export const AllGatesSketch = (p) => {
     canvas.parent("allGatesDiv");
     background(bg[0], bg[1], bg[2], bg[3]);
 
-    // lever.Update(100,100);
+    lever.Update(100,100);
     // notGate.Update(175,130,lever);
     // bulb.Update(400,90,notGate);
   }
