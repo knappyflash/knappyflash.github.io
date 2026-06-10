@@ -3,7 +3,7 @@ import Lever from "./Lever.js";
 import NotGate from "./NotGate.js";
 import AndGate  from "./AndGate.js";
 
-export const AllGatesSketch = (p) => {
+export const ComponetsSketch = (p) => {
   let bg = [150, 150, 200, 255];
 
   let lever = new Lever(p);
@@ -36,6 +36,7 @@ export const AllGatesSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
     lever.Update(100,100);
     notGate.Update(175,130);
-    bulb.Update(400,90,bulb);
+    bulb.Update(400,90);
+    andGate.Update(100,200,lever,lever)
   }
 }

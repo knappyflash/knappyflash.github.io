@@ -12,12 +12,20 @@ export default class Bulb {
         console.log("x: " + this.x + ", y:" + this.y + ", input: " + this.input);
     }
 
-    Update(x, y, input){
+    Update(x, y, input = null){
         this.x = x;
         this.y = y;
-        this.inputX = input.outputX;
-        this.inputY = input.outputY;
-        this.inputValue = input.outputValue;
+
+        if(input){
+            this.inputX = input.outputX;
+            this.inputY = input.outputY;
+            this.inputValue = input.outputValue;
+        }else{
+            this.inputX = this.x;
+            this.inputY = this.y;
+            this.inputValue = 0;
+        }
+
         let bublColor = this.p.color(255, 255, 100);
         let filamentColor = this.p.color(255, 100, 100);
         let inputColor = this.p.color(255, 255, 100);

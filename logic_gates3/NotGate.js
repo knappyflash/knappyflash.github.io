@@ -51,7 +51,7 @@ export default class NotGate {
         this.p.line(this.x, this.y-30, this.x-25, this.y-30);
         this.p.stroke(0,0,0);
         this.p.fill(255,255,255);
-        this.p.triangle(this.x, this.y, this.x, this.y-50, this.x+50, this.y-30);
+        this.p.triangle(this.x, this.y-5, this.x, this.y-55, this.x+50, this.y-30);
         this.p.fill(outputColor);
         this.p.ellipse(this.x+50, this.y-30, 10, 10);
         this.p.stroke(outputColor);

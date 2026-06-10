@@ -1,5 +1,5 @@
 
-import {AllGatesSketch} from "./AllGatesSketch.js";
+import {ComponetsSketch} from "./ComponetsSketch.js";
 import {NotGateSketch} from "./NotGateSketch.js";
 
 const pageTitle = "Logic Gates";
@@ -13,5 +13,5 @@ function changeTitle() {
   title.textContent = pageTitle;
 }
 
-new p5(AllGatesSketch);
+new p5(ComponetsSketch);
 new p5(NotGateSketch);
