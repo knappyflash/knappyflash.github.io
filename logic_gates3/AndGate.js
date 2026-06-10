@@ -1,5 +1,6 @@
 export default class AndGate {
-    constructor() {
+    constructor(p) {
+        this.p = p;
         this.x = 0;
         this.y = 0;
         this.inputA_Value = 0;
@@ -31,59 +32,59 @@ export default class AndGate {
 
 
         // inputA
-        strokeWeight(3);
+        this.p.strokeWeight(3);
         if(this.inputA_Value == 1){
-            stroke(255,100,100);
-            line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
-            stroke(255, 0, 0);
+            this.p.stroke(255,100,100);
+            this.p.line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
+            this.p.stroke(255, 0, 0);
         }else{
-            stroke(50,50,100);
-            line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
-            stroke(0, 0, 0);
+            this.p.stroke(50,50,100);
+            this.p.line(this.inputA_X, this.inputA_Y, this.x-40, this.y+20);
+            this.p.stroke(0, 0, 0);
         }
-        strokeWeight(8);
-        line(this.x-40, this.y+20, this.x, this.y+20);
+        this.p.strokeWeight(8);
+        this.p.line(this.x-40, this.y+20, this.x, this.y+20);
 
 
         // inputB
-        strokeWeight(3);
+        this.p.strokeWeight(3);
         if(this.inputB_Value == 1){
-            stroke(255,100,100);
-            line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
-            stroke(255, 0, 0);
+            this.p.stroke(255,100,100);
+            this.p.line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
+            this.p.stroke(255, 0, 0);
         }else{
-            stroke(50,50,100);
-            line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
-            stroke(0, 0, 0);
+            this.p.stroke(50,50,100);
+            this.p.line(this.inputB_X, this.inputB_Y, this.x-40, this.y+60);
+            this.p.stroke(0, 0, 0);
         }
-        strokeWeight(8);
-        line(this.x-40, this.y+60, this.x, this.y+60);
+        this.p.strokeWeight(8);
+        this.p.line(this.x-40, this.y+60, this.x, this.y+60);
         
 
         //  output
         if((this.inputA_Value == 1)&&(this.inputB_Value == 1)){
             this.outputValue = 1;
-            stroke(255, 0, 0);
+            this.p.stroke(255, 0, 0);
         }else{
             this.outputValue = 0;
-            stroke(0, 0, 0);
+            this.p.stroke(0, 0, 0);
         }
-        line(this.x+80, this.y+38, this.outputX, this.outputY);
+        this.p.line(this.x+80, this.y+38, this.outputX, this.outputY);
 
         // and gate
-        stroke(0, 0, 0);
-        fill(100, 110, 110);
-        strokeWeight(15);
-        ellipse(this.x+40, this.y+40, 80, 80);
-        rect(this.x, this.y, 40, 80);
-        noStroke();
-        ellipse(this.x+40, this.y+40, 80, 80);
-        rect(this.x, this.y, 40, 80);
+        this.p.stroke(0, 0, 0);
+        this.p.fill(100, 110, 110);
+        this.p.strokeWeight(15);
+        this.p.ellipse(this.x+40, this.y+40, 80, 80);
+        this.p.rect(this.x, this.y, 40, 80);
+        this.p.noStroke();
+        this.p.ellipse(this.x+40, this.y+40, 80, 80);
+        this.p.rect(this.x, this.y, 40, 80);
         
-        fill(255, 255, 255);
-        stroke(0, 0, 0);
-        strokeWeight(8);
-        textSize(20);
-        text("AND", this.x+15, this.y+45);
+        this.p.fill(255, 255, 255);
+        this.p.stroke(0, 0, 0);
+        this.p.strokeWeight(8);
+        this.p.textSize(20);
+        this.p.text("AND", this.x+15, this.y+45);
     }
 }

@@ -1,5 +1,6 @@
 export default class Lever {
-    constructor() {
+    constructor(p) {
+        this.p = p;
         this.x = 0;
         this.y = 0;
         this.outputValue = 0;
@@ -17,7 +18,7 @@ export default class Lever {
         this.outputX = this.x+15;
         this.outputY = this.y+20;
 
-        if ((mouseX > this.x-15) && (mouseX < this.x+15) && (mouseY > this.y-5) && (mouseY < this.y+20)){
+        if ((this.p.mouseX > this.x-15) && (this.p.mouseX < this.x+15) && (this.p.mouseY > this.y-5) && (this.p.mouseY < this.y+20)){
             if(this.outputValue == 1){
                 this.outputValue = 0;
             }else{
@@ -25,19 +26,19 @@ export default class Lever {
             }
         }
 
-        let myColor = color(0,0,0);
-        stroke(myColor);
-        strokeWeight(8);
+        let myColor = this.p.color(0,0,0);
+        this.p.stroke(myColor);
+        this.p.strokeWeight(8);
         if(this.outputValue == 0){
-            line(this.x-10,this.y-5,this.x+2,this.y+20);
-            myColor = color(0,0,0);
+            this.p.line(this.x-10,this.y-5,this.x+2,this.y+20);
+            myColor = this.p.color(0,0,0);
         }else{
-            line(this.x+10,this.y-5,this.x+2,this.y+20);
-            myColor = color(255,0,0);
+            this.p.line(this.x+10,this.y-5,this.x+2,this.y+20);
+            myColor = this.p.color(255,0,0);
         }
-        line(this.x-15,this.y+20,this.x+15,this.y+20);
-        stroke(myColor);
-        strokeWeight(3);
-        line(this.x-5,this.y+18,this.outputX,this.outputY);
+        this.p.line(this.x-15,this.y+20,this.x+15,this.y+20);
+        this.p.stroke(myColor);
+        this.p.strokeWeight(3);
+        this.p.line(this.x-5,this.y+18,this.outputX,this.outputY);
     }
 }

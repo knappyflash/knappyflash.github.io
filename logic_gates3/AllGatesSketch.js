@@ -4,31 +4,38 @@ import NotGate from "./NotGate.js";
 import AndGate  from "./AndGate.js";
 
 export const AllGatesSketch = (p) => {
-  console.log("Hi :)");
   let bg = [150, 150, 200, 255];
 
-  let lever = new Lever();
-  let bulb = new Bulb();
-  let notGate = new NotGate();
-  let andGate = new AndGate();
+  let lever = new Lever(p);
+  let bulb = new Bulb(p);
+  let notGate = new NotGate(p);
+  let andGate = new AndGate(p);
 
 
-  window.setup = () => {
-    console.log("Hi :)");
-    let currentTime = new Date();
-    console.log(currentTime + ": Starting Setup");
+  p.setup = () => {
     const parent = document.getElementById("allGatesDiv");
     let w = parent.clientWidth;
     let h = parent.clientHeight;
-    let canvas = createCanvas(w-20, h-20);
+    let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("allGatesDiv");
-    background(bg[0], bg[1], bg[2], bg[3]);
-
-    lever.Update(100,100);
-    // notGate.Update(175,130,lever);
-    // bulb.Update(400,90,notGate);
+    p.background(bg[0], bg[1], bg[2], bg[3]);
+    UpdateLogicGates();
   }
 
-  window.draw = () => {
+  p.draw = () => {
+  }
+
+  p.mousePressed = () => {
+  }
+
+  p.mouseReleased = () => {
+    UpdateLogicGates();
+  }
+
+  function UpdateLogicGates(){
+    p.background(bg[0], bg[1], bg[2], bg[3]);
+    lever.Update(100,100);
+    notGate.Update(175,130);
+    bulb.Update(400,90,bulb);
   }
 }
