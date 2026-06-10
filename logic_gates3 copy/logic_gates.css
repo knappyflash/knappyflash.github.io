@@ -30,7 +30,17 @@ body {
     top left; 
 }
 
-#logicgateDiv {
+#allGatesDiv {
+  width: 500px;
+  height: 300px;
+  margin: 40px auto 0 auto;
+  border: 5px solid #E0943B;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: black;
+}
+
+#notGateDiv {
   width: 500px;
   height: 300px;
   margin: 40px auto 0 auto;
