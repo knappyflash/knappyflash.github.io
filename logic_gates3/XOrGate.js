@@ -1,4 +1,4 @@
-export default class AndGate {
+export default class XOrGate {
     constructor(p) {
         this.p = p;
         this.x = 0;
@@ -23,11 +23,12 @@ export default class AndGate {
         this.y = y;
 
         this.inputA_Value = 0;
-        this.inputA_X = this.x-15;
+        this.inputA_X = this.x;
         this.inputA_Y = this.y+15;
         this.inputB_Value = 0;
-        this.inputB_X = this.x-15;
+        this.inputB_X = this.x;
         this.inputB_Y = this.y+45;
+        let bgColor = this.p.color(150, 150, 200, 255);
         
         if(inputA){
             this.inputA_Value = inputA.outputValue;
@@ -40,34 +41,15 @@ export default class AndGate {
             this.inputB_Y = inputB.outputY;
         }
 
-        this.outputX = this.x+95;
+        this.outputX = this.x+90;
         this.outputY = this.y+28;
 
         this.p.fill(255, 255, 255);
         this.p.strokeWeight(3);
-
-        // inputA
-        if(this.inputA_Value == 1){
-            this.p.stroke(255,0,0);
-        }else{
-            this.p.stroke(0,0,0);
-        }
-        this.p.line(this.inputA_X, this.inputA_Y, this.x-15, this.y+15);
-        this.p.line(this.x-15, this.y+15, this.x+5, this.y+15);
-
-
-        // inputB
-        if(this.inputB_Value == 1){
-            this.p.stroke(255,0,0);
-        }else{
-            this.p.stroke(0,0,0);
-        }
-        this.p.line(this.inputB_X, this.inputB_Y, this.x-15, this.y+45);
-        this.p.line(this.x-15, this.y+45, this.x+5, this.y+45);
         
 
         //  output
-        if((this.inputA_Value == 1)&&(this.inputB_Value == 1)){
+        if((this.inputA_Value == 1)^(this.inputB_Value == 1)){
             this.outputValue = 1;
             this.p.stroke(255, 0, 0);
         }else{
@@ -77,13 +59,54 @@ export default class AndGate {
         this.p.line(this.x+70, this.y+28, this.outputX, this.outputY);
 
         // and gate
-        this.p.strokeWeight(8);
         this.p.stroke(0, 0, 0);
         this.p.ellipse(this.x+40, this.y+30, 60, 60);
         this.p.rect(this.x+10, this.y, 30, 60);
+
         this.p.noStroke();
-        this.p.ellipse(this.x+40, this.y+30, 60, 60);
-        this.p.rect(this.x+10, this.y, 30, 60);
+        this.p.rect(this.x+38, this.y+2, 5, 56);
+        this.p.stroke(0, 0, 0);
+
+        this.p.noFill()
+        this.p.curve(this.x, this.y, this.x+5, this.y+5, this.x+10, this.y+10, this.x+20, this.y+20);
+
+        this.p.fill(bgColor);
+        this.p.ellipse(this.x+10, this.y+30, 30, 60);
+        this.p.noStroke();
+        this.p.rect(this.x-7, this.y-1, 15, 62);
+
+        this.p.stroke(0, 0, 0);
+        this.p.noFill()
         
+        this.p.curve(
+            this.x - 100, this.y - 50,  // control point 1 (right, above)
+            this.x+1,      this.y,   // start
+            this.x+1,      this.y + 60,   // end
+            this.x - 100, this.y + 100   // control point 2 (right, below)
+        );
+
+
+        
+
+
+        // inputA
+        if(this.inputA_Value == 1){
+            this.p.stroke(255,0,0);
+        }else{
+            this.p.stroke(0,0,0);
+        }
+        this.p.line(this.inputA_X, this.inputA_Y, this.x-10, this.y+15);
+        this.p.line(this.x-10, this.y+15, this.x+10, this.y+15);
+
+
+        // inputB
+        if(this.inputB_Value == 1){
+            this.p.stroke(255,0,0);
+        }else{
+            this.p.stroke(0,0,0);
+        }
+        this.p.line(this.inputB_X, this.inputB_Y, this.x-10, this.y+45);
+        this.p.line(this.x-10, this.y+45, this.x+10, this.y+45);
+
     }
 }

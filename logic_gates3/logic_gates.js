@@ -1,6 +1,10 @@
 
 import {ComponetsSketch} from "./ComponetsSketch.js";
 import {NotGateSketch} from "./NotGateSketch.js";
+import {OrGateSketch} from "./OrGateSketch.js";
+import {AndGateSketch} from "./AndGateSketch.js";
+import {XOrGateSketch} from "./XOrGateSketch.js";
+import { QuickTestSketch } from "./QuickTestSketch.js";
 
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
@@ -15,3 +19,7 @@ function changeTitle() {
 
 new p5(ComponetsSketch);
 new p5(NotGateSketch);
+new p5(OrGateSketch);
+new p5(AndGateSketch);
+new p5(XOrGateSketch);
+new p5(QuickTestSketch);
