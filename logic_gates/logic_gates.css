@@ -8,7 +8,7 @@ body {
 }
 
 .page {
-  height: 2300px;
+  height: 2700px;
   margin-top: 10px;
   margin-left: 0px;
   border: 5px solid #E0943B;
@@ -35,7 +35,8 @@ body {
 #orGateDiv,
 #andGateDiv,
 #xOrGateDiv,
-#quickTestDiv {
+#quickTestDiv,
+#quickTest2Div {
   width: 500px;
   height: 300px;
   margin: 40px auto 0 auto;

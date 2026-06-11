@@ -1,27 +1,26 @@
 import Bulb from "./Bulb.js";
 import Lever from "./Lever.js";
-import NotGate from "./NotGate.js";
-import OrGate from "./OrGate.js";
+import NorGate from "./NorGate.js";
 
-export const QuickTestSketch = (p) => {
+export const QuickTestSketch2 = (p) => {
   let bg = [150, 150, 200, 255];
 
   let lever1 = new Lever(p);
   let lever2 = new Lever(p);
-  let notGate1 = new NotGate(p);
-  let notGate2 = new NotGate(p);
-  let notGate3 = new NotGate(p);
-  let orGate1 = new OrGate(p);
+  let norGate1 = new NorGate(p);
+  let norGate2 = new NorGate(p);
   let bulb1 = new Bulb(p);
+  let bulb2 = new Bulb(p);
 
 
   p.setup = () => {
-    const parent = document.getElementById("quickTestDiv");
+    const parent = document.getElementById("quickTest2Div");
     let w = parent.clientWidth;
     let h = parent.clientHeight;
     let canvas = p.createCanvas(w-20, h-20);
-    canvas.parent("quickTestDiv");
+    canvas.parent("quickTest2Div");
     p.background(bg[0], bg[1], bg[2], bg[3]);
+    UpdateLogicGates();
     UpdateLogicGates();
   }
 
@@ -37,18 +36,21 @@ export const QuickTestSketch = (p) => {
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
+
     lever1.Update(30,70);
-    lever2.Update(30,200);
-    notGate1.Update(100,120,lever1);
-    notGate2.Update(100,250,lever2);
-    orGate1.Update(200,125,notGate1,notGate2);
-    notGate3.Update(320,183,orGate1);
-    bulb1.Update(450,117,notGate3);
+    lever2.Update(30,250);
+    
+    norGate1.Update(200,100,lever1,norGate2);
+    norGate2.Update(200,200,norGate1,lever2);
+    norGate1.Update(200,100,lever1,norGate2);
+    
+    bulb1.Update(450,90,norGate1);
+    bulb2.Update(450,190,norGate2);
 
     p.fill(255, 255, 255);
     p.strokeWeight(3);
     p.stroke(0, 0, 0);
     p.textSize(50);
-    p.text('And Gate', 125, 50);
+    p.text('RS Nor Latch', 125, 50);
   }
 }
