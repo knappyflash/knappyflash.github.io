@@ -22,6 +22,8 @@ export const ComponetsSketch = (p) => {
   let norGate = new NorGate(p);
   let xnOrGate = new XNorGate(p);
 
+  let isMousePressed = false;
+
 
   p.setup = () => {
     const parent = document.getElementById("componetsDiv");
@@ -37,15 +39,18 @@ export const ComponetsSketch = (p) => {
   }
 
   p.mousePressed = () => {
+    isMousePressed = true;
+    UpdateLogicGates();
   }
 
   p.mouseReleased = () => {
+    isMousePressed = false;
     UpdateLogicGates();
   }
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever.Update(40,40);
+    lever.Update(40,40,isMousePressed);
     bulb.Update(100,30);
     notGate.Update(170,70);
     orGate.Update(265,10);

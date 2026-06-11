@@ -6,23 +6,27 @@ export default class Lever {
         this.outputValue = 0;
         this.outputX = 0;
         this.outputY = 0;
+        this.isMousePressed = false;
     }
 
     PrintProperties() {
         console.log("x: " + this.x + ", y:" + this.y + ", outputValue: " + this.outputValue);
     }
 
-    Update(x, y){
+    Update(x, y, isMousePressed){
         this.x = x;
         this.y = y;
         this.outputX = this.x+15;
         this.outputY = this.y+20;
+        this.isMousePressed = isMousePressed;
 
-        if ((this.p.mouseX > this.x-15) && (this.p.mouseX < this.x+15) && (this.p.mouseY > this.y-5) && (this.p.mouseY < this.y+20)){
-            if(this.outputValue == 1){
-                this.outputValue = 0;
-            }else{
-                this.outputValue = 1;
+        if (this.isMousePressed){
+            if ((this.p.mouseX > this.x-15) && (this.p.mouseX < this.x+15) && (this.p.mouseY > this.y-5) && (this.p.mouseY < this.y+20)){
+                if(this.outputValue == 1){
+                    this.outputValue = 0;
+                }else{
+                    this.outputValue = 1;
+                }
             }
         }
 

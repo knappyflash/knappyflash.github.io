@@ -12,6 +12,7 @@ export const QuickTestSketch2 = (p) => {
   let bulb1 = new Bulb(p);
   let bulb2 = new Bulb(p);
 
+  let isMousePressed = false;
 
   p.setup = () => {
     const parent = document.getElementById("quickTest2Div");
@@ -28,18 +29,22 @@ export const QuickTestSketch2 = (p) => {
   }
 
   p.mousePressed = () => {
+    isMousePressed = true;
+    UpdateLogicGates();
   }
 
   p.mouseReleased = () => {
+    isMousePressed = false;
     UpdateLogicGates();
   }
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    lever1.Update(30,70);
-    lever2.Update(30,250);
+    lever1.Update(30,70,isMousePressed);
+    lever2.Update(30,250,isMousePressed);
     
+    norGate2.Update(200,200,norGate1,lever2);
     norGate1.Update(200,100,lever1,norGate2);
     norGate2.Update(200,200,norGate1,lever2);
     norGate1.Update(200,100,lever1,norGate2);

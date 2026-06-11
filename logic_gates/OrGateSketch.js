@@ -16,6 +16,8 @@ export const OrGateSketch = (p) => {
   let norGate1 = new NorGate(p);
   let bulb2 = new Bulb(p);
 
+  let isMousePressed = false;
+
 
   p.setup = () => {
     const parent = document.getElementById("orGateDiv");
@@ -31,21 +33,24 @@ export const OrGateSketch = (p) => {
   }
 
   p.mousePressed = () => {
+    isMousePressed = true;
+    UpdateLogicGates();
   }
 
   p.mouseReleased = () => {
+    isMousePressed = false;
     UpdateLogicGates();
   }
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(60,75);
-    lever2.Update(60,105);
+    lever1.Update(60,75,isMousePressed);
+    lever2.Update(60,105,isMousePressed);
     orGate1.Update(175,80,lever1,lever2);
     bulb1.Update(400,75,orGate1);
 
-    lever3.Update(60,190);
-    lever4.Update(60,220);
+    lever3.Update(60,190,isMousePressed);
+    lever4.Update(60,220,isMousePressed);
     norGate1.Update(175,195,lever3,lever4);
     bulb2.Update(400,190,norGate1);
 

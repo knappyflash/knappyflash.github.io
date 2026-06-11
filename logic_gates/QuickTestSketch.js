@@ -14,6 +14,7 @@ export const QuickTestSketch = (p) => {
   let orGate1 = new OrGate(p);
   let bulb1 = new Bulb(p);
 
+  let isMousePressed = false;
 
   p.setup = () => {
     const parent = document.getElementById("quickTestDiv");
@@ -29,16 +30,19 @@ export const QuickTestSketch = (p) => {
   }
 
   p.mousePressed = () => {
+    isMousePressed = true;
+    UpdateLogicGates();
   }
 
   p.mouseReleased = () => {
+    isMousePressed = false;
     UpdateLogicGates();
   }
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(30,70);
-    lever2.Update(30,200);
+    lever1.Update(30,70,isMousePressed);
+    lever2.Update(30,200,isMousePressed);
     notGate1.Update(100,120,lever1);
     notGate2.Update(100,250,lever2);
     orGate1.Update(200,125,notGate1,notGate2);

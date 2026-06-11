@@ -9,6 +9,8 @@ export const NotGateSketch = (p) => {
   let bulb1 = new Bulb(p);
   let notGate1 = new NotGate(p);
 
+  let isMousePressed = false;
+
 
   p.setup = () => {
     const parent = document.getElementById("notGateDiv");
@@ -24,15 +26,18 @@ export const NotGateSketch = (p) => {
   }
 
   p.mousePressed = () => {
+    isMousePressed = true;
+    UpdateLogicGates();
   }
 
   p.mouseReleased = () => {
+    isMousePressed = false;
     UpdateLogicGates();
   }
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(60,200);
+    lever1.Update(60,200,isMousePressed);
     notGate1.Update(175,250,lever1);
     bulb1.Update(400,185,notGate1);
 
