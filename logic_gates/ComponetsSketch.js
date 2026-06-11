@@ -5,7 +5,7 @@ import AndGate  from "./AndGate.js";
 import OrGate from "./OrGate.js";
 import XOrGate from "./XOrGate.js";
 import NandGate from "./NandGate.js";
-import NorGate from "./NorGate.js";
+import NorGate from "./NorGate_.js";
 import XNorGate from "./XNorGate.js";
 
 export const ComponetsSketch = (p) => {
