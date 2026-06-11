@@ -1,7 +1,7 @@
 import Bulb from "./Bulb.js";
 import Lever from "./Lever.js";
 import OrGate from "./OrGate.js";
-import NorGate from "./NOrGate.js";
+import NorGate from "./NorGate.js";
 
 export const OrGateSketch = (p) => {
   let bg = [150, 150, 200, 255];
