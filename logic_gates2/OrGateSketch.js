@@ -1,6 +1,7 @@
 import Bulb from "./Bulb.js";
 import Lever from "./Lever.js";
 import OrGate from "./OrGate.js";
+import NorGate from "./NOrGate.js";
 
 export const OrGateSketch = (p) => {
   let bg = [150, 150, 200, 255];
@@ -9,6 +10,11 @@ export const OrGateSketch = (p) => {
   let lever2 = new Lever(p);
   let orGate1 = new OrGate(p);
   let bulb1 = new Bulb(p);
+
+  let lever3 = new Lever(p);
+  let lever4 = new Lever(p);
+  let norGate1 = new NorGate(p);
+  let bulb2 = new Bulb(p);
 
 
   p.setup = () => {
@@ -33,15 +39,20 @@ export const OrGateSketch = (p) => {
 
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(60,180);
-    lever2.Update(60,240);
-    orGate1.Update(175,195,lever1,lever2);
-    bulb1.Update(400,185,orGate1);
+    lever1.Update(60,75);
+    lever2.Update(60,105);
+    orGate1.Update(175,80,lever1,lever2);
+    bulb1.Update(400,75,orGate1);
+
+    lever3.Update(60,190);
+    lever4.Update(60,220);
+    norGate1.Update(175,195,lever3,lever4);
+    bulb2.Update(400,190,norGate1);
 
     p.fill(255, 255, 255);
     p.strokeWeight(3);
     p.stroke(0, 0, 0);
     p.textSize(50);
-    p.text('Or Gate', 125, 100);
+    p.text('Or / Nor Gate', 90, 50);
   }
 }

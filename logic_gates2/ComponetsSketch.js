@@ -4,6 +4,9 @@ import NotGate from "./NotGate.js";
 import AndGate  from "./AndGate.js";
 import OrGate from "./OrGate.js";
 import XOrGate from "./XOrGate.js";
+import NandGate from "./NandGate.js";
+import NorGate from "./NOrGate.js";
+import XNorGate from "./XNorGate.js";
 
 export const ComponetsSketch = (p) => {
   let bg = [150, 150, 200, 255];
@@ -15,6 +18,9 @@ export const ComponetsSketch = (p) => {
   let andGate = new AndGate(p);
   let orGate = new OrGate(p);
   let xOrGate = new XOrGate(p);
+  let nandGate = new NandGate(p);
+  let norGate = new NorGate(p);
+  let xnOrGate = new XNorGate(p);
 
 
   p.setup = () => {
@@ -45,6 +51,9 @@ export const ComponetsSketch = (p) => {
     orGate.Update(265,10);
     andGate.Update(390,10);
     xOrGate.Update(20,150);
+    nandGate.Update(150,150);
+    norGate.Update(265,150);
+    xnOrGate.Update(390,150);
 
     p.fill(255, 255, 255);
     p.strokeWeight(3);
@@ -56,5 +65,8 @@ export const ComponetsSketch = (p) => {
     p.text('Or Gate', 270, 100);
     p.text('And Gate', 380, 100);
     p.text('Xor Gate', 20, 240);
+    p.text('Nand Gate', 155, 240);
+    p.text('Nor Gate', 270, 240);
+    p.text('Xnor Gate', 380, 240);
   }
 }
