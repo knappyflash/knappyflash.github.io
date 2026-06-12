@@ -1,25 +1,29 @@
 import Bulb from "./Bulb.js";
 import Button from "./Button.js";
 import NorGate from "./NorGate.js";
+import AndGate from "./AndGate.js";
+import NotGate from "./NotGate.js";
 
-export const RsNorLatchSketch = (p) => {
+export const TFlipFlopSketch = (p) => {
+  
   let bg = [150, 150, 200, 255];
-
   let button1 = new Button(p);
-  let button2 = new Button(p);
   let norGate1 = new NorGate(p);
   let norGate2 = new NorGate(p);
+  let andGate1 = new AndGate(p);
+  let andGate2 = new AndGate(p);
+  let notGate1 = new NotGate(p);
   let bulb1 = new Bulb(p);
   let bulb2 = new Bulb(p);
 
   let isMousePressed = false;
 
   p.setup = () => {
-    const parent = document.getElementById("rsNorLatchDiv");
+    const parent = document.getElementById("tFlipFlopDiv");
     let w = parent.clientWidth;
     let h = parent.clientHeight;
     let canvas = p.createCanvas(w-20, h-20);
-    canvas.parent("rsNorLatchDiv");
+    canvas.parent("tFlipFlopDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
     UpdateLogicGates();
     UpdateLogicGates();
@@ -41,21 +45,28 @@ export const RsNorLatchSketch = (p) => {
   function UpdateLogicGates(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    button1.Update(30,115,isMousePressed);
-    button2.Update(30,245,isMousePressed);
-    
-    norGate2.Update(200,200,norGate1,button2);
-    norGate1.Update(200,100,button1,norGate2);
-    norGate2.Update(200,200,norGate1,button2);
-    norGate1.Update(200,100,button1,norGate2);
-    
-    bulb1.Update(450,90,norGate1);
-    bulb2.Update(450,190,norGate2);
+    button1.Update(150,160,isMousePressed);
+
+    let norX = 250;
+    let andX = 250;
+
+    norGate1.Update(norX,80,andGate1,norGate2);
+    norGate2.Update(norX,150,norGate1,andGate2);
+    andGate1.Update(andX,5,button1,norGate1);
+    andGate2.Update(andX,225,norGate2,button1);
+    norGate2.Update(norX,150,norGate1,andGate2);
+    norGate1.Update(norX,80,andGate1,norGate2);
+    norGate2.Update(norX,150,norGate1,andGate2);
+
+    bulb1.Update(450,75,norGate1);
+    bulb2.Update(450,145,norGate2);
 
     p.fill(255, 255, 255);
     p.strokeWeight(3);
     p.stroke(0, 0, 0);
     p.textSize(50);
-    p.text('RS Nor Latch', 90, 50);
+    p.text('T', 25, 50);
+    p.text('Flip',5, 100);
+    p.text('Flop', 0, 150);
   }
 }
