@@ -4,7 +4,7 @@ import Button from "./Button.js";
 import NorGate from "./NorGate.js";
 import AndGate from "./AndGate.js";
 import NotGate from "./NotGate.js";
-// 1
+
 export const DFlipFlopSketch = (p) => {
   let bg = [150, 150, 200, 255];
 
