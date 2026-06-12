@@ -40,6 +40,7 @@ export default class Button {
     }
 
     ButtonDown(){
+        this.p.stroke(0, 0, 0);
         this.p.fill(255,255,255)
         this.p.quad(this.x, this.y, this.x+40, this.y, this.x+35, this.y-10, this.x+5, this.y-10);
         this.p.fill(255,0,0)
@@ -47,6 +48,7 @@ export default class Button {
     }
 
     ButtonUp(){
+        this.p.stroke(0, 0, 0);
         this.p.fill(255,255,255)
         this.p.quad(this.x, this.y, this.x+40, this.y, this.x+35, this.y-10, this.x+5, this.y-10);
         this.p.rect(this.x+10, this.y-16, 20, 10);

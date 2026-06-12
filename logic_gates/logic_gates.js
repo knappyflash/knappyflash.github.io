@@ -7,6 +7,7 @@ import {XOrGateSketch} from "./XOrGateSketch.js";
 import { AndGate2Sketch } from "./AndGate2Sketch.js";
 import { RsNorLatchSketch } from "./RsNorLatchSketch.js";
 import { TFlipFlopSketch } from "./TFlipFlopSketch.js";
+import { DFlipFlopSketch } from "./DFlipFlopSketch.js";
 
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
@@ -27,3 +28,4 @@ new p5(XOrGateSketch);
 new p5(AndGate2Sketch);
 new p5(RsNorLatchSketch);
 new p5(TFlipFlopSketch);
+new p5(DFlipFlopSketch);
