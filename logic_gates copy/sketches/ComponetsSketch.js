@@ -23,6 +23,7 @@ export const ComponetsSketch = (p) => {
   let xnOrGate = new XNorGate(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
 
   p.setup = () => {
@@ -32,25 +33,26 @@ export const ComponetsSketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("componetsDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked =false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever.Update(40,40,isMousePressed);
+    lever.Update(40,40,isMouseClicked);
     bulb.Update(100,30);
     notGate.Update(170,70);
     orGate.Update(265,10);

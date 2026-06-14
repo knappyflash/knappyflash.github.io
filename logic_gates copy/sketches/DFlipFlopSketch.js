@@ -19,6 +19,7 @@ export const DFlipFlopSketch = (p) => {
   let notGate1 = new NotGate(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
   p.setup = () => {
     const parent = document.getElementById("dFlipFLopSketchDiv");
@@ -27,37 +28,35 @@ export const DFlipFlopSketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("dFlipFLopSketchDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked = false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
     
-    lever1.Update(30,250,isMousePressed);
-    button1.Update(50,280,isMousePressed);
+    lever1.Update(30,250,isMouseClicked);
+    button1.Update(50,280,isMouseClicked);
 
     notGate1.Update(30,145,lever1)
     
     andGate1.Update(100,100,notGate1,button1);
     andGate2.Update(100,200,lever1,button1);
     
-    norGate2.Update(200,200,norGate1,andGate2);
-    norGate1.Update(200,100,andGate1,norGate2);
     norGate2.Update(200,200,norGate1,andGate2);
     norGate1.Update(200,100,andGate1,norGate2);
     

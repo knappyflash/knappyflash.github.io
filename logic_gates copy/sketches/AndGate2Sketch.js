@@ -15,6 +15,7 @@ export const AndGate2Sketch = (p) => {
   let bulb1 = new Bulb(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
   p.setup = () => {
     const parent = document.getElementById("andGate2Div");
@@ -23,26 +24,27 @@ export const AndGate2Sketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("andGate2Div");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked = false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(30,70,isMousePressed);
-    lever2.Update(30,200,isMousePressed);
+    lever1.Update(30,70,isMouseClicked);
+    lever2.Update(30,200,isMouseClicked);
     notGate1.Update(100,120,lever1);
     notGate2.Update(100,250,lever2);
     orGate1.Update(200,125,notGate1,notGate2);

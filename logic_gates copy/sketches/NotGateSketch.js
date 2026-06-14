@@ -10,6 +10,7 @@ export const NotGateSketch = (p) => {
   let notGate1 = new NotGate(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
 
   p.setup = () => {
@@ -19,25 +20,26 @@ export const NotGateSketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("notGateDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked = false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    lever1.Update(60,200,isMousePressed);
+    lever1.Update(60,200,isMouseClicked);
     notGate1.Update(175,250,lever1);
     bulb1.Update(400,185,notGate1);
 

@@ -26,23 +26,17 @@ export default class Clock {
             this.outputValue = 1 - this.outputValue;
             this.lastSavedTime = Date.now ();
         }
-        
+
+        let inputColor = this.p.color(255, 0, 0);
+        let outputColor = this.p.color(255, 0, 0);
         this.inputX = input.outputX;
         this.inputY = input.outputY;
-        if(input.outputValue == 1){
+        if(input.outputValue == 0){
             this.outputValue = 0;
-        }
-
-        let inputColor = this.p.color(50,50,100);
-        let outputColor = this.p.color(255, 0, 0);
-
-        if (this.outputValue === 1) {
-            outputColor = this.p.color(255, 0, 0);
-            inputColor = this.p.color(0,0,0);
-        } else {
             outputColor = this.p.color(0, 0, 0);
-            inputColor = this.p.color(255,0,0);
+            inputColor = this.p.color(0, 0, 0);
         }
+        if(this.outputValue == 0){outputColor = this.p.color(0, 0, 0);}
 
         // wire to terminal
         this.p.stroke(inputColor);

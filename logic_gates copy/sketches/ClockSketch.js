@@ -18,7 +18,6 @@ export const ClockSketch = (p) => {
     canvas.parent("clockDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
     p.frameRate(30);
-    UpdateLogic();
   }
 
   p.draw = () => {

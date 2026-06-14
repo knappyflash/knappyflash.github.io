@@ -13,6 +13,7 @@ export const RsNorLatchSketch = (p) => {
   let bulb2 = new Bulb(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
   p.setup = () => {
     const parent = document.getElementById("rsNorLatchDiv");
@@ -21,31 +22,29 @@ export const RsNorLatchSketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("rsNorLatchDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked = false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    button1.Update(30,115,isMousePressed);
-    button2.Update(30,245,isMousePressed);
+    button1.Update(30,115,isMouseClicked);
+    button2.Update(30,245,isMouseClicked);
     
-    norGate2.Update(200,200,norGate1,button2);
-    norGate1.Update(200,100,button1,norGate2);
     norGate2.Update(200,200,norGate1,button2);
     norGate1.Update(200,100,button1,norGate2);
     

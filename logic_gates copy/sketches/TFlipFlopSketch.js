@@ -17,6 +17,7 @@ export const TFlipFlopSketch = (p) => {
   let bulb2 = new Bulb(p);
 
   let isMousePressed = false;
+  let isMouseClicked = false;
 
   p.setup = () => {
     const parent = document.getElementById("tFlipFlopDiv");
@@ -25,27 +26,27 @@ export const TFlipFlopSketch = (p) => {
     let canvas = p.createCanvas(w-20, h-20);
     canvas.parent("tFlipFlopDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    UpdateLogicGates();
-    UpdateLogicGates();
+    p.frameRate(30);
   }
 
   p.draw = () => {
+    UpdateLogic();
+    isMouseClicked = false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
-    UpdateLogicGates();
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
     isMousePressed = false;
-    UpdateLogicGates();
   }
 
-  function UpdateLogicGates(){
+  function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    button1.Update(150,160,isMousePressed);
+    button1.Update(150,160,isMouseClicked);
 
     let norX = 250;
     let andX = 250;
@@ -54,9 +55,6 @@ export const TFlipFlopSketch = (p) => {
     norGate2.Update(norX,150,norGate1,andGate2);
     andGate1.Update(andX,5,button1,norGate1);
     andGate2.Update(andX,225,norGate2,button1);
-    norGate2.Update(norX,150,norGate1,andGate2);
-    norGate1.Update(norX,80,andGate1,norGate2);
-    norGate2.Update(norX,150,norGate1,andGate2);
 
     bulb1.Update(450,75,norGate1);
     bulb2.Update(450,145,norGate2);
