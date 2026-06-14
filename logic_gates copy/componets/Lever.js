@@ -45,4 +45,13 @@ export default class Lever {
         this.p.strokeWeight(3);
         this.p.line(this.x-5,this.y+18,this.outputX,this.outputY);
     }
+
+    p.mousePressed = () => {
+
+        isMousePressed = true;
+    }
+
+    p.mouseReleased = () => {
+        isMousePressed = false;
+    }
 }

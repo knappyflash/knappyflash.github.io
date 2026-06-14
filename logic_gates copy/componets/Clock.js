@@ -65,8 +65,8 @@ export default class Clock {
     }
 
     GetElapsedTime(){
-        let elapsedTime = (Date.now() - this.lastSavedTime);
-        return elapsedTime;
-    }
+            let elapsedTime = (Date.now() - this.lastSavedTime);
+            return elapsedTime;
+        }
 
 }

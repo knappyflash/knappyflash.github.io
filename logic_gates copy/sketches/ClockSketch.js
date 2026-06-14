@@ -6,6 +6,7 @@ export const ClockSketch = (p) => {
   
   let bg = [150, 150, 200, 255];
   let isMousePressed = false;
+  let isMouseClicked = false;
   let bulb = new Bulb(p);
   let clock = new Clock(p);
   let lever = new Lever(p);
@@ -22,10 +23,12 @@ export const ClockSketch = (p) => {
 
   p.draw = () => {
     UpdateLogic();
+    isMouseClicked =false;
   }
 
   p.mousePressed = () => {
     isMousePressed = true;
+    isMouseClicked = true;
   }
 
   p.mouseReleased = () => {
@@ -36,7 +39,7 @@ export const ClockSketch = (p) => {
   function UpdateLogic(){
       p.background(bg[0], bg[1], bg[2], bg[3]);
       
-      lever.Update(60,170,isMousePressed);
+      lever.Update(60,170,isMouseClicked);
       clock.Update(200,190,lever,500);
       bulb.Update(400,155,clock);
 
