@@ -1,6 +1,6 @@
-import Bulb from "../Componets/Bulb.js";
-import Button from "../Componets/Button.js";
-import NorGate from "../Componets/NorGate.js";
+import Bulb from "../componets/Bulb.js";
+import Button from "../componets/Button.js";
+import NorGate from "../componets/NorGate.js";
 
 export const RsNorLatchSketch = (p) => {
   let bg = [150, 150, 200, 255];

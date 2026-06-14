@@ -1,6 +1,6 @@
-import Bulb from "../Componets/Bulb.js";
-import Clock from "../Componets/Clock.js";
-import Lever from "../Componets/Lever.js";
+import Bulb from "../componets/Bulb.js";
+import Clock from "../componets/Clock.js";
+import Lever from "../componets/Lever.js";
 
 export const ClockSketch = (p) => {
   

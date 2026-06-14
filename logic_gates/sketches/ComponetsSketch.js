@@ -1,12 +1,12 @@
-import Bulb from "../Componets/Bulb.js";
-import Lever from "../Componets/Lever.js";
-import NotGate from "../Componets/NotGate.js";
-import AndGate  from "../Componets/AndGate.js";
-import OrGate from "../Componets/OrGate.js";
-import XOrGate from "../Componets/XOrGate.js";
-import NandGate from "../Componets/NandGate.js";
-import NorGate from "../Componets/NorGate.js";
-import XNorGate from "../Componets/XNorGate.js";
+import Bulb from "../componets/Bulb.js";
+import Lever from "../componets/Lever.js";
+import NotGate from "../componets/NotGate.js";
+import AndGate  from "../componets/AndGate.js";
+import OrGate from "../componets/OrGate.js";
+import XOrGate from "../componets/XOrGate.js";
+import NandGate from "../componets/NandGate.js";
+import NorGate from "../componets/NorGate.js";
+import XNorGate from "../componets/XNorGate.js";
 
 export const ComponetsSketch = (p) => {
   let bg = [150, 150, 200, 255];

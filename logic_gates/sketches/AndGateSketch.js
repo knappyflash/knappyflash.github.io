@@ -1,7 +1,7 @@
-import Bulb from "../Componets/Bulb.js";
-import Lever from "../Componets/Lever.js";
-import AndGate from "../Componets/AndGate.js";
-import NandGate from "../Componets/NandGate.js";
+import Bulb from "../componets/Bulb.js";
+import Lever from "../componets/Lever.js";
+import AndGate from "../componets/AndGate.js";
+import NandGate from "../componets/NandGate.js";
 
 export const AndGateSketch = (p) => {
   let bg = [150, 150, 200, 255];

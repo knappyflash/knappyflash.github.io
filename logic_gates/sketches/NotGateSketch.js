@@ -1,6 +1,6 @@
-import Bulb from "../Componets/Bulb.js";
-import Lever from "../Componets/Lever.js";
-import NotGate from "../Componets/NotGate.js";
+import Bulb from "../componets/Bulb.js";
+import Lever from "../componets/Lever.js";
+import NotGate from "../componets/NotGate.js";
 
 export const NotGateSketch = (p) => {
   let bg = [150, 150, 200, 255];

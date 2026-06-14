@@ -1,8 +1,8 @@
-import Bulb from "../Componets/Bulb.js";
-import Button from "../Componets/Button.js";
-import NorGate from "../Componets/NorGate.js";
-import AndGate from "../Componets/AndGate.js";
-import NotGate from "../Componets/NotGate.js";
+import Bulb from "../componets/Bulb.js";
+import Button from "../componets/Button.js";
+import NorGate from "../componets/NorGate.js";
+import AndGate from "../componets/AndGate.js";
+import NotGate from "../componets/NotGate.js";
 
 export const TFlipFlopSketch = (p) => {
   
