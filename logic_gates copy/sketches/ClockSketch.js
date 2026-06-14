@@ -1,5 +1,6 @@
 import Bulb from "../Componets/Bulb.js";
 import Clock from "../Componets/Clock.js";
+import Lever from "../Componets/Lever.js";
 
 export const ClockSketch = (p) => {
   
@@ -7,6 +8,7 @@ export const ClockSketch = (p) => {
   let isMousePressed = false;
   let bulb = new Bulb(p);
   let clock = new Clock(p);
+  let lever = new Lever(p);
   p.setup = () => {
     const parent = document.getElementById("clockDiv");
     const w = parent.clientWidth;
@@ -14,7 +16,7 @@ export const ClockSketch = (p) => {
     const canvas = p.createCanvas(w-20, h-20);
     canvas.parent("clockDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
-    p.frameRate(1);
+    p.frameRate(30);
     UpdateLogic();
   }
 
@@ -33,8 +35,10 @@ export const ClockSketch = (p) => {
   
   function UpdateLogic(){
       p.background(bg[0], bg[1], bg[2], bg[3]);
-      clock.Update(100,190,0);
-      bulb.Update(250,125,clock);
+      
+      lever.Update(60,170,isMousePressed);
+      clock.Update(200,190,lever,500);
+      bulb.Update(400,155,clock);
 
       p.fill(255, 255, 255);
       p.strokeWeight(3);
