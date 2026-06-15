@@ -62,7 +62,7 @@ export const MonostableSketch = (p) => {
 
       notGate1.Update(150,185,lever);
       norGate1.Update(330,110,notGate3,notGate1);
-      notGate3.Update(250,150,notGate1);
+      notGate3.Update(250,155,notGate1);
       // notGate2.Update(170,150,lever);
 
       bulb.Update(450,102,norGate1);
