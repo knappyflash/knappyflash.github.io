@@ -22,24 +22,15 @@ export default class Button {
 
         if (this.isMousePressed){
             if ((this.p.mouseX > this.x) && (this.p.mouseX < this.x+40) && (this.p.mouseY > this.y-20) && (this.p.mouseY < this.y)){
-                if(this.outputValue == 1){
-                    this.outputValue = 0;
-                }else{
-                    this.outputValue = 1;
-                }
+                this.ButtonDown();
+                return
             }
-        }else{
-            this.outputValue = 0;
         }
-
-        if(this.outputValue == 0){
-            this.ButtonUp();
-        }else{
-            this.ButtonDown();
-        }
+        this.ButtonUp();
     }
 
     ButtonDown(){
+        this.outputValue = 1;
         this.p.stroke(0, 0, 0);
         this.p.fill(255,255,255)
         this.p.quad(this.x, this.y, this.x+40, this.y, this.x+35, this.y-10, this.x+5, this.y-10);
@@ -48,6 +39,7 @@ export default class Button {
     }
 
     ButtonUp(){
+        this.outputValue = 0;
         this.p.stroke(0, 0, 0);
         this.p.fill(255,255,255)
         this.p.quad(this.x, this.y, this.x+40, this.y, this.x+35, this.y-10, this.x+5, this.y-10);

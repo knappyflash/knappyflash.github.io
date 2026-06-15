@@ -50,7 +50,7 @@ export const DFlipFlopSketch = (p) => {
 
     
     lever1.Update(30,250,isMouseClicked);
-    button1.Update(50,280,isMouseClicked);
+    button1.Update(50,280,isMousePressed);
 
     notGate1.Update(30,145,lever1)
     

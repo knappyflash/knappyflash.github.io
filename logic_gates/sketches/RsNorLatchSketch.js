@@ -42,8 +42,8 @@ export const RsNorLatchSketch = (p) => {
   function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    button1.Update(30,115,isMouseClicked);
-    button2.Update(30,245,isMouseClicked);
+    button1.Update(30,115,isMousePressed);
+    button2.Update(30,245,isMousePressed);
     
     norGate2.Update(200,200,norGate1,button2);
     norGate1.Update(200,100,button1,norGate2);
