@@ -58,12 +58,12 @@ export const MonostableSketch = (p) => {
   function UpdateLogic(){
       p.background(bg[0], bg[1], bg[2], bg[3]);
       
-      lever.Update(120,150,isMouseClicked);
+      lever.Update(100,135,isMouseClicked);
 
-      notGate1.Update(250,200,lever);
+      notGate1.Update(150,185,lever);
       norGate1.Update(330,110,notGate3,notGate1);
-      notGate3.Update(250,150,notGate2);
-      notGate2.Update(170,150,lever);
+      notGate3.Update(250,150,notGate1);
+      // notGate2.Update(170,150,lever);
 
       bulb.Update(450,102,norGate1);
 
