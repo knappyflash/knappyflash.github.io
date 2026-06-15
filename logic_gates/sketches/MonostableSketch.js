@@ -1,11 +1,7 @@
 import Bulb from "../componets/Bulb.js";
-// import Clock from "../componets/Clock.js";
 import NotGate from "../componets/NotGate.js";
 import Lever from "../componets/Lever.js";
 import NorGate from "../componets/NorGate.js";
-import OrGate from "../componets/OrGate.js";
-import NandGate from "../componets/NandGate.js";
-import AndGate from "../componets/AndGate.js";
 
 export const MonostableSketch = (p) => {
   
@@ -15,20 +11,8 @@ export const MonostableSketch = (p) => {
   let bulb = new Bulb(p);
   let notGate1 = new NotGate(p);
   let notGate2 = new NotGate(p);
-  let notGate3 = new NotGate(p);
-  let notGate4 = new NotGate(p);
-  let notGate5 = new NotGate(p);
-
   let norGate1 = new NorGate(p);
-  let orGate1 = new OrGate(p);
-
-  // let clock = new Clock(p);
   let lever = new Lever(p);
-
-  let nandGate1 = new NandGate(p);
-  let nandGate2 = new NandGate(p);
-
-  let andGate1 = new AndGate(p);
 
   p.setup = () => {
     const parent = document.getElementById("monostableSketchDiv");
@@ -61,9 +45,8 @@ export const MonostableSketch = (p) => {
       lever.Update(100,135,isMouseClicked);
 
       notGate1.Update(150,185,lever);
-      norGate1.Update(330,110,notGate3,notGate1);
-      notGate3.Update(250,155,notGate1);
-      // notGate2.Update(170,150,lever);
+      norGate1.Update(330,110,notGate2,notGate1);
+      notGate2.Update(250,155,notGate1);
 
       bulb.Update(450,102,norGate1);
 
