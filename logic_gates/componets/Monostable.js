@@ -9,10 +9,12 @@ export default class Monostable {
         this.outputValue = 0;
         this.outputX = 0;
         this.outputY = 0;
-        this.lastSavedTime = Date.now ();
+        this.iterationCounter = 0;
+        this.inputColor = this.p.color(0, 0, 0);
+        this.outputColor = this.p.color(0, 0, 0)
     }
 
-    Update(x, y, input = null, ms){
+    Update(x, y, input = null){
         this.x = x;
         this.y = y;
 
@@ -22,24 +24,25 @@ export default class Monostable {
         this.outputX = this.x+75;
         this.outputY = this.y;
 
-        if(this.GetElapsedTime() > ms){
-            this.outputValue = 1 - this.outputValue;
-            this.lastSavedTime = Date.now ();
-        }
-
-        let inputColor = this.p.color(255, 0, 0);
-        let outputColor = this.p.color(255, 0, 0);
         this.inputX = input.outputX;
         this.inputY = input.outputY;
-        if(input.outputValue == 0){
-            this.outputValue = 0;
-            outputColor = this.p.color(0, 0, 0);
-            inputColor = this.p.color(0, 0, 0);
+        this.outputValue = 0;
+
+        if(input.outputValue == 1){
+            this.inputColor = this.p.color(255, 0, 0);
+            this.outputColor = this.p.color(0, 0, 0)
+            if(this.iterationCounter < 1){
+                this.outputValue = 1;
+                this.outputColor = this.p.color(255, 0, 0)
+                this.iterationCounter ++;
+            }
+        }else{
+            this.inputColor = this.p.color(0, 0, 0);
+            this.iterationCounter = 0;
         }
-        if(this.outputValue == 0){outputColor = this.p.color(0, 0, 0);}
 
         // wire to terminal
-        this.p.stroke(inputColor);
+        this.p.stroke(this.inputColor);
         this.p.strokeWeight(3);
         this.p.line(this.inputX, this.inputY, this.x-25, this.y);
         this.p.line(this.x, this.y, this.x-25, this.y);
@@ -57,14 +60,9 @@ export default class Monostable {
 
         // output wire
         this.p.strokeWeight(3);
-        this.p.fill(outputColor);
-        this.p.stroke(outputColor);
+        this.p.fill(this.outputColor);
+        this.p.stroke(this.outputColor);
         this.p.line(this.x+55, this.y, this.x+75, this.y);
     }
-
-    GetElapsedTime(){
-            let elapsedTime = (Date.now() - this.lastSavedTime);
-            return elapsedTime;
-        }
 
 }
