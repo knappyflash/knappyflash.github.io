@@ -1,58 +1,78 @@
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+  border: 2px solid #E0943B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #E0943B, #8a4f12);
+  border-radius: 4px;
+  border: 2px solid #000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ffd27a, #E0943B);
+}
+
+/* ===== Body ===== */
 body {
   background-color: black;
   color: white;
   font-family: Verdana;
   margin: 0;
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
+/* ===== Page (FIXED ✅) ===== */
 .page {
-  height: calc(100vh - 10px); /* 5px top + 5px bottom */
+  min-height: 100vh;
   margin-top: 10px;
-  margin-left: 0px;
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
-  position: relative;
 
   background-image: 
     url("/images/mc_grass.png"),
-    url("/images/mc_dirt.png"); 
-  background-repeat: 
-    repeat-x,
-    repeat;
-  background-size: 
-    50px 50px,
-    50px 50px;
-  background-position: 
-    top left,
-    top left;
+    url("/images/mc_dirt.png");
+  background-repeat: repeat-x, repeat;
+  background-size: 50px 50px, 50px 50px;
+  background-position: top left, top left;
+
+  padding-bottom: 40px;
 }
 
+/* ===== MIDI App Container ===== */
 #midiPlayApp {
-  margin-top: 40px;
-  margin: 40px auto 0 auto;
+  margin: 40px auto;
   padding: 15px;
+
   width: 500px;
   height: 400px;
+
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  border: 1px solid #E0943B;
+
+  border: 2px solid #E0943B;
   background-color: #505090;
 }
 
+/* ===== Track List (scrollable area ✅) ===== */
 #trackList {
   margin-top: 5px;
-  flex: 1;  
+  flex: 1;
+
   overflow-y: auto;
-  overflow-x: auto;
-  border: 1px solid #E0943B;;
+  overflow-x: hidden;
+
+  border: 1px solid #E0943B;
 }
 
-
+/* ===== File name display ===== */
 #fileNameDisplay { 
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
@@ -60,11 +80,13 @@ body {
   border: 1px solid #E0943B;
 }
 
+/* ===== Player ===== */
 #midiPlayer {
   width: 100%;
 }
 
-li{
+/* ===== List styling ===== */
+li {
   white-space: nowrap;
   padding: 3px;
 }
@@ -75,39 +97,56 @@ li{
   font-size: 10px;
 }
 
-#previousButton { 
+/* ===== Button rows ===== */
+#prevNextDiv,
+#autoRandomDiv {
+  display: flex;
+  gap: 5px;
   margin-top: 5px;
-  float: left;
-  width: 49%;
-  cursor: pointer; 
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
 }
 
-#nextButton { 
-  margin-top: 5px;
-  float: right;
-  width: 49%;
-  cursor: pointer; 
+/* ===== Buttons ===== */
+#prevNextDiv button,
+#autoRandomDiv button {
+  width: 50%;
+
+  cursor: pointer;
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
+
+  padding: 6px 0;
+
+  background: linear-gradient(to bottom, #2a2a2a, #000);
+  color: #fff;
+
+  border: 2px solid #E0943B;
+  border-radius: 4px;
+
+  /* retro raised effect */
+  box-shadow:
+    2px 2px 0px #8a4f12,
+    -1px -1px 0px #ffd27a;
+
+  transition: all 0.15s ease;
 }
 
-#autoPlayButton {
-  margin-top: 5px;
-  float: left; 
-  width: 49%;
-  cursor: pointer; 
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+/* Hover */
+#prevNextDiv button:hover,
+#autoRandomDiv button:hover {
+  transform: translateY(-2px) scale(1.05);
+
+  box-shadow:
+    3px 3px 0px #8a4f12,
+    -1px -1px 0px #ffd27a,
+    0 0 8px #E0943B;
 }
 
-#randomizeButton { 
-  margin-top: 5px;
-  float: right;
-  width: 49%;
-  cursor: pointer; 
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-}
+/* Click */
+#prevNextDiv button:active,
+#autoRandomDiv button:active {
+  transform: translateY(2px);
 
+  box-shadow:
+    1px 1px 0px #8a4f12 inset,
+    -1px -1px 0px #ffd27a inset;
+}

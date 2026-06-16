@@ -1,3 +1,26 @@
+/* Entire scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: #111;
+  border: 2px solid #E0943B;
+}
+
+/* Thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #E0943B, #8a4f12);
+  border-radius: 4px;
+  border: 2px solid #000;
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ffd27a, #E0943B);
+}
+
 body {
   background-color: black;
   color: white;
@@ -8,24 +31,18 @@ body {
 }
 
 .page {
-  height: calc(100vh - 10px); /* 5px top + 5px bottom */
+  min-height: 100vh;
   margin-top: 10px;
-  margin-left: 0px;
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
-  position: relative;
 
   background-image: 
-    url("/images/mc_grass.png"),   /* top layer */
-    url("/images/mc_dirt.png");    /* bottom layer */
-  background-repeat: 
-    repeat-x,  /* grass only repeats horizontally */
-    repeat;    /* dirt tiles everywhere */
-  background-size: 
-    50px 50px, /* grass size */
-    50px 50px; /* dirt size */
-  background-position: 
-    top left,  /* grass at the top */
-    top left;  /* dirt starts same position */
+    url("/images/mc_grass.png"),
+    url("/images/mc_dirt.png");
+  background-repeat: repeat-x, repeat;
+  background-size: 50px 50px, 50px 50px;
+  background-position: top left, top left;
+
+  padding-bottom: 40px; /* optional: prevents content from touching bottom */
 }

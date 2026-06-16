@@ -2,6 +2,11 @@ const pageTitle = "Cats";
 window.addEventListener("load", function () {
     console.log(pageTitle + " Page is loaded");
     changeTitle();
+    var msnry = new Masonry(".gallery", {
+      itemSelector: ".grid-item",
+      columnWidth: 400,
+      gutter: 10
+    });
 });
 function changeTitle() {
   const headerFrame = parent.frames["header"];
@@ -12,7 +17,12 @@ function changeTitle() {
 const gallery = document.querySelector(".gallery");
 
 for (let i = 1; i <= 99; i++) {
+  let item = document.createElement("div");
+  item.classList.add("grid-item");
+
   let img = document.createElement("img");
   img.src = `/images/cats/cat${i}.png`;
-  gallery.appendChild(img);
+
+  item.appendChild(img);
+  gallery.appendChild(item);
 }

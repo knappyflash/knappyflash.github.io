@@ -12,7 +12,20 @@ function changeTitle() {
 const gallery = document.querySelector(".gallery");
 
 for (let i = 1; i <= 22; i++) {
+  let item = document.createElement("div");
+  item.classList.add("grid-item");
+
   let img = document.createElement("img");
   img.src = `/images/us/us${i}.png`;
-  gallery.appendChild(img);
+
+  item.appendChild(img);
+  gallery.appendChild(item);
 }
+
+window.addEventListener("load", function () {
+  var msnry = new Masonry(".gallery", {
+    itemSelector: ".grid-item",
+    columnWidth: 400,
+    gutter: 10
+  });
+});

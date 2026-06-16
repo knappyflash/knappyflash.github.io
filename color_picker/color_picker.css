@@ -1,75 +1,82 @@
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+  border: 2px solid #E0943B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #E0943B, #8a4f12);
+  border: 2px solid #000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ffd27a, #E0943B);
+}
+
+/* ===== Body ===== */
 body {
   background-color: black;
   color: white;
   font-family: Verdana;
   margin: 0;
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
+/* ===== Page ===== */
 .page {
-  height: calc(100vh - 10px);
+  min-height: 100vh; 
   margin-top: 10px;
-  margin-left: 0px;
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
-  position: relative;
 
   background-image: 
     url("/images/mc_grass.png"), 
-    url("/images/mc_dirt.png");   
-  background-repeat: 
-    repeat-x,  
-    repeat;  
-  background-size: 
-    50px 50px,
-    50px 50px; 
-  background-position: 
-    top left, 
-    top left; 
+    url("/images/mc_dirt.png");
+  background-repeat: repeat-x, repeat;
+  background-size: 50px 50px, 50px 50px;
+  background-position: top left, top left;
+
+  padding-bottom: 50px; 
 }
 
+/* ===== Color Picker Container ===== */
 #colorPickerDiv {
-  position: absolute;
-  top: 70px;
-  left: 50%; 
-  transform: translateX(-50%);
-  margin-top: 30px;
-  display: block;
+  position: relative; 
+  width: fit-content;
+
+  margin: 100px auto; 
 }
 
-
-#hsv {
-  top: -85px;
+/* ===== Labels / Inputs ===== */
+#hsv,
+#rgb,
+#hex_1 {
+  position: absolute;
   left: 0;
-  margin-top: 10px;
-  position: absolute; 
-  display: block;
   background-color: black;
   color: white;
+}
+
+/* Vertical spacing positioning */
+#hsv {
+  top: -85px;
 }
 
 #rgb {
   top: -60px;
-  left: 0px;
-  margin-top: 10px;
-  position: absolute; 
-  display: block;
-  background-color: black;
-  color: white;
 }
 
 #hex_1 {
   top: -35px;
-  left: 0%;
-  margin-top: 10px;
-  position: absolute; 
-  display: block;
-  background-color: black;
-  color: white;
 }
 
+/* ===== Input Sizes ===== */
 #hex input {
   width: 60px;
 }
@@ -78,4 +85,3 @@ body {
 #rgb input {
   width: 50px;
 }
-
