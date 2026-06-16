@@ -68,10 +68,11 @@ export const DecimalToBinarySketch = (p) => {
     button7.Update(380,200,isMousePressed);
     button8.Update(440,200,isMousePressed);
 
-      inputButton1 = null;
-      inputButton2 = null;
-      inputButton3 = null;
-      inputButton4 = null;
+    inputButton1 = null;
+    inputButton2 = null;
+    inputButton3 = null;
+    inputButton4 = null;
+    
     if(button1.outputValue == 1){
       inputButton1 = button1;
     }else if(button2.outputValue == 1){
