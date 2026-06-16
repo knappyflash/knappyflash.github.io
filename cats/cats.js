@@ -16,17 +16,13 @@ function changeTitle() {
 
 const gallery = document.querySelector(".gallery");
 
-let item;
-let img;
 for (let i = 1; i <= 99; i++) {
-  item = document.createElement("div");
+  let item = document.createElement("div");
   item.classList.add("grid-item");
-  img = document.createElement("img");
-  img.src = `/images/cats/cat${i}.png`;
-  AppendImgItem(img);
-}
 
-async function AppendImgItem(img){
+  let img = document.createElement("img");
+  img.src = `/images/cats/cat${i}.png`;
+
   item.appendChild(img);
-  await gallery.appendChild(item);
+  gallery.appendChild(item);
 }
