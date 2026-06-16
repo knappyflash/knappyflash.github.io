@@ -10,7 +10,8 @@ import { MonostableSketch } from "./sketches/MonostableSketch.js";
 import { TFlipFlopSketch } from "./sketches/TFlipFlopSketch.js";
 import { DFlipFlopSketch } from "./sketches/DFlipFlopSketch.js";
 import { ClockSketch } from "./sketches/ClockSketch.js";
-import { BinaryCounter } from "./sketches/BinaryCounterSketch.js";
+import { BinaryCounterSketch } from "./sketches/BinaryCounterSketch.js";
+import { BinaryAdderSketch } from "./sketches/BinaryAdderSketch.js";
 
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
@@ -34,4 +35,5 @@ new p5(MonostableSketch);
 new p5(TFlipFlopSketch);
 new p5(DFlipFlopSketch);
 new p5(ClockSketch);
-new p5(BinaryCounter);
+new p5(BinaryCounterSketch);
+new p5(BinaryAdderSketch);

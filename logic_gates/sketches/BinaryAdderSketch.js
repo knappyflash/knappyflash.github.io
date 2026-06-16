@@ -1,32 +1,37 @@
 import Bulb from "../componets/Bulb.js";
 import Lever from "../componets/Lever.js";
-import Button from "../componets/Button.js";
 import NorGate from "../componets/NorGate.js";
+import OrGate from "../componets/OrGate.js";
 import AndGate from "../componets/AndGate.js";
-import NotGate from "../componets/NotGate.js";
+import XOrGate from "../componets/XOrGate.js";
 
-export const DFlipFlopSketch = (p) => {
+export const BinaryAdderSketch = (p) => {
   let bg = [150, 150, 200, 255];
 
-  let button1 = new Button(p);
   let lever1 = new Lever(p);
-  let norGate1 = new NorGate(p);
-  let norGate2 = new NorGate(p);
+  let lever2 = new Lever(p);
+  let lever3 = new Lever(p);
+
   let bulb1 = new Bulb(p);
   let bulb2 = new Bulb(p);
+
+  let xOrGate1 = new XOrGate(p);
+  let xOrGate2 = new XOrGate(p);
+
   let andGate1 = new AndGate(p);
   let andGate2 = new AndGate(p);
-  let notGate1 = new NotGate(p);
+
+  let orGate1 = new OrGate(p);
 
   let isMousePressed = false;
   let isMouseClicked = false;
 
   p.setup = () => {
-    const parent = document.getElementById("dFlipFLopSketchDiv");
+    const parent = document.getElementById("binaryAdderDiv");
     let w = parent.clientWidth;
     let h = parent.clientHeight;
     let canvas = p.createCanvas(w-20, h-20);
-    canvas.parent("dFlipFLopSketchDiv");
+    canvas.parent("binaryAdderDiv");
     p.background(bg[0], bg[1], bg[2], bg[3]);
     p.frameRate(30);
   }
@@ -49,24 +54,25 @@ export const DFlipFlopSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
     
-    lever1.Update(30,250,isMouseClicked);
-    button1.Update(50,280,isMousePressed);
+    lever1.Update(30,95,isMouseClicked);
+    lever2.Update(30,125,isMouseClicked);
+    lever3.Update(30,200,isMouseClicked);
 
-    notGate1.Update(30,145,lever1)
+    xOrGate1.Update(90,100,lever1,lever2);
+    andGate1.Update(90,200,lever1,lever2);
     
-    andGate1.Update(100,100,notGate1,button1);
-    andGate2.Update(100,200,lever1,button1);
+    xOrGate2.Update(200,100,xOrGate1,lever3);
+    andGate2.Update(200,200,xOrGate1,lever3);
     
-    norGate2.Update(200,200,norGate1,andGate2);
-    norGate1.Update(200,100,andGate1,norGate2);
+    orGate1.Update(318,200,andGate2,andGate1);
     
-    bulb1.Update(450,90,norGate1);
-    bulb2.Update(450,190,norGate2);
+    bulb1.Update(450,90,xOrGate2);
+    bulb2.Update(450,192,orGate1);
 
     p.fill(255, 255, 255);
     p.strokeWeight(3);
     p.stroke(0, 0, 0);
     p.textSize(50);
-    p.text('D Flip Flop', 110, 50);
+    p.text('Full Adder', 110, 50);
   }
 }

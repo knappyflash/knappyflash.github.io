@@ -4,7 +4,7 @@ import TFlipFlop from "../componets/TFlipFlop.js";
 import NotGate from "../componets/NotGate.js";
 import Clock from "../componets/Clock.js";
 
-export const BinaryCounter = (p) => {
+export const BinaryCounterSketch = (p) => {
   
   let bg = [150, 150, 200, 255];
   let bulb1 = new Bulb(p);
