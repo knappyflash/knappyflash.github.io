@@ -12,6 +12,7 @@ import { DFlipFlopSketch } from "./sketches/DFlipFlopSketch.js";
 import { ClockSketch } from "./sketches/ClockSketch.js";
 import { BinaryCounterSketch } from "./sketches/BinaryCounterSketch.js";
 import { BinaryAdderSketch } from "./sketches/BinaryAdderSketch.js";
+import { DecimalToBinarySketch } from "./sketches/DecimalToBinarySketch.js";
 
 const pageTitle = "Logic Gates";
 window.addEventListener("load", function () {
@@ -37,3 +38,4 @@ new p5(DFlipFlopSketch);
 new p5(ClockSketch);
 new p5(BinaryCounterSketch);
 new p5(BinaryAdderSketch);
+new p5(DecimalToBinarySketch);
