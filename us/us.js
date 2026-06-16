@@ -1,7 +1,12 @@
 const pageTitle = "US";
 window.addEventListener("load", function () {
-    console.log(pageTitle + " Page is loaded");
-    changeTitle();
+  console.log(pageTitle + " Page is loaded");
+  changeTitle();
+  var msnry = new Masonry(".gallery", {
+    itemSelector: ".grid-item",
+    columnWidth: 400,
+    gutter: 10
+  });
 });
 function changeTitle() {
   const headerFrame = parent.frames["header"];
@@ -21,11 +26,3 @@ for (let i = 1; i <= 22; i++) {
   item.appendChild(img);
   gallery.appendChild(item);
 }
-
-window.addEventListener("load", function () {
-  var msnry = new Masonry(".gallery", {
-    itemSelector: ".grid-item",
-    columnWidth: 400,
-    gutter: 10
-  });
-});
