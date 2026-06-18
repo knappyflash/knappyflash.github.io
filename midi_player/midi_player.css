@@ -30,20 +30,20 @@ body {
 
 /* ===== Page (FIXED ✅) ===== */
 .page {
-  min-height: 100vh;
+  min-height: 98vh;
   margin-top: 10px;
+  margin-left: 0px;
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
 
-  background-image: 
-    url("/images/mc_grass.png"),
-    url("/images/mc_dirt.png");
-  background-repeat: repeat-x, repeat;
-  background-size: 50px 50px, 50px 50px;
-  background-position: top left, top left;
-
-  padding-bottom: 40px;
+.page > * {
+  position: relative;
+  z-index: 2;
 }
 
 /* ===== MIDI App Container ===== */
