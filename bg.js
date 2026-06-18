@@ -52,13 +52,7 @@ function generateBackground() {
     grid[y] = [];
 
     for (let x = 0; x < cols; x++) {
-      if (y === 0) {
-        grid[y][x] = "mc_grass.png";
-      } else if (y < 3) {
-        grid[y][x] = "mc_dirt.png";
-      } else {
-        grid[y][x] = "mc_stone.png";
-      }
+      grid[y][x] = "mc_stone.png";
     }
   }
 
@@ -66,9 +60,9 @@ function generateBackground() {
 
   // hard reset top layers so nothing can ever corrupt them
   for (let x = 0; x < cols; x++) {
-    grid[0][x] = "mc_grass.png";
-    if (rows > 1) grid[1][x] = "mc_dirt.png";
-    if (rows > 2) grid[2][x] = "mc_dirt.png";
+      grid[0][x] = "mc_grass.png";
+      grid[1][x] = "mc_dirt.png";
+      grid[2][x] = "mc_dirt.png";
   }
 
   // render
