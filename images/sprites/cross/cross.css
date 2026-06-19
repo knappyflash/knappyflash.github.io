@@ -1,0 +1,21 @@
+/* GIMP SpriteAtlas plug-in v0.3 by Bas de Reuver 2023 */
+.Frame 4 (100ms) (combine) {
+	background: url('sprites.png') no-repeat -0px -0px;
+	width: 250px;
+	height: 360px;
+}
+.Frame 3 (100ms) (combine) {
+	background: url('sprites.png') no-repeat -250px -0px;
+	width: 250px;
+	height: 360px;
+}
+.Frame 2 (100ms) (combine) {
+	background: url('sprites.png') no-repeat -0px -360px;
+	width: 250px;
+	height: 360px;
+}
+.Background (100ms) {
+	background: url('sprites.png') no-repeat -250px -360px;
+	width: 250px;
+	height: 360px;
+}

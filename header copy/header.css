@@ -1,0 +1,72 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 15px;
+  margin: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.page {
+  height: 100vh;
+  border: 5px solid #E0943B;
+  border-radius: 8px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+
+#kflashLogo {
+  display: inline-block;
+  vertical-align: middle;
+  width: 110px;
+  margin-left: 0px;
+}
+
+#topTitle {
+  position: absolute; 
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 45px;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+}
+
+/* #cross {
+  position: absolute;
+  top: 7px;
+  right: 20px;
+  width: 65px;
+} */
+
+
+#sprite {
+  position: absolute;
+  top: 7px;
+  right: 20px;
+
+  width: 250px;
+  height: 360px;
+
+  background: url('../images/sprites/cross/cross.png') no-repeat;
+
+  transform: scale(0.26);
+  transform-origin: top right;
+
+  animation: play 0.4s steps(4, jump-none) infinite;
+}
+
+
+@keyframes play {
+  0%   { background-position:   0px   0px; }
+  25%  { background-position: -250px   0px; }
+  50%  { background-position:   0px -360px; }
+  75%  { background-position: -250px -360px; }
+  100% { background-position:   0px   0px; }
+}
+
+
