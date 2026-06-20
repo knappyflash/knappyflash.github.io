@@ -52,21 +52,21 @@ export const BinaryToDecimalSketch = (p) => {
   function UpdateLogic(){
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
-    bulb1.Update(100,50,null);
-    bulb2.Update(150,50,null);
-    bulb3.Update(200,50,null);
-    bulb4.Update(250,50,null);
-    bulb5.Update(300,50,null);
-    bulb6.Update(350,50,null);
-    bulb7.Update(400,50,null);
-    bulb8.Update(450,50,null);
+    bulb1.Update(100,50,binaryDecoder1.componentDataArray[0]);
+    bulb2.Update(150,50,binaryDecoder1.componentDataArray[1]);
+    bulb3.Update(200,50,binaryDecoder1.componentDataArray[2]);
+    bulb4.Update(250,50,binaryDecoder1.componentDataArray[3]);
+    bulb5.Update(300,50,binaryDecoder1.componentDataArray[4]);
+    bulb6.Update(350,50,binaryDecoder1.componentDataArray[5]);
+    bulb7.Update(400,50,binaryDecoder1.componentDataArray[6]);
+    bulb8.Update(450,50,binaryDecoder1.componentDataArray[7]);
 
-    lever1.Update(20,100,isMouseClicked);
-    lever2.Update(20,150,isMouseClicked);
-    lever3.Update(20,200,isMouseClicked);
-    lever4.Update(20,250,isMouseClicked);
+    lever1.Update(50,130,isMouseClicked);
+    lever2.Update(50,170,isMouseClicked);
+    lever3.Update(50,210,isMouseClicked);
+    lever4.Update(50,250,isMouseClicked);
 
-    binaryDecoder1.Update(100,150);
+    binaryDecoder1.Update(200,200,lever1,lever2,lever3,lever4);
     
 
     p.fill(255, 255, 255);
@@ -74,5 +74,13 @@ export const BinaryToDecimalSketch = (p) => {
     p.stroke(0, 0, 0);
     p.textSize(20);
     p.text('Binary To Decimal', 10, 20);
+
+    p.text('1       2       3       4       5       6       7       8', 93, 80);
+
+    p.text('8', 10, 150);
+    p.text('4', 10, 190);
+    p.text('2', 10, 230);
+    p.text('1', 10, 270);
+
   }
 }

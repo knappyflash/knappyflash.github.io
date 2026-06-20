@@ -1,15 +1,19 @@
+/* ============================= */
+/* SCROLLBAR */
+/* ============================= */
+
 /* Entire scrollbar */
 ::-webkit-scrollbar {
   width: 14px;
 }
 
-/* Track (background) */
+/* Track background */
 ::-webkit-scrollbar-track {
   background: #111;
   border: 2px solid #E0943B;
 }
 
-/* Thumb (the draggable part) */
+/* Thumb draggable part */
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #E0943B, #8a4f12);
   border-radius: 4px;
@@ -22,6 +26,10 @@
 }
 
 
+/* ============================= */
+/* BODY */
+/* ============================= */
+
 body {
   background-color: black;
   color: white;
@@ -30,26 +38,143 @@ body {
   overflow-x: hidden;
 }
 
+
+/* ============================= */
+/* LEFT MENU FULL UNDERWATER EFFECT */
+/* ============================= */
+
 .menu_items {
+  position: relative;
+  isolation: isolate;
+
   height: calc(100vh - 20px);
   margin-top: 10px;
   margin-left: -8px;
-  border: 5px solid #E0943B; 
+
+  border: 5px solid #E0943B;
   border-radius: 8px;
+
   overflow-y: auto;
   overflow-x: hidden;
+
+  /*
+    Helps keep the scrollbar stable.
+  */
+  contain: paint;
+  scrollbar-gutter: stable;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 25, 70, 0.65),
+      rgba(0, 70, 140, 0.5),
+      rgba(0, 20, 80, 0.75)
+    ),
+    url("/images/bgImg1.gif"),
+    #000;
+
+  box-shadow:
+    inset 0 0 18px rgba(0, 170, 255, 0.35),
+    inset 0 0 35px rgba(0, 60, 160, 0.45),
+    0 0 12px rgba(224, 148, 59, 0.35);
 }
 
+/* Full underwater overlay */
+.menu_items::before {
+  content: "";
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+  z-index: 7;
+
+  opacity: 0.58;
+
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.32) 0 2px, transparent 3px),
+    radial-gradient(circle at 75% 35%, rgba(255,255,255,0.22) 0 2px, transparent 4px),
+    radial-gradient(circle at 40% 70%, rgba(255,255,255,0.18) 0 1px, transparent 3px),
+    radial-gradient(circle at 85% 80%, rgba(255,255,255,0.16) 0 1px, transparent 3px),
+    linear-gradient(
+      to bottom,
+      rgba(80, 220, 255, 0.28),
+      rgba(0, 125, 230, 0.42),
+      rgba(0, 30, 110, 0.68)
+    );
+
+  background-size:
+    65px 65px,
+    90px 90px,
+    55px 55px,
+    75px 75px,
+    100% 100%;
+
+  mix-blend-mode: screen;
+
+  animation: underwaterShimmer 5s linear infinite;
+}
+
+/*
+  No water surface anymore.
+  This removes the old surface line.
+*/
+.menu_items::after {
+  display: none;
+}
+
+
+/* ============================= */
+/* UNDERWATER ANIMATION */
+/* ============================= */
+
+/* Gentle underwater movement, not rising/falling */
+@keyframes underwaterShimmer {
+  0% {
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+  }
+
+  100% {
+    background-position:
+      65px 65px,
+      -90px 90px,
+      55px -55px,
+      -75px -75px,
+      0 0;
+  }
+}
+
+
+/* ============================= */
+/* LINKS CONTAINER */
+/* ============================= */
+
 .links {
+  position: relative;
+  z-index: 20;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 
-  max-width: 125px;
+  width: 100%;
+  box-sizing: border-box;
+
   margin-top: 10px;
-  margin-left: 0px;
+
+  padding: 0 10px;
 }
+
+
+/* ============================= */
+/* INDIVIDUAL LINK IDS */
+/* ============================= */
 
 #homeLink,
 #p5TestLink,
@@ -75,59 +200,137 @@ body {
      1px -1px 0 black,
     -1px  1px 0 black,
      1px  1px 0 black;
-  
+
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
 
   text-decoration: none;
+
   background-image: url("/images/bgImg1.gif");
   background-repeat: repeat;
 }
 
-
-
-
+/* ============================= */
+/* LINK BUTTONS */
+/* ============================= */
 
 .links a {
+  position: relative;
+  z-index: 25;
+
   display: inline-block;
   width: 110px;
   text-align: center;
 
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
-  
+
   padding: 6px 0;
 
-  background: linear-gradient(to bottom, #2a2a2a, #000000);
+  /*
+    Slight transparency makes the buttons look submerged.
+  */
+  background: linear-gradient(
+    to bottom,
+    rgba(42, 42, 42, 0.82),
+    rgba(0, 0, 0, 0.82)
+  );
+
   color: #fff;
 
   border: 2px solid #E0943B;
   border-radius: 4px;
 
-  /* Retro "raised" effect */
   box-shadow:
-    2px 2px 0px #8a4f12,   /* dark shadow */
-    -1px -1px 0px #ffd27a; /* highlight */
+    2px 2px 0px #8a4f12,
+    -1px -1px 0px #ffd27a,
+    0 0 8px rgba(0, 170, 255, 0.45);
 
-  transition: all 0.15s ease;
+  transition:
+    box-shadow 0.15s ease,
+    text-shadow 0.15s ease,
+    filter 0.15s ease;
+
+  animation: buttonFloat 3.6s ease-in-out infinite;
 }
 
+/* Different float timing per button */
+.links a:nth-child(1)  { animation-delay: 0s; }
+.links a:nth-child(2)  { animation-delay: -0.25s; }
+.links a:nth-child(3)  { animation-delay: -0.5s; }
+.links a:nth-child(4)  { animation-delay: -0.75s; }
+.links a:nth-child(5)  { animation-delay: -1s; }
+.links a:nth-child(6)  { animation-delay: -1.25s; }
+.links a:nth-child(7)  { animation-delay: -1.5s; }
+.links a:nth-child(8)  { animation-delay: -1.75s; }
+.links a:nth-child(9)  { animation-delay: -2s; }
+.links a:nth-child(10) { animation-delay: -2.25s; }
+.links a:nth-child(11) { animation-delay: -2.5s; }
+.links a:nth-child(12) { animation-delay: -2.75s; }
+.links a:nth-child(13) { animation-delay: -3s; }
+.links a:nth-child(14) { animation-delay: -3.25s; }
+.links a:nth-child(15) { animation-delay: -3.5s; }
+.links a:nth-child(16) { animation-delay: -3.75s; }
+
+
+/* ============================= */
+/* BUTTON FLOAT ANIMATION */
+/* ============================= */
+
+@keyframes buttonFloat {
+  0% {
+    transform: translateY(0px) rotate(-0.15deg);
+  }
+
+  25% {
+    transform: translateY(-2px) rotate(0.2deg);
+  }
+
+  50% {
+    transform: translateY(0px) rotate(-0.1deg);
+  }
+
+  75% {
+    transform: translateY(2px) rotate(0.15deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(-0.15deg);
+  }
+}
+
+
+/* ============================= */
+/* HOVER */
+/* ============================= */
+
 .links a:hover {
-  transform: translateY(-2px) scale(1.05);
+  animation-play-state: paused;
+
+  transform: translateY(-4px) scale(1.05) rotate(0deg);
 
   box-shadow:
     3px 3px 0px #8a4f12,
     -1px -1px 0px #ffd27a,
-    0 0 10px #E0943B;
+    0 0 10px #E0943B,
+    0 0 18px rgba(0, 170, 255, 0.9);
 
   text-shadow:
     0 0 5px #E0943B,
     0 0 10px #E0943B;
+
+  filter: brightness(1.15);
 }
 
 
+/* ============================= */
+/* ACTIVE / CLICK */
+/* ============================= */
+
 .links a:active {
-  transform: translateY(2px);
+  animation-play-state: paused;
+
+  transform: translateY(2px) scale(0.98);
 
   box-shadow:
     1px 1px 0px #8a4f12 inset,

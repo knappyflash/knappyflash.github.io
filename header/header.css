@@ -1,3 +1,7 @@
+/* ============================= */
+/* BODY */
+/* ============================= */
+
 body {
   background-color: black;
   color: white;
@@ -9,6 +13,9 @@ body {
 }
 
 
+/* ============================= */
+/* PAGE / SKY / HILLS / SUN-MOON */
+/* ============================= */
 
 .page {
   height: 100vh;
@@ -18,16 +25,134 @@ body {
   position: relative;
   overflow: hidden;
 
-  background:
-    radial-gradient(circle at 50% 160%, #3cb043 0 140px, transparent 141px) repeat-x,
-    radial-gradient(circle at 50% 125%, #2e8b3c 0 120px, transparent 125px) repeat-x,
-    linear-gradient(to top, #87ceeb 0%, #5fb3e6 100%);
+  /*
+    JS changes these.
+  */
+  --sceneDarkness: 0;
 
-      background-size: 150px 100%, 120px 100%, 100% 100%;
+  --frontHillColor: #3cb043;
+  --backHillColor: #2e8b3c;
+
+  --sunMoonColor: #ffd84d;
+  --sunMoonGlow1: rgba(255, 216, 77, 0.75);
+  --sunMoonGlow2: rgba(255, 180, 0, 0.35);
+
+  --moonCraterColor: transparent;
+
+  --campfireGlowOpacity: 0;
+
+  background:
+    /*
+      Front hill.
+      Top layer, so sun/moon goes behind it.
+    */
+    radial-gradient(
+      circle at 50% 160%,
+      var(--frontHillColor) 0 140px,
+      transparent 141px
+    ) repeat-x,
+
+    /*
+      Back hill.
+    */
+    radial-gradient(
+      circle at 50% 125%,
+      var(--backHillColor) 0 120px,
+      transparent 125px
+    ) repeat-x,
+
+    /*
+      Moon crater 1.
+      These are transparent during daytime.
+    */
+    radial-gradient(
+      circle at 15.5% 16.5%,
+      var(--moonCraterColor) 0 5px,
+      transparent 6px
+    ),
+
+    /*
+      Moon crater 2.
+    */
+    radial-gradient(
+      circle at 18.5% 20%,
+      var(--moonCraterColor) 0 4px,
+      transparent 5px
+    ),
+
+    /*
+      Moon crater 3.
+    */
+    radial-gradient(
+      circle at 14.5% 21.5%,
+      var(--moonCraterColor) 0 3px,
+      transparent 4px
+    ),
+
+    /*
+      Strong outer glow.
+    */
+    radial-gradient(
+      circle at 17% 18%,
+      var(--sunMoonGlow2) 0 95px,
+      transparent 155px
+    ),
+
+    /*
+      Bright inner glow.
+    */
+    radial-gradient(
+      circle at 17% 18%,
+      var(--sunMoonGlow1) 0 48px,
+      transparent 105px
+    ),
+
+    /*
+      Sun/moon circle.
+    */
+    radial-gradient(
+      circle at 17% 18%,
+      var(--sunMoonColor) 0 34px,
+      transparent 35px
+    ),
+
+    /*
+      Darkness layer for sky only.
+      This is below the sun/moon, so it does not dim the moon.
+    */
+    linear-gradient(
+      rgba(0, 0, 0, var(--sceneDarkness)),
+      rgba(0, 0, 0, var(--sceneDarkness))
+    ),
+
+    /*
+      Sky.
+    */
+    linear-gradient(
+      to top,
+      #87ceeb 0%,
+      #5fb3e6 100%
+    );
+
+  background-size:
+    150px 100%,
+    120px 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+
+  transition: background 2s ease;
 }
 
 
-
+/* ============================= */
+/* TREE */
+/* ============================= */
 
 .tree {
   position: absolute;
@@ -51,7 +176,9 @@ body {
 }
 
 
-
+/* ============================= */
+/* LOGO */
+/* ============================= */
 
 #kflashLogo {
   display: inline-block;
@@ -62,11 +189,17 @@ body {
   z-index: 11;
 }
 
+
+/* ============================= */
+/* TOP TITLE */
+/* ============================= */
+
 #topTitle {
-  position: absolute; 
+  position: absolute;
   top: 0px;
   left: 50%;
   transform: translateX(-50%);
+
   font-family: 'Press Start 2P', monospace;
   font-size: 45px;
   color: white;
@@ -81,6 +214,10 @@ body {
      2px  2px 0 black;
 }
 
+
+/* ============================= */
+/* SPRITE */
+/* ============================= */
 
 #sprite {
   position: absolute;
@@ -101,20 +238,43 @@ body {
 }
 
 
+/* ============================= */
+/* SPRITE ANIMATION */
+/* ============================= */
+
 @keyframes play {
-  0%   { background-position:   0px   0px; }
-  25%  { background-position: -250px   0px; }
-  50%  { background-position:   0px -360px; }
-  75%  { background-position: -250px -360px; }
-  100% { background-position:   0px   0px; }
+  0% {
+    background-position: 0px 0px;
+  }
+
+  25% {
+    background-position: -250px 0px;
+  }
+
+  50% {
+    background-position: 0px -360px;
+  }
+
+  75% {
+    background-position: -250px -360px;
+  }
+
+  100% {
+    background-position: 0px 0px;
+  }
 }
+
+
+/* ============================= */
+/* CAMPFIRE */
+/* ============================= */
 
 #campfire {
   position: absolute;
   top: 60px;
   right: 100px;
 
-  z-index: 0;
+  z-index: 1;
 
   width: 250px;
   height: 360px;
@@ -126,3 +286,52 @@ body {
 }
 
 
+/* ============================= */
+/* CAMPFIRE GLOW */
+/* ============================= */
+
+#campfireGlow {
+  position: absolute;
+
+  top: 68px;
+  right: 58px;
+
+  width: 120px;
+  height: 38px;
+
+  border-radius: 50%;
+
+  z-index: 0;
+  pointer-events: none;
+
+  opacity: var(--campfireGlowOpacity, 0);
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 190, 65, 0.75) 0%,
+      rgba(255, 120, 20, 0.45) 35%,
+      rgba(255, 60, 0, 0.22) 58%,
+      transparent 75%
+    );
+
+  filter: blur(6px);
+
+  transition: opacity 2s ease;
+
+  animation: campfireGlowPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes campfireGlowPulse {
+  0% {
+    transform: scaleX(0.95) scaleY(0.9);
+  }
+
+  50% {
+    transform: scaleX(1.12) scaleY(1.05);
+  }
+
+  100% {
+    transform: scaleX(0.95) scaleY(0.9);
+  }
+}
