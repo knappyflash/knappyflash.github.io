@@ -1,4 +1,3 @@
-
 import {ComponetsSketch} from "./sketches/ComponetsSketch.js";
 import {NotGateSketch} from "./sketches/NotGateSketch.js";
 import {OrGateSketch} from "./sketches/OrGateSketch.js";

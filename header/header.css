@@ -39,7 +39,9 @@ body {
 
   --moonCraterColor: transparent;
 
+  --campFireImage: url('../images/mc_campfire_on.gif');
   --campfireGlowOpacity: 0;
+
 
   background:
     /*
@@ -279,7 +281,7 @@ body {
   width: 250px;
   height: 360px;
 
-  background: url('../images/mc_campfire.gif') no-repeat;
+  background: var(--campFireImage) no-repeat;
 
   transform: scale(0.10);
   transform-origin: top right;

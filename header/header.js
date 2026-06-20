@@ -3,6 +3,8 @@
 /* ============================= */
 
 let resizeTimer;
+const campFireOff = `url("../images/mc_campfire_off.png")`;
+const campFireOn = `url("../images/mc_campfire_on.gif")`;
 
 document.addEventListener("DOMContentLoaded", () => {
   const page = document.querySelector(".page");
@@ -37,6 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
 /* DRAW RANDOM TREES */
 /* ============================= */
 
+function SeededRandom(seed) {
+  let value = seed;
+
+  return function () {
+    value = (value * 9301 + 49297) % 233280;
+    return value / 233280;
+  };
+}
+
 function DrawTrees() {
   const page = document.querySelector(".page");
 
@@ -47,22 +58,56 @@ function DrawTrees() {
   */
   document.querySelectorAll(".tree").forEach(tree => tree.remove());
 
-  const treeCount = 10;
+  /*
+    Tree density.
+    Smaller number = more trees.
+    Bigger number = fewer trees.
+  */
+  const pixelsPerTree = 120;
+
+  /*
+    Keep this many pixels clear on the right side.
+  */
+  const rightSafeZone = 100;
+
+  const treeWidth = 50;
+
+  /*
+    Only draw trees in this available area.
+  */
+  const drawableWidth = page.offsetWidth - rightSafeZone;
+
+  /*
+    Determine count based on drawable width, not full page width.
+  */
+  const minTrees = 3;
+  const maxTrees = 20;
+
+  const treeCount = Math.max(
+    minTrees,
+    Math.min(maxTrees, Math.floor(drawableWidth / pixelsPerTree))
+  );
+
+  /*
+    Same seed = same random-looking layout.
+  */
+  const random = SeededRandom(12345);
+
+  /*
+    Keep the tree itself from entering the right safe zone.
+  */
+  const usableWidth = drawableWidth - treeWidth;
+  const sectionWidth = usableWidth / treeCount;
 
   for (let i = 0; i < treeCount; i++) {
     const tree = document.createElement("div");
     tree.className = "tree";
 
-    /*
-      Keep trees from going too far off the right edge.
-    */
-    const x = Math.random() * (page.offsetWidth - 50);
+    const sectionStart = i * sectionWidth;
 
-    /*
-      Tree vertical position.
-      Increase these numbers if you want trees lower.
-    */
-    const y = 50 + Math.random() * 40;
+    const x = sectionStart + random() * Math.max(0, sectionWidth - treeWidth);
+
+    const y = 50 + random() * 40;
 
     tree.style.left = x + "px";
     tree.style.top = y + "px";
@@ -103,6 +148,7 @@ function updateSceneByTime() {
     0 = invisible
     1 = fully visible
   */
+
   let campfireGlowOpacity = 0;
 
 
@@ -121,6 +167,7 @@ function updateSceneByTime() {
 
     moonCraterColor = "transparent";
 
+    page.style.setProperty("--campFireImage", campFireOff);
     campfireGlowOpacity = 0;
 
   } else if (hour >= 10 && hour < 17) {
@@ -138,6 +185,7 @@ function updateSceneByTime() {
 
     moonCraterColor = "transparent";
 
+    page.style.setProperty("--campFireImage", campFireOff);
     campfireGlowOpacity = 0;
 
   } else if (hour >= 17 && hour < 20) {
@@ -159,6 +207,7 @@ function updateSceneByTime() {
       Soft campfire glow in the evening.
       Change this to 0 if you only want glow at night.
     */
+    page.style.setProperty("--campFireImage", campFireOn);
     campfireGlowOpacity = 0.45;
 
   } else {
@@ -179,6 +228,7 @@ function updateSceneByTime() {
     /*
       Full campfire glow at night.
     */
+    page.style.setProperty("--campFireImage", campFireOn);
     campfireGlowOpacity = 1;
   }
 
@@ -199,4 +249,5 @@ function updateSceneByTime() {
   page.style.setProperty("--moonCraterColor", moonCraterColor);
 
   page.style.setProperty("--campfireGlowOpacity", campfireGlowOpacity);
+  
 }
