@@ -8,20 +8,58 @@ body {
   overflow-x: hidden;
 }
 
+
+
 .page {
   height: 100vh;
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
   position: relative;
+  overflow: hidden; /* ✅ prevents scrollbars */
+
+  background:
+    radial-gradient(circle at 50% 160%, #3cb043 0 140px, transparent 141px) repeat-x,
+    radial-gradient(circle at 50% 125%, #2e8b3c 0 120px, transparent 105px) repeat-x,
+    linear-gradient(to top, #87ceeb 0%, #5fb3e6 100%);
+
+      background-size: 150px 100%, 120px 100%, 100% 100%;
 }
+
+
+
+
+.tree {
+  position: absolute;
+  left: 200px;
+  top: 50px;
+  z-index: 1;
+}
+
+.tree-top {
+  width: 16px;
+  height: 16px;
+  background: green;
+  border-radius: 50%;
+}
+
+.tree-trunk {
+  width: 6px;
+  height: 20px;
+  background: #5b3a1a;
+  margin: 0 auto; /* centers under top */
+}
+
+
 
 
 #kflashLogo {
   display: inline-block;
+  position: relative;
   vertical-align: middle;
   width: 110px;
   margin-left: 0px;
+  z-index: 11;
 }
 
 #topTitle {
@@ -31,17 +69,17 @@ body {
   transform: translateX(-50%);
   font-family: 'Press Start 2P', monospace;
   font-size: 45px;
-  background-color: black;
   color: white;
   text-decoration: none;
-}
 
-/* #cross {
-  position: absolute;
-  top: 7px;
-  right: 20px;
-  width: 65px;
-} */
+  z-index: 10;
+
+  text-shadow:
+    -2px -2px 0 black,
+     2px -2px 0 black,
+    -2px  2px 0 black,
+     2px  2px 0 black;
+}
 
 
 #sprite {
@@ -49,15 +87,17 @@ body {
   top: 7px;
   right: 20px;
 
+  z-index: 10;
+
   width: 250px;
   height: 360px;
 
   background: url('../images/sprites/cross/cross.png') no-repeat;
 
-  transform: scale(0.26);
+  transform: scale(0.25);
   transform-origin: top right;
 
-  animation: play 0.4s steps(4, jump-none) infinite;
+  animation: play 0.5s steps(2, jump-none) infinite;
 }
 
 
