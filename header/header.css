@@ -16,7 +16,7 @@ body {
   border-radius: 8px;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden; /* ✅ prevents scrollbars */
+  overflow: hidden;
 
   background:
     radial-gradient(circle at 50% 160%, #3cb043 0 140px, transparent 141px) repeat-x,
@@ -47,7 +47,7 @@ body {
   width: 6px;
   height: 20px;
   background: #5b3a1a;
-  margin: 0 auto; /* centers under top */
+  margin: 0 auto;
 }
 
 

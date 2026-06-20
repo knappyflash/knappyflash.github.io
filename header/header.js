@@ -9,8 +9,7 @@ observer.observe(document.querySelector(".page"));
 
 function DrawTrees(){
 
-    
-    // ✅ remove old trees
+
     document.querySelectorAll('.tree').forEach(t => t.remove());
 
 
