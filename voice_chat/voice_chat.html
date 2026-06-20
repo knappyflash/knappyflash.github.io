@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voice Chat</title>
+  <link href="voice_chat.css" rel="stylesheet" type="text/css" media="all">
+  <link href="../bg.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+  <div class="container">
+    <h1 class="small">Voice Chat</h1>
+
+    <div class="box">
+      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat demo</div>
+      <div class="status" id="connState">Connection: <strong id="state">idle</strong></div>
+    </div>
+
+    <div class="box">
+      <div><strong>Local SDP</strong></div>
+      <textarea id="localSDP" readonly></textarea>
+      <div class="row">
+        <button id="copyLocal">Copy Local SDP</button>
+        <button id="createOffer">Create Offer</button>
+        <button id="createAnswer" style="display:none">Create Answer</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div><strong>Remote SDP</strong></div>
+      <textarea id="remoteSDP" placeholder="Paste remote SDP here"></textarea>
+      <div class="row">
+        <button id="setRemote">Set Remote</button>
+        <button id="pasteRemote">Paste from clipboard</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div><strong>Chat</strong></div>
+      <div id="chatLog"></div>
+      <div class="row" style="margin-top:8px;">
+        <input id="msg" placeholder="Type a message..." />
+        <button id="send" disabled>Send</button>
+      </div>
+    </div>
+
+    <div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN.</div>
+  </div>
+
+  <script src="voice_chat.js"></script>
+  <script src="../bg.js"></script>
+</body>
+</html>
