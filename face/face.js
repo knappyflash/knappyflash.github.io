@@ -135,6 +135,7 @@ export const faceSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
     
     // shirt
+    p.strokeWeight(3);
     p.fill(255,0,0);
     p.ellipse(200, 350, 100, 300);
 
@@ -191,6 +192,7 @@ export const faceSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
     // shirt
+    p.strokeWeight(3);
     p.fill(255,0,0);
     p.ellipse(200, 350, 100, 300);
 
@@ -246,6 +248,7 @@ export const faceSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
     // shirt
+    p.strokeWeight(3);
     p.fill(255,0,0);
     p.ellipse(200, 350, 100, 300);
 
@@ -302,6 +305,7 @@ export const faceSketch = (p) => {
     p.background(bg[0], bg[1], bg[2], bg[3]);
 
     // shirt
+    p.strokeWeight(3);
     p.fill(255,0,0);
     p.ellipse(200, 350, 100, 300);
 
