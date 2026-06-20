@@ -19,6 +19,12 @@ body {
   position: relative;
   z-index: 1;
   overflow: hidden;
+  background: 
+    url('../images/mc_textures/mc_grass.png'),
+    url('../images/mc_textures/mc_dirt.png');
+    background-repeat: repeat-x, repeat;
+    background-position: left top, left top;
+    background-size: 200px auto;
 }
 
 .page > * {
