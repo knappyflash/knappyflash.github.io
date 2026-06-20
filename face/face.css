@@ -59,3 +59,30 @@ body {
   box-sizing: border-box;
 }
 
+
+/* ===== Buttons ===== */
+#happyButton,
+#sadButton,
+#angryButton,
+#scaredButton {
+  width: 24%;
+
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+
+  padding: 6px 0;
+
+  background: linear-gradient(to bottom, #2a2a2a, #000);
+  color: #fff;
+
+  border: 2px solid #E0943B;
+  border-radius: 4px;
+
+  /* retro raised effect */
+  box-shadow:
+    2px 2px 0px #8a4f12,
+    -1px -1px 0px #ffd27a;
+
+  transition: all 0.15s ease;
+}
