@@ -1,87 +1,152 @@
-import db from "../db/db.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* =========================
+   Firebase setup
+========================= */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8xBJ09Oua24wfMFfjptpWTNdYeH7lZ-8",
+  authDomain: "kflash-a660b.firebaseapp.com",
+  databaseURL: "https://kflash-a660b-default-rtdb.firebaseio.com",
+  projectId: "kflash-a660b",
+  storageBucket: "kflash-a660b.firebasestorage.app",
+  messagingSenderId: "1062304187489",
+  appId: "1:1062304187489:web:e57fd914a967b5eff99620",
+  measurementId: "G-M7XQ228MGB",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// ✅ Get database
+const database = getDatabase(app);
+
+// ✅ Create listener
+const moodRef = ref(database, "face/mood");
+
+onValue(moodRef, (snapshot) => {
+  const data = snapshot.val();
+  setMoodFromValue(data);
+  console.log("🔥Server: mood updated:", data);
+});
+
+
+/* =========================
+   DOM buttons
+========================= */
 
 const happyButton = document.getElementById("happyButton");
 const sadButton = document.getElementById("sadButton");
 const angryButton = document.getElementById("angryButton");
 const scaredButton = document.getElementById("scaredButton");
 
-happyButton.addEventListener("click", SendHappy);
-sadButton.addEventListener("click", SendSad);
-angryButton.addEventListener("click", SendAngry);
-scaredButton.addEventListener("click", SendScared);
+/* =========================
+   Page title
+========================= */
 
 const pageTitle = "Face Online";
-window.addEventListener("load", function () {
-    console.log(pageTitle + " Page is loaded");
-    changeTitle();
-});
+
 function changeTitle() {
-  const headerFrame = parent.frames["header"];
-  const title = headerFrame.document.getElementById("topTitle");
-  title.textContent = pageTitle;
+  parent.frames.header.document.getElementById("topTitle").textContent = pageTitle;
 }
 
-let myDb = new db();
+/* =========================
+   Mood state
+========================= */
 
-let FaceMood = Object.freeze({
+const FaceMood = Object.freeze({
   HAPPY: "happy",
   SAD: "sad",
   SCARED: "scared",
   ANGRY: "angry"
 });
+
 let currentMood = FaceMood.HAPPY;
+let stopMoodListener = null;
 
-function SendHappy(){
-  console.log("SendHappy");
-  WriteData(FaceMood.HAPPY);
-  currentMood = FaceMood.HAPPY;
-}
-
-function SendSad(){
-  console.log("SendSad");
-  WriteData(FaceMood.SAD);
-  currentMood = FaceMood.SAD;
-}
-
-function SendAngry(){
-  console.log("SendAngry");
-  WriteData(FaceMood.ANGRY);
-  currentMood = FaceMood.ANGRY;
-}
-
-function SendScared(){
-  console.log("SendScared");
-  WriteData(FaceMood.SCARED);
-  currentMood = FaceMood.SCARED;
-}
-
-async function GetData(){
-  let myData = await myDb.GetData("/face/mood");
-  console.log("myData: ", myData);
-  switch(myData){
-    case "happy":
-      currentMood = FaceMood.HAPPY;
-      break;
-    case "angry":
+function setMoodFromValue(mood) {
+  switch (mood) {
+    case FaceMood.ANGRY:
       currentMood = FaceMood.ANGRY;
       break;
-    case "sad":
+
+    case FaceMood.SAD:
       currentMood = FaceMood.SAD;
       break;
-    case "scared":
+
+    case FaceMood.SCARED:
       currentMood = FaceMood.SCARED;
       break;
+
+    case FaceMood.HAPPY:
     default:
       currentMood = FaceMood.HAPPY;
+      break;
   }
 }
 
-async function WriteData(mood){
-  let myData = await myDb.WriteData("face", {mood: mood});
-  console.log("myData: ", myData);
+async function writeMood(mood) {
+  await set(ref(database, "face/mood"), mood);
+  console.log("Mood written:", mood);
 }
 
-GetData();
+/* =========================
+   Button handlers
+========================= */
+
+function SendHappy() {
+  console.log("SendHappy");
+  writeMood(FaceMood.HAPPY);
+}
+
+function SendSad() {
+  console.log("SendSad");
+  writeMood(FaceMood.SAD);
+}
+
+function SendAngry() {
+  console.log("SendAngry");
+  writeMood(FaceMood.ANGRY);
+}
+
+function SendScared() {
+  console.log("SendScared");
+  writeMood(FaceMood.SCARED);
+}
+
+happyButton.addEventListener("click", SendHappy);
+sadButton.addEventListener("click", SendSad);
+angryButton.addEventListener("click", SendAngry);
+scaredButton.addEventListener("click", SendScared);
+
+/* =========================
+   Page lifecycle
+========================= */
+
+window.addEventListener("load", () => {
+  console.log(pageTitle + " Page is loaded");
+
+  changeTitle();
+
+  stopMoodListener = listenForMoodChanges();
+});
+
+window.addEventListener("beforeunload", () => {
+  if (stopMoodListener) {
+    stopMoodListener();
+  }
+});
+
+/* =========================
+   p5 face sketch
+========================= */
 
 export const faceSketch = (p) => {
   let bg = [32, 255, 251, 255];
@@ -349,6 +414,6 @@ export const faceSketch = (p) => {
     p.stroke(0, 0, 0);
     p.ellipse(200, 250, 50, 20);
   }
-}
+};
 
 new p5(faceSketch);
