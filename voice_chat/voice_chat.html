@@ -4,16 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Voice Chat</title>
-  <link href="voice_chat.css" rel="stylesheet" type="text/css" media="all">
-  <link href="../bg.css" rel="stylesheet" type="text/css" media="all">
+  <style>
+    body { background:#000; color:#fff; font-family: 'Press Start 2P', monospace; margin:0; padding:18px; }
+    .container { max-width:900px; margin:0 auto; }
+    .box { border:4px solid #E0943B; border-radius:8px; padding:12px; margin-bottom:12px; background:rgba(0,0,0,0.6); }
+    textarea { width:100%; height:120px; background:#111; color:#fff; border:2px solid #333; padding:8px; box-sizing:border-box; resize:vertical; }
+    .row { display:flex; gap:8px; margin-top:8px; }
+    button { background:#E0943B; border:none; color:#000; padding:8px 12px; cursor:pointer; font-weight:bold; }
+    #chatLog { height:220px; overflow:auto; background:#050505; padding:8px; border:2px solid #222; }
+    #msg { width:100%; padding:8px; box-sizing:border-box; background:#111; color:#fff; border:2px solid #333; }
+    .status { font-size:12px; margin-top:6px; color:#ffd27a; }
+    .small { font-size:12px; color:#ccc; }
+    audio { display:block; margin-top:8px; width:100%; }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1 class="small">Voice Chat</h1>
 
     <div class="box">
-      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat demo</div>
-      <div class="status" id="connState">Connection: <strong id="state">idle</strong></div>
+      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat demo with voice and link sharing</div>
+      <div class="status">Connection: <strong id="state">idle</strong></div>
     </div>
 
     <div class="box">
@@ -22,7 +33,7 @@
       <div class="row">
         <button id="copyLocal">Copy Local SDP</button>
         <button id="createOffer">Create Offer</button>
-        <button id="createAnswer" style="display:none">Create Answer</button>
+        <button id="genLink" disabled>Generate Link</button>
       </div>
     </div>
 
@@ -33,6 +44,17 @@
         <button id="setRemote">Set Remote</button>
         <button id="pasteRemote">Paste from clipboard</button>
       </div>
+    </div>
+
+    <div class="box">
+      <div><strong>Voice Controls</strong></div>
+      <div class="row">
+        <button id="startVoice">Start Voice</button>
+        <button id="stopVoice" disabled>Stop Voice</button>
+        <button id="muteVoice" disabled>Mute</button>
+      </div>
+      <audio id="remoteAudio" autoplay playsinline></audio>
+      <div class="small">Start voice before creating an offer so audio is included in the SDP.</div>
     </div>
 
     <div class="box">
@@ -47,7 +69,269 @@
     <div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN.</div>
   </div>
 
-  <script src="voice_chat.js"></script>
-  <script src="../bg.js"></script>
+  <script>
+    // Config
+    const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+    // State
+    let pc = null;
+    let dataChannel = null;
+    let isInitiator = false;
+    let localStream = null;
+    let audioSender = null;
+
+    // Elements
+    const localSDP = document.getElementById('localSDP');
+    const remoteSDP = document.getElementById('remoteSDP');
+    const createOfferBtn = document.getElementById('createOffer');
+    const genLinkBtn = document.getElementById('genLink');
+    const setRemoteBtn = document.getElementById('setRemote');
+    const copyLocalBtn = document.getElementById('copyLocal');
+    const pasteRemoteBtn = document.getElementById('pasteRemote');
+    const chatLog = document.getElementById('chatLog');
+    const msgInput = document.getElementById('msg');
+    const sendBtn = document.getElementById('send');
+    const stateEl = document.getElementById('state');
+    const startVoiceBtn = document.getElementById('startVoice');
+    const stopVoiceBtn = document.getElementById('stopVoice');
+    const muteVoiceBtn = document.getElementById('muteVoice');
+    const remoteAudio = document.getElementById('remoteAudio');
+
+    function log(s) {
+      const line = document.createElement('div');
+      line.textContent = s;
+      chatLog.appendChild(line);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function setState(s) {
+      stateEl.textContent = s;
+    }
+
+    function makePeerConnection() {
+      pc = new RTCPeerConnection(config);
+      setState('pc created');
+
+      pc.ondatachannel = (ev) => {
+        dataChannel = ev.channel;
+        setupDataChannel();
+      };
+
+      pc.ontrack = (ev) => {
+        // attach remote audio
+        remoteAudio.srcObject = ev.streams[0];
+      };
+
+      pc.oniceconnectionstatechange = () => {
+        setState(pc.iceConnectionState);
+      };
+
+      pc.onicecandidate = (ev) => {
+        if (!ev.candidate) {
+          // ICE gathering finished — publish local description
+          localSDP.value = JSON.stringify(pc.localDescription);
+          genLinkBtn.disabled = false;
+          setState('ice-gathering-complete');
+        }
+      };
+    }
+
+    function setupDataChannel() {
+      dataChannel.onopen = () => {
+        log('[system] datachannel open');
+        sendBtn.disabled = false;
+        msgInput.disabled = false;
+        setState('connected');
+      };
+      dataChannel.onclose = () => {
+        log('[system] datachannel closed');
+        sendBtn.disabled = true;
+        msgInput.disabled = true;
+        setState('closed');
+      };
+      dataChannel.onmessage = (ev) => {
+        log('Peer: ' + ev.data);
+      };
+    }
+
+    // Voice controls
+    startVoiceBtn.onclick = async () => {
+      if (localStream) return;
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // If pc exists, add track now; otherwise it will be added before creating offer
+        if (!pc) makePeerConnection();
+        audioSender = pc.addTrack(localStream.getAudioTracks()[0], localStream);
+        stopVoiceBtn.disabled = false;
+        muteVoiceBtn.disabled = false;
+        log('[system] microphone started');
+      } catch (e) {
+        alert('Microphone access denied or unavailable: ' + e);
+      }
+    };
+
+    stopVoiceBtn.onclick = () => {
+      if (!localStream) return;
+      localStream.getTracks().forEach(t => t.stop());
+      localStream = null;
+      if (audioSender) {
+        try { pc.removeTrack(audioSender); } catch(e) {}
+        audioSender = null;
+      }
+      stopVoiceBtn.disabled = true;
+      muteVoiceBtn.disabled = true;
+      log('[system] microphone stopped');
+    };
+
+    muteVoiceBtn.onclick = () => {
+      if (!localStream) return;
+      const track = localStream.getAudioTracks()[0];
+      track.enabled = !track.enabled;
+      muteVoiceBtn.textContent = track.enabled ? 'Mute' : 'Unmute';
+      log('[system] microphone ' + (track.enabled ? 'unmuted' : 'muted'));
+    };
+
+    // Initiator flow: create offer
+    createOfferBtn.onclick = async () => {
+      isInitiator = true;
+      if (!pc) makePeerConnection();
+
+      // If user started voice, ensure track is already added; otherwise no audio in SDP
+      if (localStream && !audioSender) {
+        audioSender = pc.addTrack(localStream.getAudioTracks()[0], localStream);
+      }
+
+      // create data channel as initiator
+      dataChannel = pc.createDataChannel('chat');
+      setupDataChannel();
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      setState('offer created, gathering ICE');
+      // localSDP will be filled when onicecandidate sees null candidate
+    };
+
+    // Generate a link containing the local SDP in the fragment
+    genLinkBtn.onclick = () => {
+      if (!localSDP.value) return alert('No local SDP yet');
+      // encode SDP JSON safely
+      const encoded = btoa(unescape(encodeURIComponent(localSDP.value)));
+      // use fragment so it is not sent to servers
+      const url = location.origin + location.pathname + '#sdp=' + encoded;
+      // copy to clipboard and show
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard. Paste into email.');
+      }).catch(() => {
+        prompt('Copy this link and email it:', url);
+      });
+    };
+
+    // Set remote SDP (works for both sides)
+    setRemoteBtn.onclick = async () => {
+      const text = remoteSDP.value.trim();
+      if (!text) return alert('Paste remote SDP first');
+      let desc;
+      try {
+        desc = JSON.parse(text);
+      } catch (e) {
+        return alert('Invalid JSON SDP');
+      }
+
+      if (!pc) makePeerConnection();
+
+      try {
+        await pc.setRemoteDescription(desc);
+        setState('remote description set');
+
+        if (desc.type === 'offer') {
+          // We're the answerer: create answer and wait for ICE
+          // If user has a mic started, ensure track is added before creating answer
+          if (localStream && !audioSender) {
+            audioSender = pc.addTrack(localStream.getAudioTracks()[0], localStream);
+          }
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          setState('answer created, gathering ICE');
+          // localSDP will be filled when ICE gathering completes
+        } else if (desc.type === 'answer') {
+          setState('answer received');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to set remote description: ' + err);
+      }
+    };
+
+    // Copy local SDP to clipboard
+    copyLocalBtn.onclick = async () => {
+      if (!localSDP.value) return alert('No local SDP yet');
+      try {
+        await navigator.clipboard.writeText(localSDP.value);
+        alert('Local SDP copied to clipboard');
+      } catch (e) {
+        alert('Copy failed: ' + e);
+      }
+    };
+
+    // Paste remote from clipboard
+    pasteRemoteBtn.onclick = async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        remoteSDP.value = txt;
+      } catch (e) {
+        alert('Paste failed: ' + e);
+      }
+    };
+
+    // Send message
+    sendBtn.onclick = () => {
+      const text = msgInput.value.trim();
+      if (!text || !dataChannel || dataChannel.readyState !== 'open') return;
+      dataChannel.send(text);
+      log('You: ' + text);
+      msgInput.value = '';
+    };
+
+    msgInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+
+    // Auto-detect fragment on load and paste it into remoteSDP and auto-run setRemote
+    window.addEventListener('load', async () => {
+      const frag = location.hash;
+      if (!frag) return;
+      const m = frag.match(/sdp=([^&]+)/);
+      if (!m) return;
+      try {
+        const decoded = decodeURIComponent(escape(atob(m[1])));
+        // If the decoded string looks like JSON, paste and auto-run
+        remoteSDP.value = decoded;
+        // small delay to let UI initialize
+        setTimeout(() => {
+          // auto-click setRemote
+          setRemoteBtn.click();
+        }, 300);
+      } catch (e) {
+        console.warn('Failed to decode SDP from URL', e);
+      }
+    });
+
+    // Show/hide genLink button when localSDP exists
+    remoteSDP.addEventListener('input', () => {
+      try {
+        const parsed = JSON.parse(remoteSDP.value || '{}');
+        // no UI change here, but could show createAnswer if needed
+      } catch (e) {}
+    });
+
+    // Initialize UI state
+    setState('idle');
+    sendBtn.disabled = true;
+    msgInput.disabled = true;
+    genLinkBtn.disabled = true;
+  </script>
 </body>
 </html>

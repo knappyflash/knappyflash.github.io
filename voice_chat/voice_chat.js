@@ -200,6 +200,56 @@ function changeTitle() {
       }
     });
 
+
+
+    let localStream = null;
+    let audioSender = null;
+    const remoteAudio = document.getElementById('remoteAudio');
+
+    async function startVoice() {
+      if (localStream) return;
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // If pc exists, add track now; otherwise add before creating offer
+        if (!pc) makePeerConnection();
+        audioSender = pc.addTrack(localStream.getAudioTracks()[0], localStream);
+        document.getElementById('stopVoice').disabled = false;
+        document.getElementById('muteVoice').disabled = false;
+        log('[system] microphone started');
+      } catch (e) {
+        alert('Microphone access denied or unavailable: ' + e);
+      }
+    }
+
+    function stopVoice() {
+      if (!localStream) return;
+      localStream.getTracks().forEach(t => t.stop());
+      localStream = null;
+      if (audioSender) {
+        pc.removeTrack(audioSender);
+        audioSender = null;
+      }
+      document.getElementById('stopVoice').disabled = true;
+      document.getElementById('muteVoice').disabled = true;
+      log('[system] microphone stopped');
+    }
+
+    function toggleMute() {
+      if (!localStream) return;
+      const track = localStream.getAudioTracks()[0];
+      track.enabled = !track.enabled;
+      document.getElementById('muteVoice').textContent = track.enabled ? 'Mute' : 'Unmute';
+      log('[system] microphone ' + (track.enabled ? 'unmuted' : 'muted'));
+    }
+
+    // When remote tracks arrive, attach to audio element
+    pc && (pc.ontrack = (ev) => {
+      // attach first audio track
+      remoteAudio.srcObject = ev.streams[0];
+    });
+
+
+
     // Initialize UI state
     setState('idle');
     sendBtn.disabled = true;
