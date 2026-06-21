@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Firebase WebRTC Voice Chat - Hashed Password</title>
+<title>Firecall</title>
 <style>
 :root{--gold:#E0943B;--gold2:#ffd27a;--red:#b72b2b;--green:#35d082;--blue:#00aaff}*{box-sizing:border-box}body{margin:0;padding:18px;background:radial-gradient(circle at top,#201304 0,#000 45%,#000 100%);color:#fff;font-family:monospace}.container{max-width:1200px;margin:auto}.box{border:3px solid var(--gold);border-radius:12px;padding:14px;margin:0 0 12px;background:rgba(0,0,0,.76);box-shadow:0 0 20px rgba(224,148,59,.12)}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.meta{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-top:8px;align-items:center}button{border:0;border-radius:7px;background:var(--gold);color:#000;font-weight:bold;padding:9px 13px;cursor:pointer;box-shadow:0 2px 0 #6c4215}button:hover{filter:brightness(1.12)}button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}.primary{background:var(--gold2)}.danger{background:var(--red);color:#fff}.hang{background:#ff4747;color:#fff}input,textarea{background:#111;color:#fff;border:2px solid #333;border-radius:6px;padding:8px;font-family:monospace}input[readonly]{color:#ddd}#userNameInput{min-width:260px;max-width:420px;width:100%}#roomPassword{width:110px;text-transform:uppercase;text-align:center;letter-spacing:3px;color:var(--gold2);font-weight:bold}.small{font-size:12px;color:#ccc;line-height:1.55}code,.gold{color:var(--gold2)}.pill{display:inline-block;border:1px solid #444;border-radius:999px;background:#050505;padding:4px 8px}.ok{color:var(--green)}.warn{color:var(--gold2)}.bad{color:#ff8585}audio{width:100%;margin-top:8px}.visuals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.visual{border:2px solid #333;border-radius:8px;background:#050505;padding:8px}.visual div{color:var(--gold2);font-size:12px;margin-bottom:6px}canvas{width:100%;height:90px;background:linear-gradient(#050505,#111);display:block;border-radius:4px}#chatLog{height:230px;overflow:auto;background:#050505;border:2px solid #222;border-radius:8px;padding:8px;font-size:13px}.chat-line{margin-bottom:4px}.chat-time{color:#777}.chat-name{color:var(--gold2);font-weight:bold}#msg{flex:1;min-width:220px}.advanced summary{cursor:pointer;color:var(--gold2);font-weight:bold}.advgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}.advgrid textarea{width:100%;height:125px;font-size:12px;resize:vertical}@media(max-width:850px){.grid,.visuals,.advgrid{grid-template-columns:1fr}.meta{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="top"><h1 class="small">🔥 Firebase WebRTC Voice Chat - Hashed Password</h1><div class="small">Connection: <strong id="state" class="gold">idle</strong></div></div>
+  <div class="top"><h1 class="small">🔥 Firecall</h1><div class="small">Connection: <strong id="state" class="gold">idle</strong></div></div>
 
   <div class="box">
-    <div><strong>Flow:</strong> Person 1 clicks <code>Start Server</code>. A 5-character password appears. Person 2 types that password and clicks <code>Connect to Server</code>. Firebase stores only <code>voice_chat/passwordHash</code>, not the plain password.</div>
+    <div><strong>Flow:</strong> Person 1 clicks <code>Start Server</code>. A 5-character password appears. Person 2 types that password and clicks <code>Connect to Server</code>.</div>
     <div class="row">
       <button id="startServer" class="primary">Start Server</button>
       <button id="connectServer" class="primary">Connect to Server</button>
