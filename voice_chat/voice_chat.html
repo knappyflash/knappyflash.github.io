@@ -26,7 +26,7 @@
     <h1 class="small">Voice Chat</h1>
 
     <div class="box">
-      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat with always-on voice, mute, volume sliders, file export/import</div>
+      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat with always-on voice, mute, volume sliders, TXT export/import</div>
       <div class="status">Connection: <strong id="state">idle</strong></div>
     </div>
 
@@ -37,7 +37,6 @@
         <button id="copyLocal">Copy Local SDP</button>
         <button id="createOffer">Create Offer</button>
         <button id="genTxt" disabled>Generate TXT File</button>
-        <button id="genEmail" disabled>Generate Email File</button>
       </div>
     </div>
 
@@ -101,7 +100,6 @@
     const remoteSDP = document.getElementById('remoteSDP');
     const createOfferBtn = document.getElementById('createOffer');
     const genTxtBtn = document.getElementById('genTxt');
-    const genEmailBtn = document.getElementById('genEmail');
     const setRemoteBtn = document.getElementById('setRemote');
     const copyLocalBtn = document.getElementById('copyLocal');
     const pasteRemoteBtn = document.getElementById('pasteRemote');
@@ -151,7 +149,6 @@
         if (!ev.candidate) {
           localSDP.value = JSON.stringify(pc.localDescription);
           genTxtBtn.disabled = false;
-          genEmailBtn.disabled = false;
           setState('ice-gathering-complete');
         }
       };
@@ -304,13 +301,13 @@
       }
     };
 
-    // Generate TXT file download
+    // Generate TXT file download (named like vc_offer_062026_0605pm.txt)
     genTxtBtn.onclick = () => {
       if (!localSDP.value) return alert('No local SDP yet');
       let desc;
       try { desc = JSON.parse(localSDP.value); } catch(e){ desc = null; }
       const type = desc && desc.type ? desc.type : 'offer';
-      const filename = (type === 'offer') ? 'offer.txt' : 'answer.txt';
+      const filename = formatFilename(type);
       const blob = new Blob([localSDP.value], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -322,58 +319,22 @@
       URL.revokeObjectURL(url);
     };
 
-    // Generate .eml file with the SDP file attached
-    genEmailBtn.onclick = () => {
-      if (!localSDP.value) return alert('No local SDP yet');
-      let desc;
-      try { desc = JSON.parse(localSDP.value); } catch(e){ desc = null; }
-      const type = desc && desc.type ? desc.type : 'offer';
-      const attachmentName = (type === 'offer') ? 'offer.txt' : 'answer.txt';
-      const boundary = '----=_webrtc_' + Math.random().toString(36).slice(2,12);
-      const now = new Date().toUTCString();
-
-      // Build MIME .eml content: simple headers + multipart with text body and base64 attachment
-      const bodyText = `Attached is the ${type} SDP for the WebRTC session.`;
-      const attachmentBase64 = btoa(unescape(encodeURIComponent(localSDP.value)));
-
-      const emlParts = [];
-      emlParts.push(`From: sender@example.com`);
-      emlParts.push(`To: recipient@example.com`);
-      emlParts.push(`Subject: WebRTC ${type} SDP`);
-      emlParts.push(`Date: ${now}`);
-      emlParts.push(`MIME-Version: 1.0`);
-      emlParts.push(`Content-Type: multipart/mixed; boundary="${boundary}"`);
-      emlParts.push('');
-      emlParts.push(`--${boundary}`);
-      emlParts.push(`Content-Type: text/plain; charset="utf-8"`);
-      emlParts.push(`Content-Transfer-Encoding: 7bit`);
-      emlParts.push('');
-      emlParts.push(bodyText);
-      emlParts.push('');
-      emlParts.push(`--${boundary}`);
-      emlParts.push(`Content-Type: text/plain; name="${attachmentName}"`);
-      emlParts.push(`Content-Transfer-Encoding: base64`);
-      emlParts.push(`Content-Disposition: attachment; filename="${attachmentName}"`);
-      emlParts.push('');
-      // split base64 into 76-char lines per RFC
-      for (let i = 0; i < attachmentBase64.length; i += 76) {
-        emlParts.push(attachmentBase64.slice(i, i + 76));
-      }
-      emlParts.push('');
-      emlParts.push(`--${boundary}--`);
-      emlParts.push('');
-
-      const emlContent = emlParts.join('\r\n');
-      const blob = new Blob([emlContent], { type: 'message/rfc822' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `webrtc-${type}.eml`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    };
+    // Format filename: vc_offer_062026_0605pm.txt
+    function pad(n) { return n.toString().padStart(2, '0'); }
+    function formatFilename(type) {
+      const d = new Date();
+      const MM = pad(d.getMonth() + 1);
+      const DD = pad(d.getDate());
+      const YY = pad(d.getFullYear() % 100);
+      let hh = d.getHours();
+      const mm = pad(d.getMinutes());
+      const ampm = hh >= 12 ? 'pm' : 'am';
+      hh = hh % 12;
+      if (hh === 0) hh = 12;
+      const HH = pad(hh);
+      // Example: vc_offer_062026_0605pm.txt
+      return `vc_${type}_${MM}${DD}${YY}_${HH}${mm}${ampm}.txt`;
+    }
 
     // Upload / import TXT
     uploadBtn.onclick = () => fileInput.click();
@@ -388,15 +349,12 @@
 
     async function readAndImportFile(file) {
       const text = await file.text();
-      // Try to parse as JSON SDP; if not, just paste raw text
       try {
         JSON.parse(text);
         remoteSDP.value = text;
       } catch (e) {
-        // maybe the file contains extra whitespace; still paste raw
         remoteSDP.value = text.trim();
       }
-      // Auto-run setRemote for convenience
       setTimeout(() => setRemoteBtn.click(), 200);
     }
 
@@ -447,7 +405,6 @@
     sendBtn.disabled = true;
     msgInput.disabled = true;
     genTxtBtn.disabled = true;
-    genEmailBtn.disabled = true;
     muteVoiceBtn.disabled = true;
   </script>
 </body>
