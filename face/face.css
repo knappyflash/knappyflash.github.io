@@ -49,18 +49,24 @@ body {
   z-index: 2;
 }
 
+
 #faceDiv {
   background-color: black;
-  min-height: 50vh;
-  min-width: 50vh;
-  width: fit-content;
-  margin: 50px auto; 
+
+  width: 400px;
+  height: 450px;
+
+  margin: 50px auto;
 
   display: block;
+
   border: 5px solid #E0943B;
   border-radius: 8px;
   box-sizing: border-box;
+
+  overflow: hidden; /* keeps p5 canvas inside */
 }
+
 
 /* ===== Buttons ===== */
 #happyButton,
