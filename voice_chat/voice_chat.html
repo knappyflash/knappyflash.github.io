@@ -1,289 +1,60 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voice Chat Firebase One File</title>
-  <style>
-    body{background:#000;color:#fff;font-family:'Press Start 2P',monospace;margin:0;padding:18px}.container{max-width:1200px;margin:0 auto}.box{border:4px solid #E0943B;border-radius:8px;padding:12px;margin-bottom:12px;background:rgba(0,0,0,.6)}textarea{width:100%;height:120px;background:#111;color:#fff;border:2px solid #333;padding:8px;box-sizing:border-box;resize:vertical;font-family:monospace;font-size:12px}input[type=text],input[readonly],#msg{background:#111;color:#fff;border:2px solid #333;padding:8px;box-sizing:border-box;font-family:monospace}.row{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}button{background:#E0943B;border:none;color:#000;padding:8px 12px;cursor:pointer;font-weight:bold;border-radius:4px}button:disabled{opacity:.45;cursor:not-allowed}.status{font-size:12px;margin-top:6px;color:#ffd27a}.small{font-size:12px;color:#ccc;line-height:1.6}label{font-size:12px;color:#ffd27a;margin-right:6px}audio{display:block;margin-top:8px;width:100%}.file-drop{border:2px dashed #444;padding:10px;text-align:center;color:#ccc;margin-top:8px}.sdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.db-textarea{height:150px}.firebase-title,code{color:#ffd27a}#chatLog{height:220px;overflow:auto;background:#050505;padding:8px;border:2px solid #222;font-family:monospace;font-size:13px}#msg{flex:1;min-width:220px}.meta-grid{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin-bottom:8px}.meta-grid label{margin:0}.meta-grid input{width:100%}#userNameInput{min-width:260px;max-width:420px;width:100%}@media(max-width:850px){.sdp-layout{grid-template-columns:1fr}.meta-grid{grid-template-columns:1fr}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Voice Chat Firebase Visualizers</title>
+<style>
+body{background:#000;color:#fff;font-family:'Press Start 2P',monospace;margin:0;padding:18px}.container{max-width:1200px;margin:0 auto}.box{border:4px solid #E0943B;border-radius:8px;padding:12px;margin-bottom:12px;background:rgba(0,0,0,.6)}textarea{width:100%;height:120px;background:#111;color:#fff;border:2px solid #333;padding:8px;box-sizing:border-box;resize:vertical;font-family:monospace;font-size:12px}input[type=text],input[readonly],#msg{background:#111;color:#fff;border:2px solid #333;padding:8px;box-sizing:border-box;font-family:monospace}.row{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}button{background:#E0943B;border:none;color:#000;padding:8px 12px;cursor:pointer;font-weight:bold;border-radius:4px}button:disabled{opacity:.45;cursor:not-allowed}.status{font-size:12px;margin-top:6px;color:#ffd27a}.small{font-size:12px;color:#ccc;line-height:1.6}label{font-size:12px;color:#ffd27a;margin-right:6px}audio{display:block;margin-top:8px;width:100%}.file-drop{border:2px dashed #444;padding:10px;text-align:center;color:#ccc;margin-top:8px}.sdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.db-textarea{height:150px}.firebase-title,code{color:#ffd27a}#chatLog{height:220px;overflow:auto;background:#050505;padding:8px;border:2px solid #222;font-family:monospace;font-size:13px}#msg{flex:1;min-width:220px}.meta-grid{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin-bottom:8px}.meta-grid label{margin:0}.meta-grid input{width:100%}#userNameInput{min-width:260px;max-width:420px;width:100%}.visualizer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.visualizer-box{border:2px solid #333;background:#050505;padding:8px;border-radius:4px}.visualizer-box .small{color:#ffd27a;margin-bottom:6px}canvas.voice-canvas{width:100%;height:90px;display:block;background:linear-gradient(to bottom,#050505,#111);image-rendering:pixelated}@media(max-width:850px){.sdp-layout,.visualizer-grid{grid-template-columns:1fr}.meta-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="small">Voice Chat</h1>
-
-    <div class="box">
-      <div>Hey, I'm kflash 👋 — manual WebRTC chat with Firebase SDP sharing, usernames, timestamps, voice, mute, volume sliders, TXT export/import.</div>
-      <div class="status">Connection: <strong id="state">idle</strong></div>
-    </div>
-
-    <div class="box">
-      <div><strong>Your Name</strong></div>
-      <div class="row">
-        <label for="userNameInput">Name</label>
-        <input id="userNameInput" type="text" placeholder="Type your name" maxlength="40" />
-      </div>
-      <div class="small">Saved to <code>localStorage</code>. When you send an offer/answer, this name is written to <code>offerUsername</code> or <code>answerUsername</code>.</div>
-    </div>
-
-    <div class="sdp-layout">
-      <div class="sdp-left">
-        <div class="box">
-          <div><strong>Local SDP</strong></div>
-          <textarea id="localSDP" readonly></textarea>
-          <div class="row">
-            <button id="copyLocal">Copy Local SDP</button>
-            <button id="createOffer">Create Offer</button>
-            <button id="genTxt" disabled>Generate TXT File</button>
-            <button id="sendLocalToDb" disabled>Send Local SDP To Firebase</button>
-          </div>
-          <div class="small">Offer saves to <code>voice_chat/offer</code>, <code>voice_chat/offerUsername</code>, <code>voice_chat/offerTimestamp</code>. Answer saves to <code>voice_chat/answer</code>, <code>voice_chat/answerUsername</code>, <code>voice_chat/answerTimestamp</code>.</div>
-        </div>
-
-        <div class="box">
-          <div><strong>Remote SDP</strong></div>
-          <textarea id="remoteSDP" placeholder="Paste remote SDP here"></textarea>
-          <div class="row">
-            <button id="setRemote">Set Remote</button>
-            <button id="pasteRemote">Paste from clipboard</button>
-            <input id="fileInput" type="file" accept=".txt,.json" style="display:none">
-            <button id="uploadBtn">Upload TXT</button>
-          </div>
-          <div class="file-drop" id="dropZone">Or drag & drop an offer.txt / answer.txt here</div>
-        </div>
-      </div>
-
-      <div class="sdp-right">
-        <div class="box">
-          <div class="firebase-title"><strong>Firebase Offer SDP</strong></div>
-          <div class="meta-grid">
-            <label>Username</label><input id="dbOfferUsername" type="text" readonly />
-            <label>Timestamp</label><input id="dbOfferTimestamp" type="text" readonly />
-          </div>
-          <textarea id="dbOfferSDP" class="db-textarea" readonly></textarea>
-          <div class="row">
-            <button id="readOfferFromDb">Read Offer From DB</button>
-            <button id="useOfferAsRemote">Use Offer As Remote</button>
-            <button id="readOfferAndSetRemote">Read Offer + Set Remote</button>
-          </div>
-        </div>
-
-        <div class="box">
-          <div class="firebase-title"><strong>Firebase Answer SDP</strong></div>
-          <div class="meta-grid">
-            <label>Username</label><input id="dbAnswerUsername" type="text" readonly />
-            <label>Timestamp</label><input id="dbAnswerTimestamp" type="text" readonly />
-          </div>
-          <textarea id="dbAnswerSDP" class="db-textarea" readonly></textarea>
-          <div class="row">
-            <button id="readAnswerFromDb">Read Answer From DB</button>
-            <button id="useAnswerAsRemote">Use Answer As Remote</button>
-            <button id="readAnswerAndSetRemote">Read Answer + Set Remote</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="box">
-      <div><strong>Voice Controls</strong></div>
-      <div class="row"><label>Mic Volume</label><input id="micVol" type="range" min="0" max="2" step="0.01" value="1"><span id="micVal" class="small">1.00</span></div>
-      <div class="row"><label>Speaker Volume</label><input id="spkVol" type="range" min="0" max="1" step="0.01" value="1"><span id="spkVal" class="small">1.00</span></div>
-      <div class="row"><button id="muteVoice" disabled>Mute</button></div>
-      <audio id="remoteAudio" autoplay playsinline></audio>
-      <div class="small">Microphone will be requested when you create an offer or accept an offer. Mute uses outgoing gain.</div>
-    </div>
-
-    <div class="box">
-      <div><strong>Chat</strong></div>
-      <div id="chatLog"></div>
-      <div class="row"><input id="msg" placeholder="Type a message..." /><button id="send" disabled>Send</button></div>
-    </div>
-
-    <div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN. Serve over HTTPS or localhost.</div>
-  </div>
-
-  <script>
-    console.log("Voice chat version: xxxxUsername-fix-2");
-
-    class Db {
-      constructor(){this.DB_URL="https://kflash-a660b-default-rtdb.firebaseio.com";}
-      NormalizePath(path){return String(path||"").replace(/^\/+/,"");}
-      async GetData(path){
-        try{
-          const clean=this.NormalizePath(path), url=`${this.DB_URL}/${clean}.json`;
-          console.log("GET URL:",url);
-          const res=await fetch(url);
-          console.log("GET Response status:",res.status);
-          if(!res.ok){const t=await res.text();console.error("GET Error response:",t);throw new Error(`HTTP error! Status: ${res.status}`);}
-          const data=await res.json();
-          console.log("Retrieved Data:",data);
-          return data;
-        }catch(err){console.error("Error reading data:",err);return null;}
-      }
-      async WriteData(path,payload){
-        try{
-          const clean=this.NormalizePath(path), url=`${this.DB_URL}/${clean}.json`, body=JSON.stringify(payload);
-          console.log("PUT URL:",url); console.log("PUT Payload object:",payload); console.log("PUT Payload JSON:",body);
-          const res=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body});
-          console.log("PUT Response status:",res.status);
-          if(!res.ok){const t=await res.text();console.error("PUT Error response:",t);throw new Error(`HTTP error! Status: ${res.status}`);}
-          const data=await res.json();
-          console.log("Data Written Successfully:",data);
-          return data;
-        }catch(err){console.error("Error writing data:",err);return null;}
-      }
-    }
-
-    const myDb=new Db();
-    const config={iceServers:[{urls:"stun:stun.l.google.com:19302"}]};
-    const USERNAME_KEY="kflash_voice_chat_username";
-
-    let pc=null,dataChannel=null,localStream=null,processedStream=null,audioCtx=null,micGainNode=null,micSourceNode=null,audioSender=null;
-
-    const $=id=>document.getElementById(id);
-    const userNameInput=$("userNameInput"),localSDP=$("localSDP"),remoteSDP=$("remoteSDP"),createOfferBtn=$("createOffer"),genTxtBtn=$("genTxt"),setRemoteBtn=$("setRemote"),copyLocalBtn=$("copyLocal"),pasteRemoteBtn=$("pasteRemote"),uploadBtn=$("uploadBtn"),fileInput=$("fileInput"),dropZone=$("dropZone"),sendLocalToDbBtn=$("sendLocalToDb"),dbOfferSDP=$("dbOfferSDP"),dbAnswerSDP=$("dbAnswerSDP"),dbOfferUsername=$("dbOfferUsername"),dbAnswerUsername=$("dbAnswerUsername"),dbOfferTimestamp=$("dbOfferTimestamp"),dbAnswerTimestamp=$("dbAnswerTimestamp"),readOfferFromDbBtn=$("readOfferFromDb"),readAnswerFromDbBtn=$("readAnswerFromDb"),useOfferAsRemoteBtn=$("useOfferAsRemote"),useAnswerAsRemoteBtn=$("useAnswerAsRemote"),readOfferAndSetRemoteBtn=$("readOfferAndSetRemote"),readAnswerAndSetRemoteBtn=$("readAnswerAndSetRemote"),chatLog=$("chatLog"),msgInput=$("msg"),sendBtn=$("send"),stateEl=$("state"),muteVoiceBtn=$("muteVoice"),micVol=$("micVol"),spkVol=$("spkVol"),micVal=$("micVal"),spkVal=$("spkVal"),remoteAudio=$("remoteAudio");
-
-    function log(s){const line=document.createElement("div");line.textContent=s;chatLog.appendChild(line);chatLog.scrollTop=chatLog.scrollHeight;}
-    function setState(s){stateEl.textContent=s;}
-    function loadSavedUsername(){const saved=localStorage.getItem(USERNAME_KEY);if(saved)userNameInput.value=saved;}
-    function getUsername(){const name=userNameInput.value.trim()||"Anonymous";localStorage.setItem(USERNAME_KEY,name);return name;}
-    function getTimestampString(){return new Date().toISOString();}
-    function formatTimestamp(value){if(!value)return"";const d=new Date(value);return Number.isNaN(d.getTime())?value:d.toLocaleString();}
-    userNameInput.addEventListener("input",()=>localStorage.setItem(USERNAME_KEY,userNameInput.value.trim()));
-
-    function makePeerConnection(){
-      pc=new RTCPeerConnection(config);setState("pc created");
-      pc.ondatachannel=ev=>{dataChannel=ev.channel;setupDataChannel();};
-      pc.ontrack=ev=>{remoteAudio.srcObject=ev.streams[0];};
-      pc.oniceconnectionstatechange=()=>setState(pc.iceConnectionState);
-      pc.onicecandidate=ev=>{
-        if(!ev.candidate){
-          localSDP.value=JSON.stringify(pc.localDescription);
-          genTxtBtn.disabled=false;sendLocalToDbBtn.disabled=false;setState("ice-gathering-complete");
-          const info=getLocalSdpInfo(false);if(info)log(`[system] local ${info.type} SDP ready`);
-        }
-      };
-    }
-
-    function setupDataChannel(){
-      dataChannel.onopen=()=>{log("[system] datachannel open");sendBtn.disabled=false;msgInput.disabled=false;setState("connected");if(localStream&&!audioSender)addProcessedTrackToPC();};
-      dataChannel.onclose=()=>{log("[system] datachannel closed");sendBtn.disabled=true;msgInput.disabled=true;setState("closed");};
-      dataChannel.onmessage=ev=>log("Peer: "+ev.data);
-    }
-
-    async function ensureMicReady(){
-      if(localStream&&processedStream)return;
-      try{localStream=await navigator.mediaDevices.getUserMedia({audio:true});}catch(e){alert("Microphone access denied or unavailable: "+e);throw e;}
-      if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-      micSourceNode=audioCtx.createMediaStreamSource(localStream);micGainNode=audioCtx.createGain();micGainNode.gain.value=parseFloat(micVol.value);
-      const dest=audioCtx.createMediaStreamDestination();micSourceNode.connect(micGainNode);micGainNode.connect(dest);processedStream=dest.stream;
-      if(pc&&dataChannel&&dataChannel.readyState==="open"&&!audioSender)addProcessedTrackToPC();
-      muteVoiceBtn.disabled=false;
-    }
-
-    function addProcessedTrackToPC(){if(!pc||!processedStream)return;audioSender=pc.addTrack(processedStream.getAudioTracks()[0],processedStream);log("[system] outgoing audio track added to peer connection");}
-
-    function getLocalSdpInfo(showAlerts=true){
-      const text=localSDP.value.trim();
-      if(!text){if(showAlerts)alert("No Local SDP yet.");return null;}
-      let desc;try{desc=JSON.parse(text);}catch(e){if(showAlerts)alert("Local SDP is not valid JSON.");return null;}
-      if(desc.type!=="offer"&&desc.type!=="answer"){if(showAlerts)alert("Local SDP must be type offer or answer.");return null;}
-      return{type:desc.type,text,desc};
-    }
-
-    function getFirebaseKeysForType(type){
-      if(type==="offer")return{sdpKey:"offer",usernameKey:"offerUsername",timestampKey:"offerTimestamp"};
-      if(type==="answer")return{sdpKey:"answer",usernameKey:"answerUsername",timestampKey:"answerTimestamp"};
-      throw new Error("Unknown SDP type: "+type);
-    }
-
-    async function sendLocalSdpToFirebase(){
-      const info=getLocalSdpInfo(true);if(!info)return;
-      const keys=getFirebaseKeysForType(info.type), username=getUsername(), timestamp=getTimestampString();
-      console.log("========== SEND LOCAL SDP ==========");
-      console.log("Local SDP type:",info.type);console.log("Name input value:",username);console.log("Firebase keys:",keys);console.log("====================================");
-      const results=await Promise.all([
-        myDb.WriteData(`voice_chat/${keys.sdpKey}`,info.text),
-        myDb.WriteData(`voice_chat/${keys.usernameKey}`,username),
-        myDb.WriteData(`voice_chat/${keys.timestampKey}`,timestamp)
-      ]);
-      if(results.some(x=>x===null)){log(`[system] failed to send ${info.type} SDP metadata to Firebase`);return;}
-      log(`[system] sent local ${info.type} SDP to Firebase as ${username} at ${formatTimestamp(timestamp)}`);
-    }
-
-    async function readSdpFromFirebase(type){
-      const keys=getFirebaseKeysForType(type);
-      const [sdp,username,timestamp]=await Promise.all([
-        myDb.GetData(`voice_chat/${keys.sdpKey}`),
-        myDb.GetData(`voice_chat/${keys.usernameKey}`),
-        myDb.GetData(`voice_chat/${keys.timestampKey}`)
-      ]);
-      if(typeof sdp!=="string"){alert(`Firebase ${type} value was not a string.`);return"";}
-      if(type==="offer"){dbOfferSDP.value=sdp;dbOfferUsername.value=typeof username==="string"?username:"";dbOfferTimestamp.value=typeof timestamp==="string"?formatTimestamp(timestamp):"";}
-      if(type==="answer"){dbAnswerSDP.value=sdp;dbAnswerUsername.value=typeof username==="string"?username:"";dbAnswerTimestamp.value=typeof timestamp==="string"?formatTimestamp(timestamp):"";}
-      log(`[system] read ${type} SDP from Firebase — ${typeof username==="string"?username:"unknown user"}`);
-      return sdp;
-    }
-
-    async function useFirebaseSdpAsRemote(type){
-      let value=type==="offer"?dbOfferSDP.value.trim():dbAnswerSDP.value.trim();
-      if(!value)value=await readSdpFromFirebase(type);
-      if(!value){alert(`No ${type} SDP found.`);return false;}
-      remoteSDP.value=value;log(`[system] copied Firebase ${type} SDP into Remote SDP box`);return true;
-    }
-    async function readFirebaseSdpAndSetRemote(type){const copied=await useFirebaseSdpAsRemote(type);if(copied)setTimeout(()=>setRemoteBtn.click(),150);}
-
-    muteVoiceBtn.onclick=()=>{if(!micGainNode)return;const isMuted=micGainNode.gain.value===0;micGainNode.gain.value=isMuted?parseFloat(micVol.value):0;muteVoiceBtn.textContent=isMuted?"Mute":"Unmute";log("[system] microphone "+(isMuted?"unmuted":"muted"));};
-    micVol.addEventListener("input",()=>{const v=parseFloat(micVol.value);micVal.textContent=v.toFixed(2);if(micGainNode&&micGainNode.gain.value!==0)micGainNode.gain.value=v;});
-    spkVol.addEventListener("input",()=>{const v=parseFloat(spkVol.value);spkVal.textContent=v.toFixed(2);remoteAudio.volume=v;});
-
-    createOfferBtn.onclick=async()=>{if(!pc)makePeerConnection();try{await ensureMicReady();}catch(e){return;}if(!audioSender)addProcessedTrackToPC();dataChannel=pc.createDataChannel("chat");setupDataChannel();const offer=await pc.createOffer();await pc.setLocalDescription(offer);setState("offer created, gathering ICE");};
-
-    setRemoteBtn.onclick=async()=>{
-      const text=remoteSDP.value.trim();if(!text)return alert("Paste remote SDP first");
-      let desc;try{desc=JSON.parse(text);}catch(e){return alert("Invalid JSON SDP");}
-      if(!pc)makePeerConnection();
-      try{
-        await pc.setRemoteDescription(desc);setState("remote description set");
-        if(desc.type==="offer"){
-          try{await ensureMicReady();}catch(e){return;}if(!audioSender)addProcessedTrackToPC();
-          const answer=await pc.createAnswer();await pc.setLocalDescription(answer);setState("answer created, gathering ICE");
-        }else if(desc.type==="answer"){setState("answer received");}
-      }catch(err){console.error(err);alert("Failed to set remote description: "+err);}
-    };
-
-    copyLocalBtn.onclick=async()=>{if(!localSDP.value)return alert("No local SDP yet");try{await navigator.clipboard.writeText(localSDP.value);alert("Local SDP copied to clipboard");}catch(e){alert("Copy failed: "+e);}};
-    pasteRemoteBtn.onclick=async()=>{try{remoteSDP.value=await navigator.clipboard.readText();}catch(e){alert("Paste failed: "+e);}};
-
-    sendLocalToDbBtn.onclick=()=>sendLocalSdpToFirebase();
-    readOfferFromDbBtn.onclick=()=>readSdpFromFirebase("offer");
-    readAnswerFromDbBtn.onclick=()=>readSdpFromFirebase("answer");
-    useOfferAsRemoteBtn.onclick=()=>useFirebaseSdpAsRemote("offer");
-    useAnswerAsRemoteBtn.onclick=()=>useFirebaseSdpAsRemote("answer");
-    readOfferAndSetRemoteBtn.onclick=()=>readFirebaseSdpAndSetRemote("offer");
-    readAnswerAndSetRemoteBtn.onclick=()=>readFirebaseSdpAndSetRemote("answer");
-
-    genTxtBtn.onclick=()=>{if(!localSDP.value)return alert("No local SDP yet");let desc;try{desc=JSON.parse(localSDP.value);}catch(e){desc=null;}const type=desc&&desc.type?desc.type:"offer";const filename=formatFilename(type);const blob=new Blob([localSDP.value],{type:"text/plain"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);};
-    function pad(n){return n.toString().padStart(2,"0");}
-    function formatFilename(type){const d=new Date(),MM=pad(d.getMonth()+1),DD=pad(d.getDate()),YY=pad(d.getFullYear()%100);let hh=d.getHours();const mm=pad(d.getMinutes()),ampm=hh>=12?"pm":"am";hh=hh%12;if(hh===0)hh=12;return`vc_${type}_${MM}${DD}${YY}_${pad(hh)}${mm}${ampm}.txt`;}
-
-    uploadBtn.onclick=()=>fileInput.click();fileInput.addEventListener("change",handleFiles);
-    async function handleFiles(e){const f=e.target.files&&e.target.files[0];if(!f)return;await readAndImportFile(f);fileInput.value="";}
-    async function readAndImportFile(file){const text=await file.text();try{JSON.parse(text);remoteSDP.value=text;}catch(e){remoteSDP.value=text.trim();}setTimeout(()=>setRemoteBtn.click(),200);}
-    dropZone.addEventListener("dragover",ev=>{ev.preventDefault();dropZone.style.borderColor="#E0943B";});
-    dropZone.addEventListener("dragleave",ev=>{ev.preventDefault();dropZone.style.borderColor="#444";});
-    dropZone.addEventListener("drop",async ev=>{ev.preventDefault();dropZone.style.borderColor="#444";const f=ev.dataTransfer.files&&ev.dataTransfer.files[0];if(!f)return;await readAndImportFile(f);});
-
-    sendBtn.onclick=()=>{const text=msgInput.value.trim();if(!text||!dataChannel||dataChannel.readyState!=="open")return;dataChannel.send(text);log("You: "+text);msgInput.value="";};
-    msgInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendBtn.click();}});
-
-    window.addEventListener("load",async()=>{
-      loadSavedUsername();
-      const frag=location.hash;if(!frag)return;const m=frag.match(/sdp=([^&]+)/);if(!m)return;
-      try{const decoded=decodeURIComponent(escape(atob(m[1])));remoteSDP.value=decoded;setTimeout(()=>setRemoteBtn.click(),300);}catch(e){console.warn("Failed to decode SDP from URL",e);}
-    });
-
-    setState("idle");sendBtn.disabled=true;msgInput.disabled=true;genTxtBtn.disabled=true;sendLocalToDbBtn.disabled=true;muteVoiceBtn.disabled=true;
-  </script>
+<div class="container">
+<h1 class="small">Voice Chat</h1>
+<div class="box"><div>Hey, I'm kflash 👋 — WebRTC chat with Firebase SDP sharing, usernames, timestamps, and local/remote voice visualizers.</div><div class="status">Connection: <strong id="state">idle</strong></div></div>
+<div class="box"><div><strong>Your Name</strong></div><div class="row"><label for="userNameInput">Name</label><input id="userNameInput" type="text" placeholder="Type your name" maxlength="40" /></div><div class="small">Saved to <code>localStorage</code>. Offers write to <code>offerUsername</code>; answers write to <code>answerUsername</code>.</div></div>
+<div class="sdp-layout">
+<div class="sdp-left">
+<div class="box"><div><strong>Local SDP</strong></div><textarea id="localSDP" readonly></textarea><div class="row"><button id="copyLocal">Copy Local SDP</button><button id="createOffer">Create Offer</button><button id="genTxt" disabled>Generate TXT File</button><button id="sendLocalToDb" disabled>Send Local SDP To Firebase</button></div><div class="small">Offer saves to <code>voice_chat/offer</code>, <code>offerUsername</code>, <code>offerTimestamp</code>. Answer saves to <code>voice_chat/answer</code>, <code>answerUsername</code>, <code>answerTimestamp</code>.</div></div>
+<div class="box"><div><strong>Remote SDP</strong></div><textarea id="remoteSDP" placeholder="Paste remote SDP here"></textarea><div class="row"><button id="setRemote">Set Remote</button><button id="pasteRemote">Paste from clipboard</button><input id="fileInput" type="file" accept=".txt,.json" style="display:none"><button id="uploadBtn">Upload TXT</button></div><div class="file-drop" id="dropZone">Or drag & drop an offer.txt / answer.txt here</div></div>
+</div>
+<div class="sdp-right">
+<div class="box"><div class="firebase-title"><strong>Firebase Offer SDP</strong></div><div class="meta-grid"><label>Username</label><input id="dbOfferUsername" readonly><label>Timestamp</label><input id="dbOfferTimestamp" readonly></div><textarea id="dbOfferSDP" class="db-textarea" readonly></textarea><div class="row"><button id="readOfferFromDb">Read Offer From DB</button><button id="useOfferAsRemote">Use Offer As Remote</button><button id="readOfferAndSetRemote">Read Offer + Set Remote</button></div></div>
+<div class="box"><div class="firebase-title"><strong>Firebase Answer SDP</strong></div><div class="meta-grid"><label>Username</label><input id="dbAnswerUsername" readonly><label>Timestamp</label><input id="dbAnswerTimestamp" readonly></div><textarea id="dbAnswerSDP" class="db-textarea" readonly></textarea><div class="row"><button id="readAnswerFromDb">Read Answer From DB</button><button id="useAnswerAsRemote">Use Answer As Remote</button><button id="readAnswerAndSetRemote">Read Answer + Set Remote</button></div></div>
+</div>
+</div>
+<div class="box"><div><strong>Voice Controls</strong></div><div class="row"><label>Mic Volume</label><input id="micVol" type="range" min="0" max="2" step="0.01" value="1"><span id="micVal" class="small">1.00</span></div><div class="row"><label>Speaker Volume</label><input id="spkVol" type="range" min="0" max="1" step="0.01" value="1"><span id="spkVal" class="small">1.00</span></div><div class="row"><button id="muteVoice" disabled>Mute</button></div><audio id="remoteAudio" autoplay playsinline></audio><div class="visualizer-grid"><div class="visualizer-box"><div class="small">Your Mic</div><canvas id="localVoiceCanvas" class="voice-canvas" width="420" height="90"></canvas></div><div class="visualizer-box"><div class="small">Remote Voice</div><canvas id="remoteVoiceCanvas" class="voice-canvas" width="420" height="90"></canvas></div></div><div class="small">The orange visualizer is your outgoing mic. The blue visualizer is the remote incoming voice.</div></div>
+<div class="box"><div><strong>Chat</strong></div><div id="chatLog"></div><div class="row"><input id="msg" placeholder="Type a message..." /><button id="send" disabled>Send</button></div></div>
+<div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN. Serve over HTTPS or localhost.</div>
+</div>
+<script>
+console.log("Voice chat version: visualizers-xxxxUsername-fix-3");
+class Db{constructor(){this.DB_URL="https://kflash-a660b-default-rtdb.firebaseio.com";}NormalizePath(p){return String(p||"").replace(/^\/+/,"");}async GetData(p){try{const path=this.NormalizePath(p),url=`${this.DB_URL}/${path}.json`;console.log("GET URL:",url);const r=await fetch(url);console.log("GET Response status:",r.status);if(!r.ok){const t=await r.text();console.error("GET Error response:",t);throw new Error(`HTTP error! Status: ${r.status}`)}const d=await r.json();console.log("Retrieved Data:",d);return d}catch(e){console.error("Error reading data:",e);return null}}async WriteData(p,payload){try{const path=this.NormalizePath(p),url=`${this.DB_URL}/${path}.json`,body=JSON.stringify(payload);console.log("PUT URL:",url);console.log("PUT Payload object:",payload);console.log("PUT Payload JSON:",body);const r=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body});console.log("PUT Response status:",r.status);if(!r.ok){const t=await r.text();console.error("PUT Error response:",t);throw new Error(`HTTP error! Status: ${r.status}`)}const d=await r.json();console.log("Data Written Successfully:",d);return d}catch(e){console.error("Error writing data:",e);return null}}}
+const myDb=new Db(),config={iceServers:[{urls:"stun:stun.l.google.com:19302"}]},USERNAME_KEY="kflash_voice_chat_username";
+let pc=null,dataChannel=null,localStream=null,processedStream=null,audioCtx=null,micGainNode=null,micSourceNode=null,audioSender=null,localAnalyser=null,remoteAnalyser=null,remoteSourceNode=null,visualizerStarted=false;
+const $=id=>document.getElementById(id),userNameInput=$("userNameInput"),localSDP=$("localSDP"),remoteSDP=$("remoteSDP"),createOfferBtn=$("createOffer"),genTxtBtn=$("genTxt"),setRemoteBtn=$("setRemote"),copyLocalBtn=$("copyLocal"),pasteRemoteBtn=$("pasteRemote"),uploadBtn=$("uploadBtn"),fileInput=$("fileInput"),dropZone=$("dropZone"),sendLocalToDbBtn=$("sendLocalToDb"),dbOfferSDP=$("dbOfferSDP"),dbAnswerSDP=$("dbAnswerSDP"),dbOfferUsername=$("dbOfferUsername"),dbAnswerUsername=$("dbAnswerUsername"),dbOfferTimestamp=$("dbOfferTimestamp"),dbAnswerTimestamp=$("dbAnswerTimestamp"),readOfferFromDbBtn=$("readOfferFromDb"),readAnswerFromDbBtn=$("readAnswerFromDb"),useOfferAsRemoteBtn=$("useOfferAsRemote"),useAnswerAsRemoteBtn=$("useAnswerAsRemote"),readOfferAndSetRemoteBtn=$("readOfferAndSetRemote"),readAnswerAndSetRemoteBtn=$("readAnswerAndSetRemote"),chatLog=$("chatLog"),msgInput=$("msg"),sendBtn=$("send"),stateEl=$("state"),muteVoiceBtn=$("muteVoice"),micVol=$("micVol"),spkVol=$("spkVol"),micVal=$("micVal"),spkVal=$("spkVal"),remoteAudio=$("remoteAudio"),localVoiceCanvas=$("localVoiceCanvas"),remoteVoiceCanvas=$("remoteVoiceCanvas");
+function log(s){const l=document.createElement("div");l.textContent=s;chatLog.appendChild(l);chatLog.scrollTop=chatLog.scrollHeight}function setState(s){stateEl.textContent=s}function loadSavedUsername(){const s=localStorage.getItem(USERNAME_KEY);if(s)userNameInput.value=s}function getUsername(){const n=userNameInput.value.trim()||"Anonymous";localStorage.setItem(USERNAME_KEY,n);return n}function getTimestampString(){return new Date().toISOString()}function formatTimestamp(v){if(!v)return"";const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString()}userNameInput.addEventListener("input",()=>localStorage.setItem(USERNAME_KEY,userNameInput.value.trim()));
+function makePeerConnection(){pc=new RTCPeerConnection(config);setState("pc created");pc.ondatachannel=e=>{dataChannel=e.channel;setupDataChannel()};pc.ontrack=e=>{remoteAudio.srcObject=e.streams[0];setupRemoteVisualizer(e.streams[0])};pc.oniceconnectionstatechange=()=>setState(pc.iceConnectionState);pc.onicecandidate=e=>{if(!e.candidate){localSDP.value=JSON.stringify(pc.localDescription);genTxtBtn.disabled=false;sendLocalToDbBtn.disabled=false;setState("ice-gathering-complete");const info=getLocalSdpInfo(false);if(info)log(`[system] local ${info.type} SDP ready`)}}}
+function setupDataChannel(){dataChannel.onopen=()=>{log("[system] datachannel open");sendBtn.disabled=false;msgInput.disabled=false;setState("connected");if(localStream&&!audioSender)addProcessedTrackToPC()};dataChannel.onclose=()=>{log("[system] datachannel closed");sendBtn.disabled=true;msgInput.disabled=true;setState("closed")};dataChannel.onmessage=e=>log("Peer: "+e.data)}
+async function ensureMicReady(){if(localStream&&processedStream)return;try{localStream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){alert("Microphone access denied or unavailable: "+e);throw e}if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();micSourceNode=audioCtx.createMediaStreamSource(localStream);micGainNode=audioCtx.createGain();micGainNode.gain.value=parseFloat(micVol.value);const dest=audioCtx.createMediaStreamDestination();localAnalyser=audioCtx.createAnalyser();localAnalyser.fftSize=256;localAnalyser.smoothingTimeConstant=.75;micSourceNode.connect(micGainNode);micGainNode.connect(localAnalyser);localAnalyser.connect(dest);processedStream=dest.stream;startVoiceVisualizers();if(pc&&dataChannel&&dataChannel.readyState==="open"&&!audioSender)addProcessedTrackToPC();muteVoiceBtn.disabled=false}
+function addProcessedTrackToPC(){if(!pc||!processedStream)return;audioSender=pc.addTrack(processedStream.getAudioTracks()[0],processedStream);log("[system] outgoing audio track added to peer connection")}
+function setupRemoteVisualizer(stream){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(remoteSourceNode){try{remoteSourceNode.disconnect()}catch(e){}}remoteSourceNode=audioCtx.createMediaStreamSource(stream);remoteAnalyser=audioCtx.createAnalyser();remoteAnalyser.fftSize=256;remoteAnalyser.smoothingTimeConstant=.75;remoteSourceNode.connect(remoteAnalyser);startVoiceVisualizers()}
+function startVoiceVisualizers(){if(visualizerStarted)return;visualizerStarted=true;requestAnimationFrame(drawVoiceVisualizers)}function drawVoiceVisualizers(){drawAnalyserBars(localAnalyser,localVoiceCanvas,"#E0943B","#ffd27a");drawAnalyserBars(remoteAnalyser,remoteVoiceCanvas,"#00aaff","#80ffff");requestAnimationFrame(drawVoiceVisualizers)}function drawAnalyserBars(analyser,canvas,barColor,peakColor){if(!canvas)return;const ctx=canvas.getContext("2d"),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle="#050505";ctx.fillRect(0,0,w,h);ctx.strokeStyle="#222";ctx.lineWidth=1;for(let y=0;y<h;y+=15){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}if(!analyser){ctx.fillStyle="#333";ctx.font="12px monospace";ctx.fillText("waiting for audio...",12,52);return}const data=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(data);const bars=48,gap=2,bw=(w-(bars-1)*gap)/bars;for(let i=0;i<bars;i++){const start=Math.floor(i*data.length/bars),end=Math.floor((i+1)*data.length/bars);let sum=0;for(let j=start;j<end;j++)sum+=data[j];const avg=sum/Math.max(1,end-start),bh=Math.max(2,avg/255*h),x=i*(bw+gap),y=h-bh;ctx.fillStyle=barColor;ctx.fillRect(x,y,bw,bh);if(avg>180){ctx.fillStyle=peakColor;ctx.fillRect(x,Math.max(0,y-3),bw,3)}}}
+function getLocalSdpInfo(alerts=true){const text=localSDP.value.trim();if(!text){if(alerts)alert("No Local SDP yet.");return null}let desc;try{desc=JSON.parse(text)}catch(e){if(alerts)alert("Local SDP is not valid JSON.");return null}if(desc.type!=="offer"&&desc.type!=="answer"){if(alerts)alert("Local SDP must be type offer or answer.");return null}return{type:desc.type,text,desc}}
+function getFirebaseKeysForType(type){if(type==="offer")return{sdpKey:"offer",usernameKey:"offerUsername",timestampKey:"offerTimestamp"};if(type==="answer")return{sdpKey:"answer",usernameKey:"answerUsername",timestampKey:"answerTimestamp"};throw new Error("Unknown SDP type: "+type)}
+async function sendLocalSdpToFirebase(){const info=getLocalSdpInfo(true);if(!info)return;const keys=getFirebaseKeysForType(info.type),username=getUsername(),timestamp=getTimestampString();console.log("========== SEND LOCAL SDP ==========");console.log("Local SDP type:",info.type);console.log("Name input value:",username);console.log("Firebase keys:",keys);console.log("====================================");const results=await Promise.all([myDb.WriteData(`voice_chat/${keys.sdpKey}`,info.text),myDb.WriteData(`voice_chat/${keys.usernameKey}`,username),myDb.WriteData(`voice_chat/${keys.timestampKey}`,timestamp)]);if(results.some(x=>x===null)){log(`[system] failed to send ${info.type} SDP metadata to Firebase`);return}log(`[system] sent local ${info.type} SDP to Firebase as ${username} at ${formatTimestamp(timestamp)}`)}
+async function readSdpFromFirebase(type){const keys=getFirebaseKeysForType(type);const [sdp,username,timestamp]=await Promise.all([myDb.GetData(`voice_chat/${keys.sdpKey}`),myDb.GetData(`voice_chat/${keys.usernameKey}`),myDb.GetData(`voice_chat/${keys.timestampKey}`)]);if(typeof sdp!=="string"){alert(`Firebase ${type} value was not a string.`);return""}if(type==="offer"){dbOfferSDP.value=sdp;dbOfferUsername.value=typeof username==="string"?username:"";dbOfferTimestamp.value=typeof timestamp==="string"?formatTimestamp(timestamp):""}if(type==="answer"){dbAnswerSDP.value=sdp;dbAnswerUsername.value=typeof username==="string"?username:"";dbAnswerTimestamp.value=typeof timestamp==="string"?formatTimestamp(timestamp):""}log(`[system] read ${type} SDP from Firebase — ${typeof username==="string"?username:"unknown user"}`);return sdp}
+async function useFirebaseSdpAsRemote(type){let value=type==="offer"?dbOfferSDP.value.trim():dbAnswerSDP.value.trim();if(!value)value=await readSdpFromFirebase(type);if(!value){alert(`No ${type} SDP found.`);return false}remoteSDP.value=value;log(`[system] copied Firebase ${type} SDP into Remote SDP box`);return true}async function readFirebaseSdpAndSetRemote(type){const copied=await useFirebaseSdpAsRemote(type);if(copied)setTimeout(()=>setRemoteBtn.click(),150)}
+muteVoiceBtn.onclick=()=>{if(!micGainNode)return;const m=micGainNode.gain.value===0;micGainNode.gain.value=m?parseFloat(micVol.value):0;muteVoiceBtn.textContent=m?"Mute":"Unmute";log("[system] microphone "+(m?"unmuted":"muted"))};micVol.addEventListener("input",()=>{const v=parseFloat(micVol.value);micVal.textContent=v.toFixed(2);if(micGainNode&&micGainNode.gain.value!==0)micGainNode.gain.value=v});spkVol.addEventListener("input",()=>{const v=parseFloat(spkVol.value);spkVal.textContent=v.toFixed(2);remoteAudio.volume=v});
+createOfferBtn.onclick=async()=>{if(!pc)makePeerConnection();try{await ensureMicReady()}catch(e){return}if(!audioSender)addProcessedTrackToPC();dataChannel=pc.createDataChannel("chat");setupDataChannel();const offer=await pc.createOffer();await pc.setLocalDescription(offer);setState("offer created, gathering ICE")};
+setRemoteBtn.onclick=async()=>{const text=remoteSDP.value.trim();if(!text)return alert("Paste remote SDP first");let desc;try{desc=JSON.parse(text)}catch(e){return alert("Invalid JSON SDP")}if(!pc)makePeerConnection();try{await pc.setRemoteDescription(desc);setState("remote description set");if(desc.type==="offer"){try{await ensureMicReady()}catch(e){return}if(!audioSender)addProcessedTrackToPC();const answer=await pc.createAnswer();await pc.setLocalDescription(answer);setState("answer created, gathering ICE")}else if(desc.type==="answer"){setState("answer received")}}catch(err){console.error(err);alert("Failed to set remote description: "+err)}};
+copyLocalBtn.onclick=async()=>{if(!localSDP.value)return alert("No local SDP yet");try{await navigator.clipboard.writeText(localSDP.value);alert("Local SDP copied to clipboard")}catch(e){alert("Copy failed: "+e)}};pasteRemoteBtn.onclick=async()=>{try{remoteSDP.value=await navigator.clipboard.readText()}catch(e){alert("Paste failed: "+e)}};
+sendLocalToDbBtn.onclick=()=>sendLocalSdpToFirebase();readOfferFromDbBtn.onclick=()=>readSdpFromFirebase("offer");readAnswerFromDbBtn.onclick=()=>readSdpFromFirebase("answer");useOfferAsRemoteBtn.onclick=()=>useFirebaseSdpAsRemote("offer");useAnswerAsRemoteBtn.onclick=()=>useFirebaseSdpAsRemote("answer");readOfferAndSetRemoteBtn.onclick=()=>readFirebaseSdpAndSetRemote("offer");readAnswerAndSetRemoteBtn.onclick=()=>readFirebaseSdpAndSetRemote("answer");
+genTxtBtn.onclick=()=>{if(!localSDP.value)return alert("No local SDP yet");let desc;try{desc=JSON.parse(localSDP.value)}catch(e){desc=null}const type=desc&&desc.type?desc.type:"offer",filename=formatFilename(type),blob=new Blob([localSDP.value],{type:"text/plain"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)};function pad(n){return n.toString().padStart(2,"0")}function formatFilename(type){const d=new Date(),MM=pad(d.getMonth()+1),DD=pad(d.getDate()),YY=pad(d.getFullYear()%100);let hh=d.getHours();const mm=pad(d.getMinutes()),ampm=hh>=12?"pm":"am";hh=hh%12;if(hh===0)hh=12;return`vc_${type}_${MM}${DD}${YY}_${pad(hh)}${mm}${ampm}.txt`}
+uploadBtn.onclick=()=>fileInput.click();fileInput.addEventListener("change",handleFiles);async function handleFiles(e){const f=e.target.files&&e.target.files[0];if(!f)return;await readAndImportFile(f);fileInput.value=""}async function readAndImportFile(file){const text=await file.text();try{JSON.parse(text);remoteSDP.value=text}catch(e){remoteSDP.value=text.trim()}setTimeout(()=>setRemoteBtn.click(),200)}dropZone.addEventListener("dragover",e=>{e.preventDefault();dropZone.style.borderColor="#E0943B"});dropZone.addEventListener("dragleave",e=>{e.preventDefault();dropZone.style.borderColor="#444"});dropZone.addEventListener("drop",async e=>{e.preventDefault();dropZone.style.borderColor="#444";const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(!f)return;await readAndImportFile(f)});
+sendBtn.onclick=()=>{const text=msgInput.value.trim();if(!text||!dataChannel||dataChannel.readyState!=="open")return;dataChannel.send(text);log("You: "+text);msgInput.value=""};msgInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendBtn.click()}});
+window.addEventListener("load",async()=>{loadSavedUsername();startVoiceVisualizers();const frag=location.hash;if(!frag)return;const m=frag.match(/sdp=([^&]+)/);if(!m)return;try{const decoded=decodeURIComponent(escape(atob(m[1])));remoteSDP.value=decoded;setTimeout(()=>setRemoteBtn.click(),300)}catch(e){console.warn("Failed to decode SDP from URL",e)}});
+setState("idle");sendBtn.disabled=true;msgInput.disabled=true;genTxtBtn.disabled=true;sendLocalToDbBtn.disabled=true;muteVoiceBtn.disabled=true;
+</script>
 </body>
 </html>
