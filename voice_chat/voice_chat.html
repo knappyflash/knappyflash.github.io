@@ -10,7 +10,7 @@ body{background:#000;color:#fff;font-family:'Press Start 2P',monospace;margin:0;
 </head>
 <body>
 <div class="container">
-<h1 class="small">Voice Chat</h1>
+<h1 class="small">Voice Chat <a href="vc_instructions.html" target="_blank"  rel="noopener noreferrer">(Instructions)</a></h1>
 <div class="box"><div>Hey, I'm kflash 👋 — WebRTC chat with Firebase SDP sharing, usernames, timestamps, visualizers, and toggleable noise cancellation.</div><div class="status">Connection: <strong id="state">idle</strong></div></div>
 <div class="box"><div><strong>Your Name</strong></div><div class="row"><label for="userNameInput">Name</label><input id="userNameInput" type="text" placeholder="Type your name" maxlength="40" /></div><div class="small">Saved to <code>localStorage</code>. Offers write to <code>offerUsername</code>; answers write to <code>answerUsername</code>.</div></div>
 <div class="sdp-layout">
@@ -28,6 +28,16 @@ body{background:#000;color:#fff;font-family:'Press Start 2P',monospace;margin:0;
 <div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN. Serve over HTTPS or localhost.</div>
 </div>
 <script>
+const pageTitle = "WebRTC Voice Chat";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
 console.log("Voice chat version: auto-answer-send-after-read-offer-7");
 class Db{constructor(){this.DB_URL="https://kflash-a660b-default-rtdb.firebaseio.com";}NormalizePath(p){return String(p||"").replace(/^\/+/,"");}async GetData(p){try{const path=this.NormalizePath(p),url=`${this.DB_URL}/${path}.json`;console.log("GET URL:",url);const r=await fetch(url);console.log("GET Response status:",r.status);if(!r.ok){const t=await r.text();console.error("GET Error response:",t);throw new Error(`HTTP error! Status: ${r.status}`)}const d=await r.json();console.log("Retrieved Data:",d);return d}catch(e){console.error("Error reading data:",e);return null}}async WriteData(p,payload){try{const path=this.NormalizePath(p),url=`${this.DB_URL}/${path}.json`,body=JSON.stringify(payload);console.log("PUT URL:",url);console.log("PUT Payload object:",payload);console.log("PUT Payload JSON:",body);const r=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body});console.log("PUT Response status:",r.status);if(!r.ok){const t=await r.text();console.error("PUT Error response:",t);throw new Error(`HTTP error! Status: ${r.status}`)}const d=await r.json();console.log("Data Written Successfully:",d);return d}catch(e){console.error("Error writing data:",e);return null}}}
 const myDb=new Db(),config={iceServers:[{urls:"stun:stun.l.google.com:19302"}]},USERNAME_KEY="kflash_voice_chat_username";
