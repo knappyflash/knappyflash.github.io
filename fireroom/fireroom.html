@@ -22,6 +22,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 console.log('Fireroom version: encrypted-offer-answer-clear-password-hash-2');
+
+const pageTitle = "Fireroom";
+window.addEventListener("load", function () {
+    console.log(pageTitle + " Page is loaded");
+    changeTitle();
+});
+function changeTitle() {
+  const headerFrame = parent.frames["header"];
+  const title = headerFrame.document.getElementById("topTitle");
+  title.textContent = pageTitle;
+}
+
 const firebaseConfig={apiKey:"AIzaSyB8xBJ09Oua24wfMFfjptpWTNdYeH7lZ-8",authDomain:"kflash-a660b.firebaseapp.com",databaseURL:"https://kflash-a660b-default-rtdb.firebaseio.com",projectId:"kflash-a660b",storageBucket:"kflash-a660b.firebasestorage.app",messagingSenderId:"1062304187489",appId:"1:1062304187489:web:e57fd914a967b5eff99620",measurementId:"G-M7XQ228MGB"};
 const firebaseApp=initializeApp(firebaseConfig),firebaseDb=getDatabase(firebaseApp);
 const myDb={async GetData(path){try{const s=await get(ref(firebaseDb,path));return s.exists()?s.val():null}catch(e){console.error('GET',path,e);return null}},async WriteData(path,value){try{await set(ref(firebaseDb,path),value);return value}catch(e){console.error('SET',path,e);return null}},Listen(path,cb){return onValue(ref(firebaseDb,path),s=>cb(s.val()),e=>console.error('LISTEN',path,e))}};
