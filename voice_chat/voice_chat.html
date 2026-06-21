@@ -3,53 +3,276 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voice Chat</title>
+  <title>Voice Chat Firebase One File</title>
+
   <style>
-    body { background:#000; color:#fff; font-family: 'Press Start 2P', monospace; margin:0; padding:18px; }
-    .container { max-width:900px; margin:0 auto; }
-    .box { border:4px solid #E0943B; border-radius:8px; padding:12px; margin-bottom:12px; background:rgba(0,0,0,0.6); }
-    textarea { width:100%; height:120px; background:#111; color:#fff; border:2px solid #333; padding:8px; box-sizing:border-box; resize:vertical; }
-    .row { display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap; }
-    button { background:#E0943B; border:none; color:#000; padding:8px 12px; cursor:pointer; font-weight:bold; }
-    #chatLog { height:220px; overflow:auto; background:#050505; padding:8px; border:2px solid #222; }
-    #msg { width:100%; padding:8px; box-sizing:border-box; background:#111; color:#fff; border:2px solid #333; }
-    .status { font-size:12px; margin-top:6px; color:#ffd27a; }
-    .small { font-size:12px; color:#ccc; }
-    label { font-size:12px; color:#ffd27a; margin-right:6px; }
-    input[type="range"] { width:180px; }
-    audio { display:block; margin-top:8px; width:100%; }
-    .file-drop { border:2px dashed #444; padding:10px; text-align:center; color:#ccc; margin-top:8px; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0;
+      padding: 18px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .box {
+      border: 4px solid #E0943B;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #111;
+      color: #fff;
+      border: 2px solid #333;
+      padding: 8px;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    input[type="text"],
+    input[readonly] {
+      background: #111;
+      color: #fff;
+      border: 2px solid #333;
+      padding: 8px;
+      box-sizing: border-box;
+      font-family: monospace;
+    }
+
+    #userNameInput {
+      min-width: 260px;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .meta-grid label {
+      margin: 0;
+    }
+
+    .meta-grid input {
+      width: 100%;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #E0943B;
+      border: none;
+      color: #000;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    #chatLog {
+      height: 220px;
+      overflow: auto;
+      background: #050505;
+      padding: 8px;
+      border: 2px solid #222;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    #msg {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px;
+      box-sizing: border-box;
+      background: #111;
+      color: #fff;
+      border: 2px solid #333;
+    }
+
+    .status {
+      font-size: 12px;
+      margin-top: 6px;
+      color: #ffd27a;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    label {
+      font-size: 12px;
+      color: #ffd27a;
+      margin-right: 6px;
+    }
+
+    input[type="range"] {
+      width: 180px;
+    }
+
+    audio {
+      display: block;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .file-drop {
+      border: 2px dashed #444;
+      padding: 10px;
+      text-align: center;
+      color: #ccc;
+      margin-top: 8px;
+    }
+
+    .sdp-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .sdp-left,
+    .sdp-right {
+      min-width: 0;
+    }
+
+    .db-textarea {
+      height: 150px;
+    }
+
+    .firebase-title,
+    code {
+      color: #ffd27a;
+    }
+
+    @media (max-width: 850px) {
+      .sdp-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1 class="small">Voice Chat</h1>
 
     <div class="box">
-      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat with always-on voice, mute, volume sliders, TXT export/import</div>
+      <div id="intro">
+        Hey, I'm kflash 👋 — manual WebRTC chat with Firebase SDP sharing, always-on voice, mute, volume sliders, TXT export/import.
+      </div>
       <div class="status">Connection: <strong id="state">idle</strong></div>
     </div>
 
     <div class="box">
-      <div><strong>Local SDP</strong></div>
-      <textarea id="localSDP" readonly></textarea>
+      <div><strong>Your Name</strong></div>
       <div class="row">
-        <button id="copyLocal">Copy Local SDP</button>
-        <button id="createOffer">Create Offer</button>
-        <button id="genTxt" disabled>Generate TXT File</button>
+        <label for="userNameInput">Name</label>
+        <input id="userNameInput" type="text" placeholder="Type your name" maxlength="40" />
+      </div>
+      <div class="small">
+        Your name is saved in this browser with <code>localStorage</code>, then sent with your Firebase offer/answer timestamp.
       </div>
     </div>
 
-    <div class="box">
-      <div><strong>Remote SDP</strong></div>
-      <textarea id="remoteSDP" placeholder="Paste remote SDP here"></textarea>
-      <div class="row">
-        <button id="setRemote">Set Remote</button>
-        <button id="pasteRemote">Paste from clipboard</button>
-        <input id="fileInput" type="file" accept=".txt,.json" style="display:none">
-        <button id="uploadBtn">Upload TXT</button>
+    <div class="sdp-layout">
+      <div class="sdp-left">
+        <div class="box">
+          <div><strong>Local SDP</strong></div>
+          <textarea id="localSDP" readonly></textarea>
+          <div class="row">
+            <button id="copyLocal">Copy Local SDP</button>
+            <button id="createOffer">Create Offer</button>
+            <button id="genTxt" disabled>Generate TXT File</button>
+            <button id="sendLocalToDb" disabled>Send Local SDP To Firebase</button>
+          </div>
+          <div class="small">
+            If Local SDP is type <strong>offer</strong>, it saves to <code>voice_chat/offer</code>, <code>voice_chat/offerUserName</code>, and <code>voice_chat/offerTimestamp</code>.
+            If it is type <strong>answer</strong>, it saves to <code>voice_chat/answer</code>, <code>voice_chat/answerUserName</code>, and <code>voice_chat/answerTimestamp</code>.
+          </div>
+        </div>
+
+        <div class="box">
+          <div><strong>Remote SDP</strong></div>
+          <textarea id="remoteSDP" placeholder="Paste remote SDP here"></textarea>
+          <div class="row">
+            <button id="setRemote">Set Remote</button>
+            <button id="pasteRemote">Paste from clipboard</button>
+            <input id="fileInput" type="file" accept=".txt,.json" style="display:none">
+            <button id="uploadBtn">Upload TXT</button>
+          </div>
+          <div class="file-drop" id="dropZone">Or drag & drop an offer.txt / answer.txt here</div>
+        </div>
       </div>
-      <div class="file-drop" id="dropZone">Or drag & drop an offer.txt / answer.txt here</div>
+
+      <div class="sdp-right">
+        <div class="box">
+          <div class="firebase-title"><strong>Firebase Offer SDP</strong></div>
+
+          <div class="meta-grid">
+            <label>Username</label>
+            <input id="dbOfferUserName" type="text" readonly />
+            <label>Timestamp</label>
+            <input id="dbOfferTimestamp" type="text" readonly />
+          </div>
+
+          <textarea id="dbOfferSDP" class="db-textarea" readonly></textarea>
+          <div class="row">
+            <button id="readOfferFromDb">Read Offer From DB</button>
+            <button id="useOfferAsRemote">Use Offer As Remote</button>
+            <button id="readOfferAndSetRemote">Read Offer + Set Remote</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="firebase-title"><strong>Firebase Answer SDP</strong></div>
+
+          <div class="meta-grid">
+            <label>Username</label>
+            <input id="dbAnswerUserName" type="text" readonly />
+            <label>Timestamp</label>
+            <input id="dbAnswerTimestamp" type="text" readonly />
+          </div>
+
+          <textarea id="dbAnswerSDP" class="db-textarea" readonly></textarea>
+          <div class="row">
+            <button id="readAnswerFromDb">Read Answer From DB</button>
+            <button id="useAnswerAsRemote">Use Answer As Remote</button>
+            <button id="readAnswerAndSetRemote">Read Answer + Set Remote</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="box">
@@ -80,11 +303,81 @@
       </div>
     </div>
 
-    <div class="small">Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN. Serve over HTTPS.</div>
+    <div class="small">
+      Notes: Uses STUN: stun.l.google.com:19302. For reliable connectivity across restrictive NATs you will need TURN. Serve over HTTPS or localhost.
+    </div>
   </div>
 
   <script>
+    class Db {
+      constructor() {
+        this.DB_URL = "https://kflash-a660b-default-rtdb.firebaseio.com";
+      }
+
+      NormalizePath(path) {
+        return String(path || "").replace(/^\/+/, "");
+      }
+
+      async GetData(path) {
+        try {
+          const cleanPath = this.NormalizePath(path);
+          const url = `${this.DB_URL}/${cleanPath}.json`;
+          console.log("GET URL:", url);
+          const response = await fetch(url);
+          console.log("GET Response status:", response.status);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("GET Error response:", errorText);
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("Retrieved Data:", data);
+          return data;
+        } catch (error) {
+          console.error("Error reading data:", error);
+          return null;
+        }
+      }
+
+      async WriteData(path, payload) {
+        try {
+          const cleanPath = this.NormalizePath(path);
+          const url = `${this.DB_URL}/${cleanPath}.json`;
+          const jsonPayload = JSON.stringify(payload);
+
+          console.log("PUT URL:", url);
+          console.log("PUT Payload object:", payload);
+          console.log("PUT Payload JSON:", jsonPayload);
+
+          const response = await fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: jsonPayload
+          });
+
+          console.log("PUT Response status:", response.status);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("PUT Error response:", errorText);
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("Data Written Successfully:", data);
+          return data;
+        } catch (error) {
+          console.error("Error writing data:", error);
+          return null;
+        }
+      }
+    }
+
+    const myDb = new Db();
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+    const USER_NAME_STORAGE_KEY = "kflash_voice_chat_user_name";
 
     let pc = null;
     let dataChannel = null;
@@ -95,30 +388,47 @@
     let micSourceNode = null;
     let audioSender = null;
 
-    // Elements
-    const localSDP = document.getElementById('localSDP');
-    const remoteSDP = document.getElementById('remoteSDP');
-    const createOfferBtn = document.getElementById('createOffer');
-    const genTxtBtn = document.getElementById('genTxt');
-    const setRemoteBtn = document.getElementById('setRemote');
-    const copyLocalBtn = document.getElementById('copyLocal');
-    const pasteRemoteBtn = document.getElementById('pasteRemote');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const fileInput = document.getElementById('fileInput');
-    const dropZone = document.getElementById('dropZone');
-    const chatLog = document.getElementById('chatLog');
-    const msgInput = document.getElementById('msg');
-    const sendBtn = document.getElementById('send');
-    const stateEl = document.getElementById('state');
-    const muteVoiceBtn = document.getElementById('muteVoice');
-    const micVol = document.getElementById('micVol');
-    const spkVol = document.getElementById('spkVol');
-    const micVal = document.getElementById('micVal');
-    const spkVal = document.getElementById('spkVal');
-    const remoteAudio = document.getElementById('remoteAudio');
+    const userNameInput = document.getElementById("userNameInput");
+    const localSDP = document.getElementById("localSDP");
+    const remoteSDP = document.getElementById("remoteSDP");
+    const createOfferBtn = document.getElementById("createOffer");
+    const genTxtBtn = document.getElementById("genTxt");
+    const setRemoteBtn = document.getElementById("setRemote");
+    const copyLocalBtn = document.getElementById("copyLocal");
+    const pasteRemoteBtn = document.getElementById("pasteRemote");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const sendLocalToDbBtn = document.getElementById("sendLocalToDb");
+
+    const dbOfferSDP = document.getElementById("dbOfferSDP");
+    const dbOfferUserName = document.getElementById("dbOfferUserName");
+    const dbOfferTimestamp = document.getElementById("dbOfferTimestamp");
+
+    const dbAnswerSDP = document.getElementById("dbAnswerSDP");
+    const dbAnswerUserName = document.getElementById("dbAnswerUserName");
+    const dbAnswerTimestamp = document.getElementById("dbAnswerTimestamp");
+
+    const readOfferFromDbBtn = document.getElementById("readOfferFromDb");
+    const readAnswerFromDbBtn = document.getElementById("readAnswerFromDb");
+    const useOfferAsRemoteBtn = document.getElementById("useOfferAsRemote");
+    const useAnswerAsRemoteBtn = document.getElementById("useAnswerAsRemote");
+    const readOfferAndSetRemoteBtn = document.getElementById("readOfferAndSetRemote");
+    const readAnswerAndSetRemoteBtn = document.getElementById("readAnswerAndSetRemote");
+
+    const chatLog = document.getElementById("chatLog");
+    const msgInput = document.getElementById("msg");
+    const sendBtn = document.getElementById("send");
+    const stateEl = document.getElementById("state");
+    const muteVoiceBtn = document.getElementById("muteVoice");
+    const micVol = document.getElementById("micVol");
+    const spkVol = document.getElementById("spkVol");
+    const micVal = document.getElementById("micVal");
+    const spkVal = document.getElementById("spkVal");
+    const remoteAudio = document.getElementById("remoteAudio");
 
     function log(s) {
-      const line = document.createElement('div');
+      const line = document.createElement("div");
       line.textContent = s;
       chatLog.appendChild(line);
       chatLog.scrollTop = chatLog.scrollHeight;
@@ -128,9 +438,37 @@
       stateEl.textContent = s;
     }
 
+    function loadSavedUserName() {
+      const savedName = localStorage.getItem(USER_NAME_STORAGE_KEY);
+      if (savedName) {
+        userNameInput.value = savedName;
+      }
+    }
+
+    function getUserName() {
+      const name = userNameInput.value.trim() || "Anonymous";
+      localStorage.setItem(USER_NAME_STORAGE_KEY, name);
+      return name;
+    }
+
+    function getTimestampString() {
+      return new Date().toISOString();
+    }
+
+    function formatTimestampForDisplay(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString();
+    }
+
+    userNameInput.addEventListener("input", () => {
+      localStorage.setItem(USER_NAME_STORAGE_KEY, userNameInput.value.trim());
+    });
+
     function makePeerConnection() {
       pc = new RTCPeerConnection(config);
-      setState('pc created');
+      setState("pc created");
 
       pc.ondatachannel = (ev) => {
         dataChannel = ev.channel;
@@ -149,36 +487,41 @@
         if (!ev.candidate) {
           localSDP.value = JSON.stringify(pc.localDescription);
           genTxtBtn.disabled = false;
-          setState('ice-gathering-complete');
+          sendLocalToDbBtn.disabled = false;
+          setState("ice-gathering-complete");
+
+          const info = getLocalSdpInfo(false);
+          if (info) log(`[system] local ${info.type} SDP ready`);
         }
       };
     }
 
     function setupDataChannel() {
       dataChannel.onopen = () => {
-        log('[system] datachannel open');
+        log("[system] datachannel open");
         sendBtn.disabled = false;
         msgInput.disabled = false;
-        setState('connected');
+        setState("connected");
         if (localStream && !audioSender) addProcessedTrackToPC();
       };
+
       dataChannel.onclose = () => {
-        log('[system] datachannel closed');
+        log("[system] datachannel closed");
         sendBtn.disabled = true;
         msgInput.disabled = true;
-        setState('closed');
+        setState("closed");
       };
-      dataChannel.onmessage = (ev) => {
-        log('Peer: ' + ev.data);
-      };
+
+      dataChannel.onmessage = (ev) => log("Peer: " + ev.data);
     }
 
     async function ensureMicReady() {
       if (localStream && processedStream) return;
+
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch (e) {
-        alert('Microphone access denied or unavailable: ' + e);
+        alert("Microphone access denied or unavailable: " + e);
         throw e;
       }
 
@@ -187,45 +530,154 @@
       micSourceNode = audioCtx.createMediaStreamSource(localStream);
       micGainNode = audioCtx.createGain();
       micGainNode.gain.value = parseFloat(micVol.value);
+
       const dest = audioCtx.createMediaStreamDestination();
       micSourceNode.connect(micGainNode);
       micGainNode.connect(dest);
       processedStream = dest.stream;
 
-      if (pc && dataChannel && dataChannel.readyState === 'open' && !audioSender) {
-        addProcessedTrackToPC();
-      }
-
+      if (pc && dataChannel && dataChannel.readyState === "open" && !audioSender) addProcessedTrackToPC();
       muteVoiceBtn.disabled = false;
     }
 
     function addProcessedTrackToPC() {
       if (!pc || !processedStream) return;
       audioSender = pc.addTrack(processedStream.getAudioTracks()[0], processedStream);
-      log('[system] outgoing audio track added to peer connection');
+      log("[system] outgoing audio track added to peer connection");
+    }
+
+    function getLocalSdpInfo(showAlerts = true) {
+      const text = localSDP.value.trim();
+      if (!text) {
+        if (showAlerts) alert("No Local SDP yet.");
+        return null;
+      }
+
+      let desc;
+      try {
+        desc = JSON.parse(text);
+      } catch (error) {
+        if (showAlerts) alert("Local SDP is not valid JSON.");
+        return null;
+      }
+
+      if (desc.type !== "offer" && desc.type !== "answer") {
+        if (showAlerts) alert("Local SDP must be type offer or answer.");
+        return null;
+      }
+
+      return { type: desc.type, text, desc };
+    }
+
+    function getFirebaseKeysForType(type) {
+      if (type === "offer") {
+        return {
+          sdpKey: "offer",
+          userNameKey: "offerUserName",
+          timestampKey: "offerTimestamp"
+        };
+      }
+
+      return {
+        sdpKey: "answer",
+        userNameKey: "answerUserName",
+        timestampKey: "answerTimestamp"
+      };
+    }
+
+    async function sendLocalSdpToFirebase() {
+      const sdpInfo = getLocalSdpInfo(true);
+      if (!sdpInfo) return;
+
+      const keys = getFirebaseKeysForType(sdpInfo.type);
+      const userName = getUserName();
+      const timestamp = getTimestampString();
+
+      const results = await Promise.all([
+        myDb.WriteData(`voice_chat/${keys.sdpKey}`, sdpInfo.text),
+        myDb.WriteData(`voice_chat/${keys.userNameKey}`, userName),
+        myDb.WriteData(`voice_chat/${keys.timestampKey}`, timestamp)
+      ]);
+
+      if (results.some(result => result === null)) {
+        log(`[system] failed to send ${sdpInfo.type} SDP metadata to Firebase`);
+        return;
+      }
+
+      log(`[system] sent local ${sdpInfo.type} SDP to Firebase as ${userName} at ${formatTimestampForDisplay(timestamp)}`);
+    }
+
+    async function readSdpFromFirebase(type) {
+      const keys = getFirebaseKeysForType(type);
+
+      const [sdpValue, userNameValue, timestampValue] = await Promise.all([
+        myDb.GetData(`voice_chat/${keys.sdpKey}`),
+        myDb.GetData(`voice_chat/${keys.userNameKey}`),
+        myDb.GetData(`voice_chat/${keys.timestampKey}`)
+      ]);
+
+      if (typeof sdpValue !== "string") {
+        alert(`Firebase ${type} value was not a string.`);
+        return "";
+      }
+
+      const displayName = typeof userNameValue === "string" ? userNameValue : "";
+      const displayTime = typeof timestampValue === "string" ? timestampValue : "";
+
+      if (type === "offer") {
+        dbOfferSDP.value = sdpValue;
+        dbOfferUserName.value = displayName;
+        dbOfferTimestamp.value = formatTimestampForDisplay(displayTime);
+      }
+
+      if (type === "answer") {
+        dbAnswerSDP.value = sdpValue;
+        dbAnswerUserName.value = displayName;
+        dbAnswerTimestamp.value = formatTimestampForDisplay(displayTime);
+      }
+
+      log(`[system] read ${type} SDP from Firebase — ${displayName || "unknown user"} ${displayTime ? "at " + formatTimestampForDisplay(displayTime) : ""}`);
+      return sdpValue;
+    }
+
+    async function useFirebaseSdpAsRemote(type) {
+      let value = type === "offer" ? dbOfferSDP.value.trim() : dbAnswerSDP.value.trim();
+      if (!value) value = await readSdpFromFirebase(type);
+      if (!value) {
+        alert(`No ${type} SDP found.`);
+        return false;
+      }
+      remoteSDP.value = value;
+      log(`[system] copied Firebase ${type} SDP into Remote SDP box`);
+      return true;
+    }
+
+    async function readFirebaseSdpAndSetRemote(type) {
+      const copied = await useFirebaseSdpAsRemote(type);
+      if (!copied) return;
+      setTimeout(() => setRemoteBtn.click(), 150);
     }
 
     muteVoiceBtn.onclick = () => {
       if (!micGainNode) return;
       const isMuted = micGainNode.gain.value === 0;
       micGainNode.gain.value = isMuted ? parseFloat(micVol.value) : 0;
-      muteVoiceBtn.textContent = isMuted ? 'Mute' : 'Unmute';
-      log('[system] microphone ' + (isMuted ? 'unmuted' : 'muted'));
+      muteVoiceBtn.textContent = isMuted ? "Mute" : "Unmute";
+      log("[system] microphone " + (isMuted ? "unmuted" : "muted"));
     };
 
-    micVol.addEventListener('input', () => {
+    micVol.addEventListener("input", () => {
       const v = parseFloat(micVol.value);
       micVal.textContent = v.toFixed(2);
       if (micGainNode && micGainNode.gain.value !== 0) micGainNode.gain.value = v;
     });
 
-    spkVol.addEventListener('input', () => {
+    spkVol.addEventListener("input", () => {
       const v = parseFloat(spkVol.value);
       spkVal.textContent = v.toFixed(2);
       remoteAudio.volume = v;
     });
 
-    // Initiator: create offer. Ensure mic is ready first so audio is included in SDP.
     createOfferBtn.onclick = async () => {
       if (!pc) makePeerConnection();
 
@@ -236,81 +688,89 @@
       }
 
       if (!audioSender) addProcessedTrackToPC();
-
-      dataChannel = pc.createDataChannel('chat');
+      dataChannel = pc.createDataChannel("chat");
       setupDataChannel();
 
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      setState('offer created, gathering ICE');
+      setState("offer created, gathering ICE");
     };
 
-    // Set remote SDP (works for both sides). If remote is an offer, ensure mic is ready before creating answer.
     setRemoteBtn.onclick = async () => {
       const text = remoteSDP.value.trim();
-      if (!text) return alert('Paste remote SDP first');
+      if (!text) return alert("Paste remote SDP first");
+
       let desc;
       try {
         desc = JSON.parse(text);
       } catch (e) {
-        return alert('Invalid JSON SDP');
+        return alert("Invalid JSON SDP");
       }
 
       if (!pc) makePeerConnection();
 
       try {
         await pc.setRemoteDescription(desc);
-        setState('remote description set');
+        setState("remote description set");
 
-        if (desc.type === 'offer') {
+        if (desc.type === "offer") {
           try {
             await ensureMicReady();
           } catch (e) {
             return;
           }
+
           if (!audioSender) addProcessedTrackToPC();
 
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
-          setState('answer created, gathering ICE');
-        } else if (desc.type === 'answer') {
-          setState('answer received');
+          setState("answer created, gathering ICE");
+        } else if (desc.type === "answer") {
+          setState("answer received");
         }
       } catch (err) {
         console.error(err);
-        alert('Failed to set remote description: ' + err);
+        alert("Failed to set remote description: " + err);
       }
     };
 
     copyLocalBtn.onclick = async () => {
-      if (!localSDP.value) return alert('No local SDP yet');
+      if (!localSDP.value) return alert("No local SDP yet");
       try {
         await navigator.clipboard.writeText(localSDP.value);
-        alert('Local SDP copied to clipboard');
+        alert("Local SDP copied to clipboard");
       } catch (e) {
-        alert('Copy failed: ' + e);
+        alert("Copy failed: " + e);
       }
     };
 
     pasteRemoteBtn.onclick = async () => {
       try {
-        const txt = await navigator.clipboard.readText();
-        remoteSDP.value = txt;
+        remoteSDP.value = await navigator.clipboard.readText();
       } catch (e) {
-        alert('Paste failed: ' + e);
+        alert("Paste failed: " + e);
       }
     };
 
-    // Generate TXT file download (named like vc_offer_062026_0605pm.txt)
+    sendLocalToDbBtn.onclick = () => sendLocalSdpToFirebase();
+    readOfferFromDbBtn.onclick = () => readSdpFromFirebase("offer");
+    readAnswerFromDbBtn.onclick = () => readSdpFromFirebase("answer");
+    useOfferAsRemoteBtn.onclick = () => useFirebaseSdpAsRemote("offer");
+    useAnswerAsRemoteBtn.onclick = () => useFirebaseSdpAsRemote("answer");
+    readOfferAndSetRemoteBtn.onclick = () => readFirebaseSdpAndSetRemote("offer");
+    readAnswerAndSetRemoteBtn.onclick = () => readFirebaseSdpAndSetRemote("answer");
+
     genTxtBtn.onclick = () => {
-      if (!localSDP.value) return alert('No local SDP yet');
+      if (!localSDP.value) return alert("No local SDP yet");
+
       let desc;
-      try { desc = JSON.parse(localSDP.value); } catch(e){ desc = null; }
-      const type = desc && desc.type ? desc.type : 'offer';
+      try { desc = JSON.parse(localSDP.value); } catch (e) { desc = null; }
+
+      const type = desc && desc.type ? desc.type : "offer";
       const filename = formatFilename(type);
-      const blob = new Blob([localSDP.value], { type: 'text/plain' });
+      const blob = new Blob([localSDP.value], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
@@ -319,8 +779,8 @@
       URL.revokeObjectURL(url);
     };
 
-    // Format filename: vc_offer_062026_0605pm.txt
-    function pad(n) { return n.toString().padStart(2, '0'); }
+    function pad(n) { return n.toString().padStart(2, "0"); }
+
     function formatFilename(type) {
       const d = new Date();
       const MM = pad(d.getMonth() + 1);
@@ -328,23 +788,21 @@
       const YY = pad(d.getFullYear() % 100);
       let hh = d.getHours();
       const mm = pad(d.getMinutes());
-      const ampm = hh >= 12 ? 'pm' : 'am';
+      const ampm = hh >= 12 ? "pm" : "am";
       hh = hh % 12;
       if (hh === 0) hh = 12;
       const HH = pad(hh);
-      // Example: vc_offer_062026_0605pm.txt
       return `vc_${type}_${MM}${DD}${YY}_${HH}${mm}${ampm}.txt`;
     }
 
-    // Upload / import TXT
     uploadBtn.onclick = () => fileInput.click();
-    fileInput.addEventListener('change', handleFiles);
+    fileInput.addEventListener("change", handleFiles);
 
     async function handleFiles(e) {
       const f = e.target.files && e.target.files[0];
       if (!f) return;
       await readAndImportFile(f);
-      fileInput.value = '';
+      fileInput.value = "";
     }
 
     async function readAndImportFile(file) {
@@ -358,53 +816,62 @@
       setTimeout(() => setRemoteBtn.click(), 200);
     }
 
-    // Drag & drop support
-    dropZone.addEventListener('dragover', (ev) => { ev.preventDefault(); dropZone.style.borderColor = '#E0943B'; });
-    dropZone.addEventListener('dragleave', (ev) => { ev.preventDefault(); dropZone.style.borderColor = '#444'; });
-    dropZone.addEventListener('drop', async (ev) => {
+    dropZone.addEventListener("dragover", (ev) => {
       ev.preventDefault();
-      dropZone.style.borderColor = '#444';
+      dropZone.style.borderColor = "#E0943B";
+    });
+
+    dropZone.addEventListener("dragleave", (ev) => {
+      ev.preventDefault();
+      dropZone.style.borderColor = "#444";
+    });
+
+    dropZone.addEventListener("drop", async (ev) => {
+      ev.preventDefault();
+      dropZone.style.borderColor = "#444";
       const f = ev.dataTransfer.files && ev.dataTransfer.files[0];
       if (!f) return;
       await readAndImportFile(f);
     });
 
-    // Send message
     sendBtn.onclick = () => {
       const text = msgInput.value.trim();
-      if (!text || !dataChannel || dataChannel.readyState !== 'open') return;
+      if (!text || !dataChannel || dataChannel.readyState !== "open") return;
       dataChannel.send(text);
-      log('You: ' + text);
-      msgInput.value = '';
+      log("You: " + text);
+      msgInput.value = "";
     };
 
-    msgInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+    msgInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
         e.preventDefault();
         sendBtn.click();
       }
     });
 
-    // Auto-detect fragment on load and paste it into remoteSDP and auto-run setRemote (kept as fallback)
-    window.addEventListener('load', async () => {
+    window.addEventListener("load", async () => {
+      loadSavedUserName();
+
       const frag = location.hash;
       if (!frag) return;
+
       const m = frag.match(/sdp=([^&]+)/);
       if (!m) return;
+
       try {
         const decoded = decodeURIComponent(escape(atob(m[1])));
         remoteSDP.value = decoded;
         setTimeout(() => setRemoteBtn.click(), 300);
       } catch (e) {
-        console.warn('Failed to decode SDP from URL', e);
+        console.warn("Failed to decode SDP from URL", e);
       }
     });
 
-    // Initialize UI state
-    setState('idle');
+    setState("idle");
     sendBtn.disabled = true;
     msgInput.disabled = true;
     genTxtBtn.disabled = true;
+    sendLocalToDbBtn.disabled = true;
     muteVoiceBtn.disabled = true;
   </script>
 </body>
