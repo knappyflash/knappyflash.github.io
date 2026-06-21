@@ -9,7 +9,7 @@
     .container { max-width:900px; margin:0 auto; }
     .box { border:4px solid #E0943B; border-radius:8px; padding:12px; margin-bottom:12px; background:rgba(0,0,0,0.6); }
     textarea { width:100%; height:120px; background:#111; color:#fff; border:2px solid #333; padding:8px; box-sizing:border-box; resize:vertical; }
-    .row { display:flex; gap:8px; margin-top:8px; align-items:center; }
+    .row { display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap; }
     button { background:#E0943B; border:none; color:#000; padding:8px 12px; cursor:pointer; font-weight:bold; }
     #chatLog { height:220px; overflow:auto; background:#050505; padding:8px; border:2px solid #222; }
     #msg { width:100%; padding:8px; box-sizing:border-box; background:#111; color:#fff; border:2px solid #333; }
@@ -18,6 +18,7 @@
     label { font-size:12px; color:#ffd27a; margin-right:6px; }
     input[type="range"] { width:180px; }
     audio { display:block; margin-top:8px; width:100%; }
+    .file-drop { border:2px dashed #444; padding:10px; text-align:center; color:#ccc; margin-top:8px; }
   </style>
 </head>
 <body>
@@ -25,7 +26,7 @@
     <h1 class="small">Voice Chat</h1>
 
     <div class="box">
-      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat with always-on voice, mute, and volume sliders</div>
+      <div id="intro">Hey, I'm kflash 👋 — manual WebRTC chat with always-on voice, mute, volume sliders, file export/import</div>
       <div class="status">Connection: <strong id="state">idle</strong></div>
     </div>
 
@@ -35,7 +36,8 @@
       <div class="row">
         <button id="copyLocal">Copy Local SDP</button>
         <button id="createOffer">Create Offer</button>
-        <button id="genLink" disabled>Generate Link</button>
+        <button id="genTxt" disabled>Generate TXT File</button>
+        <button id="genEmail" disabled>Generate Email File</button>
       </div>
     </div>
 
@@ -45,7 +47,10 @@
       <div class="row">
         <button id="setRemote">Set Remote</button>
         <button id="pasteRemote">Paste from clipboard</button>
+        <input id="fileInput" type="file" accept=".txt,.json" style="display:none">
+        <button id="uploadBtn">Upload TXT</button>
       </div>
+      <div class="file-drop" id="dropZone">Or drag & drop an offer.txt / answer.txt here</div>
     </div>
 
     <div class="box">
@@ -64,7 +69,7 @@
         <button id="muteVoice" disabled>Mute</button>
       </div>
       <audio id="remoteAudio" autoplay playsinline></audio>
-      <div class="small">Microphone will be requested automatically when you create an offer or accept an offer.</div>
+      <div class="small">Microphone will be requested when you create an offer or accept an offer. Mute uses outgoing gain.</div>
     </div>
 
     <div class="box">
@@ -84,8 +89,8 @@
 
     let pc = null;
     let dataChannel = null;
-    let localStream = null;           // raw mic stream from getUserMedia
-    let processedStream = null;       // stream from AudioContext destination (what we send)
+    let localStream = null;
+    let processedStream = null;
     let audioCtx = null;
     let micGainNode = null;
     let micSourceNode = null;
@@ -95,10 +100,14 @@
     const localSDP = document.getElementById('localSDP');
     const remoteSDP = document.getElementById('remoteSDP');
     const createOfferBtn = document.getElementById('createOffer');
-    const genLinkBtn = document.getElementById('genLink');
+    const genTxtBtn = document.getElementById('genTxt');
+    const genEmailBtn = document.getElementById('genEmail');
     const setRemoteBtn = document.getElementById('setRemote');
     const copyLocalBtn = document.getElementById('copyLocal');
     const pasteRemoteBtn = document.getElementById('pasteRemote');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
     const chatLog = document.getElementById('chatLog');
     const msgInput = document.getElementById('msg');
     const sendBtn = document.getElementById('send');
@@ -141,7 +150,8 @@
       pc.onicecandidate = (ev) => {
         if (!ev.candidate) {
           localSDP.value = JSON.stringify(pc.localDescription);
-          genLinkBtn.disabled = false;
+          genTxtBtn.disabled = false;
+          genEmailBtn.disabled = false;
           setState('ice-gathering-complete');
         }
       };
@@ -153,10 +163,7 @@
         sendBtn.disabled = false;
         msgInput.disabled = false;
         setState('connected');
-        // Ensure mic is active when connected: if we have a mic but no sender, add it
-        if (localStream && !audioSender) {
-          addProcessedTrackToPC();
-        }
+        if (localStream && !audioSender) addProcessedTrackToPC();
       };
       dataChannel.onclose = () => {
         log('[system] datachannel closed');
@@ -169,7 +176,6 @@
       };
     }
 
-    // Acquire microphone and prepare processedStream (AudioContext -> Gain -> destination)
     async function ensureMicReady() {
       if (localStream && processedStream) return;
       try {
@@ -179,44 +185,29 @@
         throw e;
       }
 
-      // Create AudioContext and routing only once
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-      // Create source from raw mic
       micSourceNode = audioCtx.createMediaStreamSource(localStream);
-
-      // Create gain node for mic volume + mute control
       micGainNode = audioCtx.createGain();
       micGainNode.gain.value = parseFloat(micVol.value);
-
-      // Destination to produce a MediaStream we can send
       const dest = audioCtx.createMediaStreamDestination();
-
-      // Connect chain: mic -> gain -> dest
       micSourceNode.connect(micGainNode);
       micGainNode.connect(dest);
-
       processedStream = dest.stream;
 
-      // If we already have a pc and datachannel open, add the processed track
       if (pc && dataChannel && dataChannel.readyState === 'open' && !audioSender) {
         addProcessedTrackToPC();
       }
 
-      // Enable mute button now that mic exists
       muteVoiceBtn.disabled = false;
     }
 
     function addProcessedTrackToPC() {
       if (!pc || !processedStream) return;
-      // Add the processed audio track to the peer connection
       audioSender = pc.addTrack(processedStream.getAudioTracks()[0], processedStream);
       log('[system] outgoing audio track added to peer connection');
     }
 
-    // Mute toggles by setting gain to 0 (no renegotiation)
     muteVoiceBtn.onclick = () => {
       if (!micGainNode) return;
       const isMuted = micGainNode.gain.value === 0;
@@ -225,14 +216,12 @@
       log('[system] microphone ' + (isMuted ? 'unmuted' : 'muted'));
     };
 
-    // Mic volume slider changes outgoing gain
     micVol.addEventListener('input', () => {
       const v = parseFloat(micVol.value);
       micVal.textContent = v.toFixed(2);
-      if (micGainNode) micGainNode.gain.value = v;
+      if (micGainNode && micGainNode.gain.value !== 0) micGainNode.gain.value = v;
     });
 
-    // Speaker volume slider controls audio element volume
     spkVol.addEventListener('input', () => {
       const v = parseFloat(spkVol.value);
       spkVal.textContent = v.toFixed(2);
@@ -243,24 +232,20 @@
     createOfferBtn.onclick = async () => {
       if (!pc) makePeerConnection();
 
-      // Request mic (user gesture) and prepare processed stream so it is included in offer
       try {
         await ensureMicReady();
       } catch (e) {
         return;
       }
 
-      // Add processed track if not already added
       if (!audioSender) addProcessedTrackToPC();
 
-      // create data channel as initiator
       dataChannel = pc.createDataChannel('chat');
       setupDataChannel();
 
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
       setState('offer created, gathering ICE');
-      // localSDP will be filled when onicecandidate sees null candidate
     };
 
     // Set remote SDP (works for both sides). If remote is an offer, ensure mic is ready before creating answer.
@@ -281,7 +266,6 @@
         setState('remote description set');
 
         if (desc.type === 'offer') {
-          // We're the answerer: ensure mic is ready so audio is included in answer
           try {
             await ensureMicReady();
           } catch (e) {
@@ -292,7 +276,6 @@
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
           setState('answer created, gathering ICE');
-          // localSDP will be filled when ICE gathering completes
         } else if (desc.type === 'answer') {
           setState('answer received');
         }
@@ -302,7 +285,6 @@
       }
     };
 
-    // Copy local SDP to clipboard
     copyLocalBtn.onclick = async () => {
       if (!localSDP.value) return alert('No local SDP yet');
       try {
@@ -313,19 +295,6 @@
       }
     };
 
-    // Generate link with encoded SDP in fragment
-    genLinkBtn.onclick = () => {
-      if (!localSDP.value) return alert('No local SDP yet');
-      const encoded = btoa(unescape(encodeURIComponent(localSDP.value)));
-      const url = location.origin + location.pathname + '#sdp=' + encoded;
-      navigator.clipboard.writeText(url).then(() => {
-        alert('Link copied to clipboard. Paste into email.');
-      }).catch(() => {
-        prompt('Copy this link and email it:', url);
-      });
-    };
-
-    // Paste remote from clipboard
     pasteRemoteBtn.onclick = async () => {
       try {
         const txt = await navigator.clipboard.readText();
@@ -334,6 +303,113 @@
         alert('Paste failed: ' + e);
       }
     };
+
+    // Generate TXT file download
+    genTxtBtn.onclick = () => {
+      if (!localSDP.value) return alert('No local SDP yet');
+      let desc;
+      try { desc = JSON.parse(localSDP.value); } catch(e){ desc = null; }
+      const type = desc && desc.type ? desc.type : 'offer';
+      const filename = (type === 'offer') ? 'offer.txt' : 'answer.txt';
+      const blob = new Blob([localSDP.value], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    // Generate .eml file with the SDP file attached
+    genEmailBtn.onclick = () => {
+      if (!localSDP.value) return alert('No local SDP yet');
+      let desc;
+      try { desc = JSON.parse(localSDP.value); } catch(e){ desc = null; }
+      const type = desc && desc.type ? desc.type : 'offer';
+      const attachmentName = (type === 'offer') ? 'offer.txt' : 'answer.txt';
+      const boundary = '----=_webrtc_' + Math.random().toString(36).slice(2,12);
+      const now = new Date().toUTCString();
+
+      // Build MIME .eml content: simple headers + multipart with text body and base64 attachment
+      const bodyText = `Attached is the ${type} SDP for the WebRTC session.`;
+      const attachmentBase64 = btoa(unescape(encodeURIComponent(localSDP.value)));
+
+      const emlParts = [];
+      emlParts.push(`From: sender@example.com`);
+      emlParts.push(`To: recipient@example.com`);
+      emlParts.push(`Subject: WebRTC ${type} SDP`);
+      emlParts.push(`Date: ${now}`);
+      emlParts.push(`MIME-Version: 1.0`);
+      emlParts.push(`Content-Type: multipart/mixed; boundary="${boundary}"`);
+      emlParts.push('');
+      emlParts.push(`--${boundary}`);
+      emlParts.push(`Content-Type: text/plain; charset="utf-8"`);
+      emlParts.push(`Content-Transfer-Encoding: 7bit`);
+      emlParts.push('');
+      emlParts.push(bodyText);
+      emlParts.push('');
+      emlParts.push(`--${boundary}`);
+      emlParts.push(`Content-Type: text/plain; name="${attachmentName}"`);
+      emlParts.push(`Content-Transfer-Encoding: base64`);
+      emlParts.push(`Content-Disposition: attachment; filename="${attachmentName}"`);
+      emlParts.push('');
+      // split base64 into 76-char lines per RFC
+      for (let i = 0; i < attachmentBase64.length; i += 76) {
+        emlParts.push(attachmentBase64.slice(i, i + 76));
+      }
+      emlParts.push('');
+      emlParts.push(`--${boundary}--`);
+      emlParts.push('');
+
+      const emlContent = emlParts.join('\r\n');
+      const blob = new Blob([emlContent], { type: 'message/rfc822' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `webrtc-${type}.eml`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    // Upload / import TXT
+    uploadBtn.onclick = () => fileInput.click();
+    fileInput.addEventListener('change', handleFiles);
+
+    async function handleFiles(e) {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      await readAndImportFile(f);
+      fileInput.value = '';
+    }
+
+    async function readAndImportFile(file) {
+      const text = await file.text();
+      // Try to parse as JSON SDP; if not, just paste raw text
+      try {
+        JSON.parse(text);
+        remoteSDP.value = text;
+      } catch (e) {
+        // maybe the file contains extra whitespace; still paste raw
+        remoteSDP.value = text.trim();
+      }
+      // Auto-run setRemote for convenience
+      setTimeout(() => setRemoteBtn.click(), 200);
+    }
+
+    // Drag & drop support
+    dropZone.addEventListener('dragover', (ev) => { ev.preventDefault(); dropZone.style.borderColor = '#E0943B'; });
+    dropZone.addEventListener('dragleave', (ev) => { ev.preventDefault(); dropZone.style.borderColor = '#444'; });
+    dropZone.addEventListener('drop', async (ev) => {
+      ev.preventDefault();
+      dropZone.style.borderColor = '#444';
+      const f = ev.dataTransfer.files && ev.dataTransfer.files[0];
+      if (!f) return;
+      await readAndImportFile(f);
+    });
 
     // Send message
     sendBtn.onclick = () => {
@@ -351,7 +427,7 @@
       }
     });
 
-    // Auto-detect fragment on load and paste it into remoteSDP and auto-run setRemote
+    // Auto-detect fragment on load and paste it into remoteSDP and auto-run setRemote (kept as fallback)
     window.addEventListener('load', async () => {
       const frag = location.hash;
       if (!frag) return;
@@ -370,7 +446,8 @@
     setState('idle');
     sendBtn.disabled = true;
     msgInput.disabled = true;
-    genLinkBtn.disabled = true;
+    genTxtBtn.disabled = true;
+    genEmailBtn.disabled = true;
     muteVoiceBtn.disabled = true;
   </script>
 </body>
