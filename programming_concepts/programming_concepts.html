@@ -1,36 +1,383 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
-    <link href="programming_concepts.css" rel="stylesheet" type="text/css" media="all">
-    <link href="../bg.css" rel="stylesheet" type="text/css" media="all">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Monoton&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div class="page" id="page" name="page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Concepts</title>
 
-        <div id="post">
-          <p>Programming Concepts:</p>
-          <ul>
-            <li>Hello World!</li>   
-            <li>Print</li>  
-            <li>Data Types</li>  
-            <li>Variables</li>  
-            <li>Conditional Statements</li>  
-            <li>Functions/Subroutines</li>  
-            <li>Loops</li>  
-            <li>Binary</li>  
-            <li>Boolean Logic</li>  
-            <li>Objects/Classes</li>  
-            <li>Programming languages</li>  
-            <li>Events</li>  
-            <li>Error handling</li>         
-          </ul>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Monoton&display=swap" rel="stylesheet">
+
+  <!-- CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
+
+  <!-- xterm CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm/css/xterm.css">
+
+  <style>
+    /* Entire scrollbar */
+    ::-webkit-scrollbar {
+      width: 14px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #111;
+      border: 2px solid #E0943B;
+    }
+
+    /* Thumb */
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #E0943B, #8a4f12);
+      border-radius: 4px;
+      border: 2px solid #000;
+    }
+
+    /* Hover effect */
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to bottom, #ffd27a, #E0943B);
+    }
+
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 15px;
+      margin: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .page {
+      min-height: 98vh;
+      margin-top: 10px;
+      margin-left: 0px;
+      border: 5px solid #E0943B;
+      border-radius: 8px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      padding-bottom: 20px;
+    }
+
+    .page > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    #post {
+      background-color: rgba(0, 0, 0, 0.7);
+      margin: 30px 15px;
+      border: 5px solid #E0943B;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      text-decoration: none;
+    }
+
+    .interpreter-box {
+      margin: 30px 15px;
+      border: 5px solid #E0943B;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 12px;
+    }
+
+    .interpreter-title {
+      margin-bottom: 12px;
+      color: #ffd27a;
+      font-size: 14px;
+    }
+
+    .interpreter-layout {
+      display: flex;
+      gap: 12px;
+      height: 360px;
+    }
+
+    .editor-panel,
+    .terminal-panel {
+      width: 50%;
+      border: 3px solid #E0943B;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .panel-label {
+      background: #E0943B;
+      color: black;
+      padding: 8px;
+      font-size: 11px;
+      border-bottom: 3px solid #000;
+    }
+
+    #editor {
+      width: 100%;
+      height: 100%;
+    }
+
+    .CodeMirror {
+      height: calc(100% - 31px);
+      font-family: monospace;
+      font-size: 15px;
+      background: #111;
+      color: white;
+    }
+
+    .CodeMirror-gutters {
+      background: #1a1a1a;
+      border-right: 1px solid #E0943B;
+    }
+
+    .CodeMirror-linenumber {
+      color: #E0943B;
+    }
+
+    #terminal {
+      height: calc(100% - 31px);
+      background: black;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      background: #E0943B;
+      color: black;
+      border: 3px solid #000;
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    button:hover {
+      background: #ffd27a;
+    }
+
+    button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #000;
+    }
+
+    @media (max-width: 800px) {
+      .interpreter-layout {
+        flex-direction: column;
+        height: 650px;
+      }
+
+      .editor-panel,
+      .terminal-panel {
+        width: 100%;
+        height: 50%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page" id="page" name="page">
+
+    <div id="post">
+      <p>Programming Concepts:</p>
+      <ul>
+        <li>Hello World!</li>
+        <li>Print</li>
+        <li>Data Types</li>
+        <li>Variables</li>
+        <li>Conditional Statements</li>
+        <li>Functions/Subroutines</li>
+        <li>Loops</li>
+        <li>Binary</li>
+        <li>Boolean Logic</li>
+        <li>Objects/Classes</li>
+        <li>Programming languages</li>
+        <li>Events</li>
+        <li>Error handling</li>
+      </ul>
+    </div>
+
+    <div class="interpreter-box">
+      <div class="interpreter-title">JavaScript Interpreter:</div>
+
+      <div class="interpreter-layout">
+        <div class="editor-panel">
+          <div class="panel-label">JavaScript Editor</div>
+          <textarea id="editor"></textarea>
+        </div>
+
+        <div class="terminal-panel">
+          <div class="panel-label">Terminal Output</div>
+          <div id="terminal"></div>
         </div>
       </div>
-    <script src="programming_concepts.js"></script>
-    <script src="../bg.js"></script>
-  </body>
+
+      <div class="controls">
+        <button onclick="runCode()">Run</button>
+        <button onclick="clearTerminal()">Clear</button>
+        <button onclick="resetCode()">Reset</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CodeMirror JS -->
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+
+  <!-- xterm JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
+
+  <script>
+    const pageTitle = "Programming Concepts";
+
+    let editor;
+    let term;
+
+    const starterCode =
+`console.log("Hello world!");
+
+let name = "Student";
+console.log("Welcome,", name);
+
+let answer = 2 + 2;
+console.log("2 + 2 =", answer);
+
+answer;`;
+
+    window.addEventListener("load", function () {
+      console.log(pageTitle + " Page is loaded");
+
+      changeTitle();
+
+      editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+        mode: "javascript",
+        lineNumbers: true,
+        tabSize: 2,
+        indentUnit: 2
+      });
+
+      editor.setValue(starterCode);
+
+      term = new Terminal({
+        cursorBlink: true,
+        fontFamily: "monospace",
+        fontSize: 14,
+        theme: {
+          background: "#000000",
+          foreground: "#00ff66",
+          cursor: "#00ff66"
+        }
+      });
+
+      term.open(document.getElementById("terminal"));
+
+      term.writeln("JavaScript Interpreter Ready");
+      term.writeln("Click Run to execute your code.");
+      term.writeln("");
+    });
+
+    function changeTitle() {
+      try {
+        const headerFrame = parent.frames["header"];
+        const title = headerFrame?.document?.getElementById("topTitle");
+
+        if (title) {
+          title.textContent = pageTitle;
+        }
+      } catch (err) {
+        // Ignore if this page is not inside your frameset.
+      }
+    }
+
+    function formatValue(value) {
+      if (typeof value === "object" && value !== null) {
+        try {
+          return JSON.stringify(value, null, 2);
+        } catch (err) {
+          return String(value);
+        }
+      }
+
+      return String(value);
+    }
+
+    function runCode() {
+      if (!editor || !term) return;
+
+      term.clear();
+      term.writeln("> Running JavaScript...");
+      term.writeln("");
+
+      const originalLog = console.log;
+      const originalWarn = console.warn;
+      const originalError = console.error;
+
+      console.log = function (...args) {
+        const message = args.map(formatValue).join(" ");
+        term.writeln(message);
+        originalLog.apply(console, args);
+      };
+
+      console.warn = function (...args) {
+        const message = args.map(formatValue).join(" ");
+        term.writeln("Warning: " + message);
+        originalWarn.apply(console, args);
+      };
+
+      console.error = function (...args) {
+        const message = args.map(formatValue).join(" ");
+        term.writeln("Error: " + message);
+        originalError.apply(console, args);
+      };
+
+      try {
+        const code = editor.getValue();
+
+        // Indirect eval runs code in the global scope.
+        const result = (0, eval)(code);
+
+        if (result !== undefined) {
+          term.writeln("");
+          term.writeln("Return value:");
+          term.writeln(formatValue(result));
+        }
+      } catch (err) {
+        term.writeln("");
+        term.writeln("Error: " + err.message);
+      }
+
+      console.log = originalLog;
+      console.warn = originalWarn;
+      console.error = originalError;
+    }
+
+    function clearTerminal() {
+      if (!term) return;
+      term.clear();
+    }
+
+    function resetCode() {
+      if (!editor || !term) return;
+
+      editor.setValue(starterCode);
+      term.clear();
+      term.writeln("Code reset.");
+    }
+  </script>
+</body>
 </html>
