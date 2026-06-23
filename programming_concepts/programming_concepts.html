@@ -11,29 +11,32 @@
   <!-- CodeMirror CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
 
+  <!-- CodeMirror Fold Gutter CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.css">
+
   <!-- xterm CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm/css/xterm.css">
 
   <style>
-    /* Entire scrollbar */
+    /* =========================
+       Page / Site Styling
+    ========================== */
+
     ::-webkit-scrollbar {
       width: 14px;
     }
 
-    /* Track */
     ::-webkit-scrollbar-track {
       background: #111;
       border: 2px solid #E0943B;
     }
 
-    /* Thumb */
     ::-webkit-scrollbar-thumb {
       background: linear-gradient(to bottom, #E0943B, #8a4f12);
       border-radius: 4px;
       border: 2px solid #000;
     }
 
-    /* Hover effect */
     ::-webkit-scrollbar-thumb:hover {
       background: linear-gradient(to bottom, #ffd27a, #E0943B);
     }
@@ -51,14 +54,13 @@
     .page {
       min-height: 98vh;
       margin-top: 10px;
-      margin-left: 0px;
       border: 5px solid #E0943B;
       border-radius: 8px;
       box-sizing: border-box;
       position: relative;
       z-index: 1;
       overflow: hidden;
-      padding-bottom: 20px;
+      padding-bottom: 25px;
     }
 
     .page > * {
@@ -80,24 +82,30 @@
       text-decoration: none;
     }
 
+    /* =========================
+       Interpreter Layout
+    ========================== */
+
     .interpreter-box {
       margin: 30px 15px;
       border: 5px solid #E0943B;
       border-radius: 8px;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.78);
       padding: 12px;
+      box-shadow: inset 0 0 18px #000;
     }
 
     .interpreter-title {
       margin-bottom: 12px;
       color: #ffd27a;
       font-size: 14px;
+      text-shadow: 2px 2px 0 #000;
     }
 
     .interpreter-layout {
       display: flex;
       gap: 12px;
-      height: 360px;
+      height: 440px;
     }
 
     .editor-panel,
@@ -107,6 +115,7 @@
       border-radius: 6px;
       overflow: hidden;
       background: #111;
+      box-shadow: inset 0 0 14px #000;
     }
 
     .panel-label {
@@ -120,23 +129,6 @@
     #editor {
       width: 100%;
       height: 100%;
-    }
-
-    .CodeMirror {
-      height: calc(100% - 31px);
-      font-family: monospace;
-      font-size: 15px;
-      background: #111;
-      color: white;
-    }
-
-    .CodeMirror-gutters {
-      background: #1a1a1a;
-      border-right: 1px solid #E0943B;
-    }
-
-    .CodeMirror-linenumber {
-      color: #E0943B;
     }
 
     #terminal {
@@ -174,16 +166,221 @@
       box-shadow: 1px 1px 0 #000;
     }
 
+    /* =========================
+       CodeMirror Theme
+       Notepad++ Dark Gray Style
+    ========================== */
+
+    .CodeMirror {
+      height: calc(100% - 31px);
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 22px;
+      line-height: 1.35;
+      background: #3f3f3f;
+      color: #eeeeee;
+    }
+
+    .CodeMirror-scroll {
+      background: #3f3f3f;
+    }
+
+    .CodeMirror-lines {
+      padding: 4px 0;
+    }
+
+    .CodeMirror pre.CodeMirror-line,
+    .CodeMirror pre.CodeMirror-line-like {
+      padding: 0 12px;
+    }
+
+    /* Cursor */
+    .CodeMirror-cursor {
+      border-left: 2px solid #ffffff !important;
+    }
+
+    /* Gutters / Line Numbers */
+    .CodeMirror-gutters {
+      background: #1d1d1d;
+      border-right: 4px solid #ff8c00;
+    }
+
+    .CodeMirror-linenumber {
+      color: #b8b8b8;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    /* Fold gutter */
+    .CodeMirror-foldgutter {
+      width: 14px;
+    }
+
+    .CodeMirror-foldgutter-open,
+    .CodeMirror-foldgutter-folded {
+      color: #b8b8b8;
+      cursor: pointer;
+    }
+
+    .CodeMirror-foldgutter-open:after {
+      content: "▾";
+    }
+
+    .CodeMirror-foldgutter-folded:after {
+      content: "▸";
+    }
+
+    /* Active line */
+    .CodeMirror-activeline-background {
+      background: #454545;
+    }
+
+    .CodeMirror-activeline-gutter {
+      background: #252525;
+    }
+
+    /* Selection */
+    .CodeMirror-selected {
+      background: #6b6b6b !important;
+    }
+
+    .CodeMirror-focused .CodeMirror-selected {
+      background: #707070 !important;
+    }
+
+    /* Matching brackets */
+    .CodeMirror-matchingbracket {
+      color: #ffffff !important;
+      background: #666633;
+      outline: 1px solid #cfcf8f;
+      font-weight: bold;
+    }
+
+    .CodeMirror-nonmatchingbracket {
+      color: #ff6666 !important;
+      background: #441111;
+    }
+
+    /* =========================
+       JavaScript Syntax Colors
+       Matched to your screenshot
+    ========================== */
+
+    /* Comments */
+    .cm-comment {
+      color: #8fb18f;
+      font-style: italic;
+    }
+
+    /* Keywords: let, if, for */
+    .cm-keyword {
+      color: #ffd86b;
+      font-weight: bold;
+    }
+
+    /* Normal identifiers */
+    .cm-variable,
+    .cm-variable-2,
+    .cm-variable-3 {
+      color: #eeeeee;
+    }
+
+    /* Property names: console.log -> log */
+    .cm-property {
+      color: #e8e8d8;
+      font-weight: bold;
+    }
+
+    /* Function definitions */
+    .cm-def {
+      color: #eeeeee;
+    }
+
+    /* Strings */
+    .cm-string,
+    .cm-string-2 {
+      color: #e6a0a0;
+    }
+
+    /* Numbers */
+    .cm-number {
+      color: #8ee8e8;
+    }
+
+    /* Operators: = + === <= */
+    .cm-operator {
+      color: #b8b88a;
+      font-weight: bold;
+    }
+
+    /* Built-ins */
+    .cm-builtin {
+      color: #e8e8d8;
+    }
+
+    /* Atoms: true, false, null */
+    .cm-atom {
+      color: #b8b88a;
+    }
+
+    /* Meta / tags / attributes, included for completeness */
+    .cm-meta {
+      color: #f92672;
+    }
+
+    .cm-tag {
+      color: #f92672;
+    }
+
+    .cm-attribute {
+      color: #a6e22e;
+    }
+
+    /* Errors */
+    .cm-error {
+      color: #ff6666;
+      background: #441111;
+    }
+
+    /* CodeMirror scrollbars */
+    .CodeMirror-vscrollbar::-webkit-scrollbar,
+    .CodeMirror-hscrollbar::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    .CodeMirror-vscrollbar::-webkit-scrollbar-track,
+    .CodeMirror-hscrollbar::-webkit-scrollbar-track {
+      background: #1d1d1d;
+    }
+
+    .CodeMirror-vscrollbar::-webkit-scrollbar-thumb,
+    .CodeMirror-hscrollbar::-webkit-scrollbar-thumb {
+      background: #6b6b6b;
+      border: 2px solid #1d1d1d;
+    }
+
+    .CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover,
+    .CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover {
+      background: #8a8a8a;
+    }
+
+    /* =========================
+       Mobile Layout
+    ========================== */
+
     @media (max-width: 800px) {
       .interpreter-layout {
         flex-direction: column;
-        height: 650px;
+        height: 760px;
       }
 
       .editor-panel,
       .terminal-panel {
         width: 100%;
         height: 50%;
+      }
+
+      .CodeMirror {
+        font-size: 17px;
       }
     }
   </style>
@@ -215,6 +412,7 @@
       <div class="interpreter-title">JavaScript Interpreter:</div>
 
       <div class="interpreter-layout">
+
         <div class="editor-panel">
           <div class="panel-label">JavaScript Editor</div>
           <textarea id="editor"></textarea>
@@ -224,6 +422,7 @@
           <div class="panel-label">Terminal Output</div>
           <div id="terminal"></div>
         </div>
+
       </div>
 
       <div class="controls">
@@ -235,9 +434,21 @@
 
   </div>
 
-  <!-- CodeMirror JS -->
+  <!-- CodeMirror Core -->
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+
+  <!-- CodeMirror JavaScript Mode -->
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+
+  <!-- CodeMirror Addons -->
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/selection/active-line.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script>
+
+  <!-- CodeMirror Folding Addons -->
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldcode.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/brace-fold.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/comment-fold.js"></script>
 
   <!-- xterm JS -->
   <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
@@ -249,13 +460,23 @@
     let term;
 
     const starterCode =
-`console.log("Hello world!");
+`// Welcome to your JavaScript interpreter!
+
+console.log("Hello world!");
 
 let name = "Student";
 console.log("Welcome,", name);
 
 let answer = 2 + 2;
 console.log("2 + 2 =", answer);
+
+if (answer === 4) {
+  console.log("Math still works!");
+}
+
+for (let i = 1; i <= 3; i++) {
+  console.log("Loop number:", i);
+}
 
 answer;`;
 
@@ -268,19 +489,29 @@ answer;`;
         mode: "javascript",
         lineNumbers: true,
         tabSize: 2,
-        indentUnit: 2
+        indentUnit: 2,
+        cursorBlinkRate: 530,
+        styleActiveLine: true,
+        matchBrackets: true,
+        lineWrapping: false,
+        foldGutter: true,
+        gutters: [
+          "CodeMirror-linenumbers",
+          "CodeMirror-foldgutter"
+        ]
       });
 
       editor.setValue(starterCode);
 
       term = new Terminal({
         cursorBlink: true,
-        fontFamily: "monospace",
-        fontSize: 14,
+        fontFamily: "Consolas, 'Courier New', monospace",
+        fontSize: 15,
         theme: {
           background: "#000000",
           foreground: "#00ff66",
-          cursor: "#00ff66"
+          cursor: "#00ff66",
+          selectionBackground: "#335533"
         }
       });
 
@@ -289,6 +520,11 @@ answer;`;
       term.writeln("JavaScript Interpreter Ready");
       term.writeln("Click Run to execute your code.");
       term.writeln("");
+
+      setTimeout(function () {
+        editor.refresh();
+        editor.focus();
+      }, 50);
     });
 
     function changeTitle() {
@@ -300,7 +536,7 @@ answer;`;
           title.textContent = pageTitle;
         }
       } catch (err) {
-        // Ignore if this page is not inside your frameset.
+        /* Ignore if this page is not inside your frameset. */
       }
     }
 
@@ -348,7 +584,6 @@ answer;`;
       try {
         const code = editor.getValue();
 
-        // Indirect eval runs code in the global scope.
         const result = (0, eval)(code);
 
         if (result !== undefined) {
@@ -359,16 +594,17 @@ answer;`;
       } catch (err) {
         term.writeln("");
         term.writeln("Error: " + err.message);
+      } finally {
+        console.log = originalLog;
+        console.warn = originalWarn;
+        console.error = originalError;
       }
-
-      console.log = originalLog;
-      console.warn = originalWarn;
-      console.error = originalError;
     }
 
     function clearTerminal() {
       if (!term) return;
       term.clear();
+      term.writeln("Terminal cleared.");
     }
 
     function resetCode() {
@@ -377,6 +613,7 @@ answer;`;
       editor.setValue(starterCode);
       term.clear();
       term.writeln("Code reset.");
+      editor.focus();
     }
   </script>
 </body>
