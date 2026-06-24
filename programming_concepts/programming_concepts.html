@@ -177,7 +177,7 @@
       font-size: 22px;
       line-height: 1.35;
       background: #3f3f3f;
-      color: #eeeeee;
+      color: #9f9d6d;
     }
 
     .CodeMirror-scroll {
@@ -230,7 +230,7 @@
 
     /* Active line */
     .CodeMirror-activeline-background {
-      background: #454545;
+      background: #3f3f3f;
     }
 
     .CodeMirror-activeline-gutter {
@@ -249,119 +249,103 @@
     /* Matching brackets */
     .CodeMirror-matchingbracket {
       color: #ffffff !important;
-      background: #666633;
-      outline: 1px solid #cfcf8f;
+      background: #3f3f3f;
+      outline: 1px solid #3f3f3f;
       font-weight: bold;
     }
 
     .CodeMirror-nonmatchingbracket {
-      color: #ff6666 !important;
-      background: #441111;
+      color: #cc9393 !important;
+      background: #3f3f3f;
     }
 
-    /* =========================
-       JavaScript Syntax Colors
-       Matched to your screenshot
-    ========================== */
-
-    /* Comments */
-    .cm-comment {
-      color: #8fb18f;
-      font-style: italic;
+    
+    /* Regular brackets, parentheses, braces, and punctuation */
+    .CodeMirror .cm-punctuation {
+      color: #9f9d6d !important;
     }
 
-    /* Keywords: let, if, for */
-    .cm-keyword {
-      color: #ffd86b;
-      font-weight: bold;
-    }
 
-    /* Normal identifiers */
-    .cm-variable,
-    .cm-variable-2,
-    .cm-variable-3 {
-      color: #eeeeee;
-    }
+   /* =========================
+   JavaScript Syntax Colors
+   Matched to your screenshot
+========================== */
 
-    /* Property names: console.log -> log */
-    .cm-property {
-      color: #e8e8d8;
-      font-weight: bold;
-    }
+/* Comments */
+.CodeMirror .cm-comment {
+  color: #8fb18f;
+  font-style: italic;
+}
 
-    /* Function definitions */
-    .cm-def {
-      color: #eeeeee;
-    }
+/* Keywords / declarations: let, const, var, if, for, function */
+.CodeMirror .cm-keyword {
+  color: #dfc47d !important;
+  font-weight: bold;
+}
 
-    /* Strings */
-    .cm-string,
-    .cm-string-2 {
-      color: #e6a0a0;
-    }
+/* Variables */
+.CodeMirror .cm-variable,
+.CodeMirror .cm-variable-2,
+.CodeMirror .cm-variable-3 {
+  color: #dcdccc !important;
+}
 
-    /* Numbers */
-    .cm-number {
-      color: #8ee8e8;
-    }
+/* Property names: console.log -> log */
+.CodeMirror .cm-property {
+  color: #e8e8d8 !important;
+  font-weight: bold;
+}
 
-    /* Operators: = + === <= */
-    .cm-operator {
-      color: #b8b88a;
-      font-weight: bold;
-    }
+/* Function definitions */
+.CodeMirror .cm-def {
+  color: #eeeeee !important;
+}
 
-    /* Built-ins */
-    .cm-builtin {
-      color: #e8e8d8;
-    }
+/* Strings */
+.CodeMirror .cm-string,
+.CodeMirror .cm-string-2 {
+  color: #cc9393 !important;
+}
 
-    /* Atoms: true, false, null */
-    .cm-atom {
-      color: #b8b88a;
-    }
+/* Numbers */
+.CodeMirror .cm-number {
+  color: #8ee8e8 !important;
+}
 
-    /* Meta / tags / attributes, included for completeness */
-    .cm-meta {
-      color: #f92672;
-    }
+/* Operators: = + === <= */
+.CodeMirror .cm-operator {
+  color: #b8b88a !important;
+  font-weight: bold;
+}
 
-    .cm-tag {
-      color: #f92672;
-    }
+/* Built-ins */
+.CodeMirror .cm-builtin {
+  color: #e8e8d8 !important;
+}
 
-    .cm-attribute {
-      color: #a6e22e;
-    }
+/* Atoms: true, false, null */
+.CodeMirror .cm-atom {
+  color: #b8b88a !important;
+}
 
-    /* Errors */
-    .cm-error {
-      color: #ff6666;
-      background: #441111;
-    }
+/* Meta / tags / attributes, included for completeness */
+.CodeMirror .cm-meta {
+  color: #f92672 !important;
+}
 
-    /* CodeMirror scrollbars */
-    .CodeMirror-vscrollbar::-webkit-scrollbar,
-    .CodeMirror-hscrollbar::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
+.CodeMirror .cm-tag {
+  color: #f92672 !important;
+}
 
-    .CodeMirror-vscrollbar::-webkit-scrollbar-track,
-    .CodeMirror-hscrollbar::-webkit-scrollbar-track {
-      background: #1d1d1d;
-    }
+.CodeMirror .cm-attribute {
+  color: #a6e22e !important;
+}
 
-    .CodeMirror-vscrollbar::-webkit-scrollbar-thumb,
-    .CodeMirror-hscrollbar::-webkit-scrollbar-thumb {
-      background: #6b6b6b;
-      border: 2px solid #1d1d1d;
-    }
-
-    .CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover,
-    .CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover {
-      background: #8a8a8a;
-    }
+/* Errors */
+.CodeMirror .cm-error {
+  color: #ff6666 !important;
+  background: #441111 !important;
+}
 
     /* =========================
        Mobile Layout
