@@ -86,9 +86,9 @@
         </div>
 
         <div class="controls">
-          <button onclick="runCode()">Run</button>
-          <button onclick="clearTerminal()">Clear</button>
-          <button onclick="resetCode()">Reset</button>
+          <button id="runButton" onclick="runCode()">Run</button>
+          <button id="clearButton" onclick="clearTerminal()">Clear</button>
+          <button id="resetButton" onclick="resetCode()">Reset</button>
         </div>
       </div>
     </div>
@@ -112,6 +112,6 @@
     <!-- xterm JS -->
     <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
 
-    <script type="module" src="programming_concepts.js"></script>
+    <script src="programming_concepts.js"></script>
   </body>
 </html>

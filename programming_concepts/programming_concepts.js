@@ -16,6 +16,8 @@ function changeTitle() {
   }
 }
 
+
+
 let editor;
 let term;
 const starterCode = `// Welcome to your JavaScript interpreter!
@@ -76,6 +78,7 @@ window.addEventListener("load", function () {
     editor.refresh();
     editor.focus();
   }, 50);
+
 });
 
 function formatValue(value) {
@@ -90,7 +93,9 @@ function formatValue(value) {
   return String(value);
 }
 
+
 function runCode() {
+  console.log("Hey You");
   if (!editor || !term) return;
 
   term.clear();
@@ -153,3 +158,4 @@ function resetCode() {
   term.writeln("Code reset.");
   editor.focus();
 }
+
