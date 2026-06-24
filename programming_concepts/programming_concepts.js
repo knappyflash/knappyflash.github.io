@@ -16,7 +16,6 @@ function changeTitle() {
   }
 }
 
-
 let editor;
 let term;
 const starterCode = `// Welcome to your JavaScript interpreter!
@@ -40,7 +39,6 @@ for (let i = 1; i <= 3; i++) {
 answer;`;
 
 window.addEventListener("load", function () {
-
   editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
     mode: "javascript",
     lineNumbers: true,
