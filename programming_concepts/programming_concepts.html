@@ -1,600 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Programming Concepts</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Monoton&display=swap" rel="stylesheet">
-
-  <!-- CodeMirror CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
-
-  <!-- CodeMirror Fold Gutter CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.css">
-
-  <!-- xterm CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm/css/xterm.css">
-
-  <style>
-    /* =========================
-       Page / Site Styling
-    ========================== */
-
-    ::-webkit-scrollbar {
-      width: 14px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #111;
-      border: 2px solid #E0943B;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #E0943B, #8a4f12);
-      border-radius: 4px;
-      border: 2px solid #000;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(to bottom, #ffd27a, #E0943B);
-    }
-
-    body {
-      background-color: #000000;
-      color: white;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 15px;
-      margin: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .page {
-      min-height: 98vh;
-      margin-top: 10px;
-      border: 5px solid #E0943B;
-      border-radius: 8px;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 1;
-      overflow: hidden;
-      padding-bottom: 25px;
-      background-color: #000000;
-    }
-
-    .page > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    #post {
-      background-color: #3f3f3f;
-      margin: 30px 15px;
-      border: 5px solid #E0943B;
-      border-radius: 8px;
-      padding: 12px;
-      font-weight: bold;
-      color: #9f9d6d;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 15px;
-      line-height: 1.6;
-      text-decoration: none;
-    }
-
-    /* =========================
-       Interpreter Layout
-    ========================== */
-
-    .interpreter-box {
-      margin: 30px 15px;
-      border: 5px solid #E0943B;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.78);
-      padding: 12px;
-      box-shadow: inset 0 0 18px #000;
-    }
-
-    .interpreter-title {
-      margin-bottom: 12px;
-      color: #ffd27a;
-      font-size: 14px;
-      text-shadow: 2px 2px 0 #000;
-    }
-
-    .interpreter-layout {
-      display: flex;
-      gap: 12px;
-      height: 440px;
-    }
-
-    .editor-panel,
-    .terminal-panel {
-      width: 50%;
-      border: 3px solid #E0943B;
-      border-radius: 6px;
-      overflow: hidden;
-      background: #111;
-      box-shadow: inset 0 0 14px #000;
-    }
-
-    .panel-label {
-      background: #E0943B;
-      color: black;
-      padding: 8px;
-      font-size: 11px;
-      border-bottom: 3px solid #000;
-    }
-
-    #editor {
-      width: 100%;
-      height: 100%;
-    }
-
-    #terminal {
-      height: calc(100% - 31px);
-      background: black;
-      padding: 6px;
-      box-sizing: border-box;
-    }
-
-    .controls {
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 12px;
-      background: #E0943B;
-      color: black;
-      border: 3px solid #000;
-      border-radius: 6px;
-      padding: 10px 14px;
-      cursor: pointer;
-      box-shadow: 3px 3px 0 #000;
-    }
-
-    button:hover {
-      background: #ffd27a;
-    }
-
-    button:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 #000;
-    }
-
-    /* =========================
-       CodeMirror Theme
-       Notepad++ Dark Gray Style
-    ========================== */
-
-    .CodeMirror {
-      height: calc(100% - 31px);
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 22px;
-      line-height: 1.35;
-      background: #3f3f3f;
-      color: #9f9d6d;
-    }
-
-    .CodeMirror-scroll {
-      background: #3f3f3f;
-    }
-
-    .CodeMirror-lines {
-      padding: 4px 0;
-    }
-
-    .CodeMirror pre.CodeMirror-line,
-    .CodeMirror pre.CodeMirror-line-like {
-      padding: 0 12px;
-    }
-
-    /* Cursor */
-    .CodeMirror-cursor {
-      border-left: 2px solid #ffffff !important;
-    }
-
-    /* Gutters / Line Numbers */
-    .CodeMirror-gutters {
-      background: #1d1d1d;
-      border-right: 4px solid #ff8c00;
-    }
-
-    .CodeMirror-linenumber {
-      color: #b8b8b8;
-      font-family: Consolas, "Courier New", monospace;
-    }
-
-    /* Fold gutter */
-    .CodeMirror-foldgutter {
-      width: 14px;
-    }
-
-    .CodeMirror-foldgutter-open,
-    .CodeMirror-foldgutter-folded {
-      color: #b8b8b8;
-      cursor: pointer;
-    }
-
-    .CodeMirror-foldgutter-open:after {
-      content: "▾";
-    }
-
-    .CodeMirror-foldgutter-folded:after {
-      content: "▸";
-    }
-
-    /* Active line */
-    .CodeMirror-activeline-background {
-      background: #3f3f3f;
-    }
-
-    .CodeMirror-activeline-gutter {
-      background: #252525;
-    }
-
-    /* Selection */
-    .CodeMirror-selected {
-      background: #6b6b6b !important;
-    }
-
-    .CodeMirror-focused .CodeMirror-selected {
-      background: #707070 !important;
-    }
-
-    /* Matching brackets */
-    .CodeMirror-matchingbracket {
-      color: #ffffff !important;
-      background: #3f3f3f;
-      outline: 1px solid #3f3f3f;
-      font-weight: bold;
-    }
-
-    .CodeMirror-nonmatchingbracket {
-      color: #cc9393 !important;
-      background: #3f3f3f;
-    }
-
-
-
-   /* =========================
-   JavaScript Syntax Colors
-   Matched to your screenshot
-========================== */
-
-/* Comments */
-.CodeMirror .cm-comment {
-  color: #8fb18f;
-  font-style: italic;
-}
-
-/* Keywords / declarations: let, const, var, if, for, function */
-.CodeMirror .cm-keyword {
-  color: #dfc47d !important;
-  font-weight: bold;
-}
-
-/* Variables */
-.CodeMirror .cm-variable,
-.CodeMirror .cm-variable-2,
-.CodeMirror .cm-variable-3 {
-  color: #dcdccc !important;
-}
-
-/* Property names: console.log -> log */
-.CodeMirror .cm-property {
-  color: #e8e8d8 !important;
-  font-weight: bold;
-}
-
-/* Function definitions */
-.CodeMirror .cm-def {
-  color: #eeeeee !important;
-}
-
-/* Strings */
-.CodeMirror .cm-string,
-.CodeMirror .cm-string-2 {
-  color: #cc9393 !important;
-}
-
-/* Numbers */
-.CodeMirror .cm-number {
-  color: #8ee8e8 !important;
-}
-
-/* Operators: = + === <= */
-.CodeMirror .cm-operator {
-  color: #b8b88a !important;
-  font-weight: bold;
-}
-
-/* Built-ins */
-.CodeMirror .cm-builtin {
-  color: #e8e8d8 !important;
-}
-
-/* Atoms: true, false, null */
-.CodeMirror .cm-atom {
-  color: #b8b88a !important;
-}
-
-/* Meta / tags / attributes, included for completeness */
-.CodeMirror .cm-meta {
-  color: #f92672 !important;
-}
-
-.CodeMirror .cm-tag {
-  color: #f92672 !important;
-}
-
-.CodeMirror .cm-attribute {
-  color: #a6e22e !important;
-}
-
-/* Errors */
-.CodeMirror .cm-error {
-  color: #ff6666 !important;
-  background: #441111 !important;
-}
-
-    /* =========================
-       Mobile Layout
-    ========================== */
-
-    @media (max-width: 800px) {
-      .interpreter-layout {
-        flex-direction: column;
-        height: 760px;
-      }
-
-      .editor-panel,
-      .terminal-panel {
-        width: 100%;
-        height: 50%;
-      }
-
-      .CodeMirror {
-        font-size: 17px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="page" id="page" name="page">
-
-    <div id="post">
-      <p>Programming Concepts:</p>
-      <ul>
-        <li>Hello World!</li>
-        <li>Print</li>
-        <li>Data Types</li>
-        <li>Variables</li>
-        <li>Conditional Statements</li>
-        <li>Functions/Subroutines</li>
-        <li>Loops</li>
-        <li>Binary</li>
-        <li>Boolean Logic</li>
-        <li>Objects/Classes</li>
-        <li>Programming languages</li>
-        <li>Events</li>
-        <li>Error handling</li>
-      </ul>
-    </div>
-
-    <div class="interpreter-box">
-      <div class="interpreter-title">JavaScript Interpreter:</div>
-
-      <div class="interpreter-layout">
-
-        <div class="editor-panel">
-          <div class="panel-label">JavaScript Editor</div>
-          <textarea id="editor"></textarea>
-        </div>
-
-        <div class="terminal-panel">
-          <div class="panel-label">Terminal Output</div>
-          <div id="terminal"></div>
-        </div>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programming Concepts</title>
+
+    <!-- Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Monoton&display=swap"
+    />
+
+    <!-- CodeMirror CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css"
+    />
+
+    <!-- CodeMirror Fold Gutter CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.css"
+    />
+
+    <!-- xterm CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@xterm/xterm/css/xterm.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="programming_concepts.css"
+      type="text/css"
+      media="all"
+    />
+  </head>
+
+  <body>
+    <div class="page" id="page" name="page">
+      <div id="post">
+        <p>Programming Concepts:</p>
+        <ul>
+          <li>Hello World!</li>
+          <li>Print</li>
+          <li>Data Types</li>
+          <li>Variables</li>
+          <li>Conditional Statements</li>
+          <li>Functions/Subroutines</li>
+          <li>Loops</li>
+          <li>Binary</li>
+          <li>Boolean Logic</li>
+          <li>Objects/Classes</li>
+          <li>Programming languages</li>
+          <li>Events</li>
+          <li>Error handling</li>
+        </ul>
       </div>
 
-      <div class="controls">
-        <button onclick="runCode()">Run</button>
-        <button onclick="clearTerminal()">Clear</button>
-        <button onclick="resetCode()">Reset</button>
+      <div class="interpreter-box">
+        <div class="interpreter-title">JavaScript Interpreter:</div>
+
+        <div class="interpreter-layout">
+          <div class="editor-panel">
+            <div class="panel-label">JavaScript Editor</div>
+            <textarea id="editor"></textarea>
+          </div>
+
+          <div class="terminal-panel">
+            <div class="panel-label">Terminal Output</div>
+            <div id="terminal"></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button onclick="runCode()">Run</button>
+          <button onclick="clearTerminal()">Clear</button>
+          <button onclick="resetCode()">Reset</button>
+        </div>
       </div>
     </div>
 
-  </div>
+    <!-- CodeMirror Core -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
 
-  <!-- CodeMirror Core -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+    <!-- CodeMirror JavaScript Mode -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
 
-  <!-- CodeMirror JavaScript Mode -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.js"></script>
+    <!-- CodeMirror Addons -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/selection/active-line.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script>
 
-  <!-- CodeMirror Addons -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/selection/active-line.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/edit/matchbrackets.js"></script>
+    <!-- CodeMirror Folding Addons -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldcode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/brace-fold.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/comment-fold.js"></script>
 
-  <!-- CodeMirror Folding Addons -->
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldcode.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/foldgutter.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/brace-fold.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/codemirror@5/addon/fold/comment-fold.js"></script>
+    <!-- xterm JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
 
-  <!-- xterm JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
-
-  <script>
-    const pageTitle = "Programming Concepts";
-
-    let editor;
-    let term;
-
-    const starterCode =
-`// Welcome to your JavaScript interpreter!
-
-console.log("Hello world!");
-
-let name = "Student";
-console.log("Welcome,", name);
-
-let answer = 2 + 2;
-console.log("2 + 2 =", answer);
-
-if (answer === 4) {
-  console.log("Math still works!");
-}
-
-for (let i = 1; i <= 3; i++) {
-  console.log("Loop number:", i);
-}
-
-answer;`;
-
-    window.addEventListener("load", function () {
-      console.log(pageTitle + " Page is loaded");
-
-      changeTitle();
-
-      editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-        mode: "javascript",
-        lineNumbers: true,
-        tabSize: 2,
-        indentUnit: 2,
-        cursorBlinkRate: 530,
-        styleActiveLine: true,
-        matchBrackets: true,
-        lineWrapping: false,
-        foldGutter: true,
-        gutters: [
-          "CodeMirror-linenumbers",
-          "CodeMirror-foldgutter"
-        ]
-      });
-
-      editor.setValue(starterCode);
-
-      term = new Terminal({
-        cursorBlink: true,
-        fontFamily: "Consolas, 'Courier New', monospace",
-        fontSize: 15,
-        theme: {
-          background: "#000000",
-          foreground: "#00ff66",
-          cursor: "#00ff66",
-          selectionBackground: "#335533"
-        }
-      });
-
-      term.open(document.getElementById("terminal"));
-
-      term.writeln("JavaScript Interpreter Ready");
-      term.writeln("Click Run to execute your code.");
-      term.writeln("");
-
-      setTimeout(function () {
-        editor.refresh();
-        editor.focus();
-      }, 50);
-    });
-
-    function changeTitle() {
-      try {
-        const headerFrame = parent.frames["header"];
-        const title = headerFrame?.document?.getElementById("topTitle");
-
-        if (title) {
-          title.textContent = pageTitle;
-        }
-      } catch (err) {
-        /* Ignore if this page is not inside your frameset. */
-      }
-    }
-
-    function formatValue(value) {
-      if (typeof value === "object" && value !== null) {
-        try {
-          return JSON.stringify(value, null, 2);
-        } catch (err) {
-          return String(value);
-        }
-      }
-
-      return String(value);
-    }
-
-    function runCode() {
-      if (!editor || !term) return;
-
-      term.clear();
-      term.writeln("> Running JavaScript...");
-      term.writeln("");
-
-      const originalLog = console.log;
-      const originalWarn = console.warn;
-      const originalError = console.error;
-
-      console.log = function (...args) {
-        const message = args.map(formatValue).join(" ");
-        term.writeln(message);
-        originalLog.apply(console, args);
-      };
-
-      console.warn = function (...args) {
-        const message = args.map(formatValue).join(" ");
-        term.writeln("Warning: " + message);
-        originalWarn.apply(console, args);
-      };
-
-      console.error = function (...args) {
-        const message = args.map(formatValue).join(" ");
-        term.writeln("Error: " + message);
-        originalError.apply(console, args);
-      };
-
-      try {
-        const code = editor.getValue();
-
-        const result = (0, eval)(code);
-
-        if (result !== undefined) {
-          term.writeln("");
-          term.writeln("Return value:");
-          term.writeln(formatValue(result));
-        }
-      } catch (err) {
-        term.writeln("");
-        term.writeln("Error: " + err.message);
-      } finally {
-        console.log = originalLog;
-        console.warn = originalWarn;
-        console.error = originalError;
-      }
-    }
-
-    function clearTerminal() {
-      if (!term) return;
-      term.clear();
-      term.writeln("Terminal cleared.");
-    }
-
-    function resetCode() {
-      if (!editor || !term) return;
-
-      editor.setValue(starterCode);
-      term.clear();
-      term.writeln("Code reset.");
-      editor.focus();
-    }
-  </script>
-</body>
+    <script type="module" src="programming_concepts.js"></script>
+  </body>
 </html>

@@ -1,30 +1,30 @@
-/* Entire scrollbar */
+/* =========================
+       Page / Site Styling
+    ========================== */
+
 ::-webkit-scrollbar {
   width: 14px;
 }
 
-/* Track (background) */
 ::-webkit-scrollbar-track {
   background: #111;
-  border: 2px solid #E0943B;
+  border: 2px solid #e0943b;
 }
 
-/* Thumb (the draggable part) */
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #E0943B, #8a4f12);
+  background: linear-gradient(to bottom, #e0943b, #8a4f12);
   border-radius: 4px;
   border: 2px solid #000;
 }
 
-/* Hover effect */
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #ffd27a, #E0943B);
+  background: linear-gradient(to bottom, #ffd27a, #e0943b);
 }
 
 body {
-  background-color: black;
+  background-color: #000000;
   color: white;
-  font-family: 'Press Start 2P', monospace;
+  font-family: "Press Start 2P", monospace;
   font-size: 15px;
   margin: 0;
   overflow-y: auto;
@@ -34,13 +34,14 @@ body {
 .page {
   min-height: 98vh;
   margin-top: 10px;
-  margin-left: 0px;
-  border: 5px solid #E0943B;
+  border: 5px solid #e0943b;
   border-radius: 8px;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
   overflow: hidden;
+  padding-bottom: 25px;
+  background-color: #000000;
 }
 
 .page > * {
@@ -49,16 +50,294 @@ body {
 }
 
 #post {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #3f3f3f;
   margin: 30px 15px;
-  border: 5px solid #E0943B;
+  border: 5px solid #e0943b;
   border-radius: 8px;
   padding: 12px;
-  margin-left: 15px;
   font-weight: bold;
-  color: white;
-  font-family: 'Press Start 2P', monospace;
+  color: #9f9d6d;
+  font-family: "Press Start 2P", monospace;
   font-size: 15px;
   line-height: 1.6;
   text-decoration: none;
+}
+
+/* =========================
+       Interpreter Layout
+    ========================== */
+
+.interpreter-box {
+  margin: 30px 15px;
+  border: 5px solid #e0943b;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.78);
+  padding: 12px;
+  box-shadow: inset 0 0 18px #000;
+}
+
+.interpreter-title {
+  margin-bottom: 12px;
+  color: #ffd27a;
+  font-size: 14px;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.interpreter-layout {
+  display: flex;
+  gap: 12px;
+  height: 440px;
+}
+
+.editor-panel,
+.terminal-panel {
+  width: 50%;
+  border: 3px solid #e0943b;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: inset 0 0 14px #000;
+}
+
+.panel-label {
+  background: #e0943b;
+  color: black;
+  padding: 8px;
+  font-size: 11px;
+  border-bottom: 3px solid #000;
+}
+
+#editor {
+  width: 100%;
+  height: 100%;
+}
+
+#terminal {
+  height: calc(100% - 31px);
+  background: black;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  font-family: "Press Start 2P", monospace;
+  font-size: 12px;
+  background: #e0943b;
+  color: black;
+  border: 3px solid #000;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+}
+
+button:hover {
+  background: #ffd27a;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* =========================
+       CodeMirror Theme
+       Notepad++ Dark Gray Style
+    ========================== */
+
+.CodeMirror {
+  height: calc(100% - 31px);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 22px;
+  line-height: 1.35;
+  background: #3f3f3f;
+  color: #9f9d6d;
+}
+
+.CodeMirror-scroll {
+  background: #3f3f3f;
+}
+
+.CodeMirror-lines {
+  padding: 4px 0;
+}
+
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  padding: 0 12px;
+}
+
+/* Cursor */
+.CodeMirror-cursor {
+  border-left: 2px solid #ffffff !important;
+}
+
+/* Gutters / Line Numbers */
+.CodeMirror-gutters {
+  background: #1d1d1d;
+  border-right: 4px solid #ff8c00;
+}
+
+.CodeMirror-linenumber {
+  color: #b8b8b8;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+/* Fold gutter */
+.CodeMirror-foldgutter {
+  width: 14px;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  color: #b8b8b8;
+  cursor: pointer;
+}
+
+.CodeMirror-foldgutter-open:after {
+  content: "▾";
+}
+
+.CodeMirror-foldgutter-folded:after {
+  content: "▸";
+}
+
+/* Active line */
+.CodeMirror-activeline-background {
+  background: #3f3f3f;
+}
+
+.CodeMirror-activeline-gutter {
+  background: #252525;
+}
+
+/* Selection */
+.CodeMirror-selected {
+  background: #6b6b6b !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+  background: #707070 !important;
+}
+
+/* Matching brackets */
+.CodeMirror-matchingbracket {
+  color: #ffffff !important;
+  background: #3f3f3f;
+  outline: 1px solid #3f3f3f;
+  font-weight: bold;
+}
+
+.CodeMirror-nonmatchingbracket {
+  color: #cc9393 !important;
+  background: #3f3f3f;
+}
+
+/* =========================
+   JavaScript Syntax Colors
+   Matched to your screenshot
+========================== */
+
+/* Comments */
+.CodeMirror .cm-comment {
+  color: #8fb18f;
+  font-style: italic;
+}
+
+/* Keywords / declarations: let, const, var, if, for, function */
+.CodeMirror .cm-keyword {
+  color: #dfc47d !important;
+  font-weight: bold;
+}
+
+/* Variables */
+.CodeMirror .cm-variable,
+.CodeMirror .cm-variable-2,
+.CodeMirror .cm-variable-3 {
+  color: #dcdccc !important;
+}
+
+/* Property names: console.log -> log */
+.CodeMirror .cm-property {
+  color: #e8e8d8 !important;
+  font-weight: bold;
+}
+
+/* Function definitions */
+.CodeMirror .cm-def {
+  color: #eeeeee !important;
+}
+
+/* Strings */
+.CodeMirror .cm-string,
+.CodeMirror .cm-string-2 {
+  color: #cc9393 !important;
+}
+
+/* Numbers */
+.CodeMirror .cm-number {
+  color: #8ee8e8 !important;
+}
+
+/* Operators: = + === <= */
+.CodeMirror .cm-operator {
+  color: #b8b88a !important;
+  font-weight: bold;
+}
+
+/* Built-ins */
+.CodeMirror .cm-builtin {
+  color: #e8e8d8 !important;
+}
+
+/* Atoms: true, false, null */
+.CodeMirror .cm-atom {
+  color: #b8b88a !important;
+}
+
+/* Meta / tags / attributes, included for completeness */
+.CodeMirror .cm-meta {
+  color: #f92672 !important;
+}
+
+.CodeMirror .cm-tag {
+  color: #f92672 !important;
+}
+
+.CodeMirror .cm-attribute {
+  color: #a6e22e !important;
+}
+
+/* Errors */
+.CodeMirror .cm-error {
+  color: #ff6666 !important;
+  background: #441111 !important;
+}
+
+/* =========================
+       Mobile Layout
+    ========================== */
+
+@media (max-width: 800px) {
+  .interpreter-layout {
+    flex-direction: column;
+    height: 760px;
+  }
+
+  .editor-panel,
+  .terminal-panel {
+    width: 100%;
+    height: 50%;
+  }
+
+  .CodeMirror {
+    font-size: 17px;
+  }
 }
