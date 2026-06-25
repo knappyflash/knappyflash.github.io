@@ -1,4 +1,4 @@
-const pageTitle = "programming_concepts";
+const pageTitle = "Programming Concepts";
 window.addEventListener("load", function () {
   console.log(pageTitle + " Page is loaded");
   changeTitle();
