@@ -166,7 +166,7 @@ function PrintLesson(){
   leasonDiv.style.whiteSpace = "pre-line";
   leasonDiv.textContent = `Printing to the console/terminal is a coders best friend.
 It can help with debugging, checking variable values, check if a line of code executed, give instruction, and much more.
-printing sends a string of characters to the conole/terminal.
+printing sends a string of characters to the console/terminal.
 Give it a shot in the js editor.
 Feel free to change the text inside the double quotes.
 Click Run!`;
