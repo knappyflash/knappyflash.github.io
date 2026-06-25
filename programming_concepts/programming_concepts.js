@@ -17,28 +17,11 @@ function changeTitle() {
 }
 
 
-
 let editor;
 let term;
 const starterCode = `// Welcome to your JavaScript interpreter!
 
-console.log("Hello world!");
-
-let name = "Student";
-console.log("Welcome,", name);
-
-let answer = 2 + 2;
-console.log("2 + 2 =", answer);
-
-if (answer === 4) {
-  console.log("Math still works!");
-}
-
-for (let i = 1; i <= 3; i++) {
-  console.log("Loop number:", i);
-}
-
-answer;`;
+`;
 
 window.addEventListener("load", function () {
   editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
@@ -159,3 +142,36 @@ function resetCode() {
   editor.focus();
 }
 
+const leasonDiv = document.getElementById("leasonDiv")
+const helloWorld_li = document.getElementById("helloWorld_li");
+helloWorld_li.addEventListener("click", HelloWorldLesson);
+function HelloWorldLesson(){
+  console.log("Hello World!");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `The 'Hello World!' program is a programming Tradition.
+The first program a programmer writes in a new programming language is 'Hello World!'.
+The hello world program prints 'Hello World!' to the console/terminal.
+Give it a shot in the js editor.
+Click Run!`;
+
+  editor.setValue(`// Hello World!
+
+console.log("Hello world!");`);
+}
+
+const print_li = document.getElementById("print_li");
+print_li.addEventListener("click", PrintLesson);
+function PrintLesson(){
+  console.log("Print");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Printing to the console/terminal is a coders best friend.
+It can help with debugging, checking variable values, check if a line code executed, give instruction, and much more.
+printing sends a string of characters to the conole/terminal.
+Give it a shot in the js editor.
+Feel free to change the text inside the double quotes.
+Click Run!`;
+
+  editor.setValue(`// Print
+
+console.log("Print Something");`);
+}
