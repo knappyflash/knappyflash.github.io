@@ -183,3 +183,135 @@ console.log("----------------");
 
 console.log(Date());`);
 }
+
+const comments_li = document.getElementById("comments_li");
+comments_li.addEventListener("click", CommentsLesson);
+function CommentsLesson(){
+  console.log("Comments");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Comments`;
+
+  editor.setValue(`// Comments
+`);
+}
+
+const dataTypes_li = document.getElementById("dataTypes_li");
+dataTypes_li.addEventListener("click", DataTypesLesson);
+function DataTypesLesson(){
+  console.log("Data Types");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Data Types`;
+
+  editor.setValue(`// Data Types
+`);
+}
+
+const variables_li = document.getElementById("variables_li");
+variables_li.addEventListener("click", VariablesLesson);
+function VariablesLesson(){
+  console.log("Variables");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Variables`;
+
+  editor.setValue(`// Variables
+`);
+}
+
+const conditional_li = document.getElementById("conditional_li");
+conditional_li.addEventListener("click", ConditionalLesson);
+function ConditionalLesson(){
+  console.log("Conditional Statements");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Conditional Statements`;
+
+  editor.setValue(`// Conditional Statements
+`);
+}
+
+const functions_li = document.getElementById("functions_li");
+functions_li.addEventListener("click", FunctionsLesson);
+function FunctionsLesson(){
+  console.log("Functions & Subroutines");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Functions & Subroutines`;
+
+  editor.setValue(`// Functions & Subroutines
+`);
+}
+
+const loops_li = document.getElementById("loops_li");
+loops_li.addEventListener("click", LoopsLesson);
+function LoopsLesson(){
+  console.log("Loops");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Loops`;
+
+  editor.setValue(`// Loops
+`);
+}
+
+const binary_li = document.getElementById("binary_li");
+binary_li.addEventListener("click", BinaryLesson);
+function BinaryLesson(){
+  console.log("Binary");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Binary`;
+
+  editor.setValue(`// Binary
+`);
+}
+
+const boolean_li = document.getElementById("boolean_li");
+boolean_li.addEventListener("click", BooleanLesson);
+function BooleanLesson(){
+  console.log("Boolean Logic");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Boolean Logic`;
+
+  editor.setValue(`// Boolean Logic
+`);
+}
+
+const objects_li = document.getElementById("objects_li");
+objects_li.addEventListener("click", ObjectsLesson);
+function ObjectsLesson(){
+  console.log("Objects & Classes");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Objects & Classes`;
+
+  editor.setValue(`// Objects & Classes
+`);
+}
+
+const progLanguages_li = document.getElementById("progLanguages_li");
+progLanguages_li.addEventListener("click", ProgLanguagesLesson);
+function ProgLanguagesLesson(){
+  console.log("Programming Languages");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Programming Languages`;
+
+  editor.setValue(`// Programming Languages
+`);
+}
+
+const events_li = document.getElementById("events_li");
+events_li.addEventListener("click", EventsLesson);
+function EventsLesson(){
+  console.log("Events");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Events`;
+
+  editor.setValue(`// Events
+`);
+}
+
+const errorHandling_li = document.getElementById("errorHandling_li");
+errorHandling_li.addEventListener("click", ErrorHandlingLesson);
+function ErrorHandlingLesson(){
+  console.log("Error Handling");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Error Handling`;
+
+  editor.setValue(`// Error Handling
+`);
+}
