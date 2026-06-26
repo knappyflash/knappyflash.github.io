@@ -173,5 +173,13 @@ Click Run!`;
 
   editor.setValue(`// Print
 
-console.log("Print Something");`);
+console.log("Print Something");
+
+console.log("----------------");
+
+console.log(2 + 3);
+
+console.log("----------------");
+
+console.log(Date());`);
 }
