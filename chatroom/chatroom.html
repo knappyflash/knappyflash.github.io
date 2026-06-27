@@ -1,0 +1,741 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Voice Chat</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #111827;
+        color: #e5e7eb;
+        height: 100vh;
+      }
+      .app {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        height: 100vh;
+      }
+      .main {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        border-right: 1px solid #374151;
+      }
+      .top,
+      .voice,
+      .composer {
+        background: #1f2937;
+        padding: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #374151;
+      }
+      .composer {
+        border-top: 1px solid #374151;
+        border-bottom: 0;
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+      input,
+      button {
+        font: inherit;
+        border-radius: 8px;
+        border: 1px solid #4b5563;
+      }
+      input {
+        background: #111827;
+        color: #e5e7eb;
+        padding: 10px;
+        outline: none;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        padding: 10px 14px;
+        border: 0;
+        cursor: pointer;
+      }
+      button:disabled { background: #4b5563; cursor: not-allowed; }
+      .ok { background: #047857; }
+      .danger { background: #991b1b; }
+      .status {
+        margin-left: auto;
+        color: #9ca3af;
+        font-size: 13px;
+      }
+      .chat {
+        flex: 1;
+        overflow: auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .row {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 10px;
+        padding: 9px 10px;
+        word-break: break-word;
+      }
+      .system { background: #312e81; color: #ddd6fe; }
+      .error { background: #7f1d1d; color: #fecaca; }
+      .meta { color: #93c5fd; font-weight: bold; }
+      .ip { color: #fbbf24; font-size: 12px; }
+      .side {
+        background: #0f172a;
+        display: flex;
+        flex-direction: column;
+      }
+      .sideh {
+        padding: 14px;
+        font-weight: bold;
+        background: #1f2937;
+        border-bottom: 1px solid #374151;
+      }
+      .users {
+        overflow: auto;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .user {
+        padding: 10px;
+        border-radius: 9px;
+        background: #1f2937;
+        border: 1px solid #374151;
+      }
+      .user.admin { border-color: #fbbf24; }
+      .user.muted { opacity: 0.58; }
+      .user.talking {
+        border-color: #22c55e;
+        box-shadow: 0 0 14px rgba(34, 197, 94, 0.75);
+      }
+      .user.talking .username {
+        animation: talkFlash 0.35s ease-in-out infinite alternate;
+        color: #86efac;
+      }
+      @keyframes talkFlash {
+        from { opacity: 0.65; text-shadow: 0 0 2px rgba(34, 197, 94, 0.4); }
+        to { opacity: 1; text-shadow: 0 0 12px rgba(34, 197, 94, 1); }
+      }
+      .username { font-weight: bold; }
+      .flags,
+      .uip {
+        margin-top: 4px;
+        color: #fbbf24;
+        font-size: 12px;
+      }
+      .uctrl {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .uctrl button {
+        padding: 6px 8px;
+        font-size: 12px;
+        background: #374151;
+      }
+      .menu {
+        position: fixed;
+        z-index: 9;
+        background: #111827;
+        border: 1px solid #4b5563;
+        border-radius: 8px;
+        display: none;
+        overflow: hidden;
+      }
+      .menu button {
+        display: block;
+        width: 170px;
+        background: transparent;
+        text-align: left;
+        border-radius: 0;
+      }
+      label {
+        font-size: 13px;
+        color: #d1d5db;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      input[type="range"] {
+        width: 120px;
+        padding: 0;
+      }
+      @media (max-width: 850px) {
+        .app { grid-template-columns: 1fr; }
+        .side { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section class="main">
+        <div class="top">
+          <input id="name" maxlength="24" placeholder="Enter username" />
+          <button id="set">Set Name</button>
+          <div id="status" class="status">Disconnected</div>
+        </div>
+
+        <div class="voice">
+          <button id="join" class="ok">Join Voice</button>
+          <button id="leave" class="danger" disabled>Leave Voice</button>
+          <button id="mic" disabled>Mute Mic</button>
+          <label>
+            Mic
+            <input id="micVol" type="range" min="0" max="2" step=".05" value="1" disabled />
+          </label>
+          <label>
+            Speaker
+            <input id="spkVol" type="range" min="0" max="1" step=".05" value="1" />
+          </label>
+          <span id="vstat" class="status">Voice: off</span>
+        </div>
+
+        <div id="chat" class="chat"></div>
+
+        <div class="composer">
+          <div>
+            <input
+              id="msg"
+              maxlength="200"
+              placeholder="Enter a message, max 200 characters"
+              disabled
+              style="width: 100%"
+            />
+            <div id="count" style="font-size: 12px; color: #9ca3af; text-align: right">0 / 200</div>
+          </div>
+          <button id="send" disabled>Send</button>
+        </div>
+      </section>
+
+      <aside class="side">
+        <div class="sideh">Users Online <span id="ucount">0</span></div>
+        <div id="users" class="users"></div>
+      </aside>
+    </div>
+
+    <div id="menu" class="menu">
+      <button id="ban">Ban IP</button>
+      <button id="unban">Unban IP</button>
+    </div>
+
+    <script>
+      const WS_URL = "ws://192.9.130.3:3000",
+        MAX_ROWS = 1000,
+        MAX_MSG = 200,
+        USERNAME_KEY = "voiceChatUsername",
+        ICE = [{ urls: "stun:stun.l.google.com:19302" }];
+
+      const $ = (id) => document.getElementById(id),
+        chat = $("chat"),
+        usersEl = $("users"),
+        ucount = $("ucount"),
+        nameIn = $("name"),
+        msg = $("msg"),
+        statusEl = $("status"),
+        count = $("count"),
+        menu = $("menu");
+
+      let ws,
+        myId = null,
+        isAdmin = false,
+        username = "",
+        users = [],
+        selected = null,
+        voiceJoined = false,
+        micMuted = false,
+        rawStream = null,
+        sendStream = null,
+        audioCtx = null,
+        micGain = null;
+
+      const peers = new Map(),
+        audios = new Map(),
+        voiceMuted = new Set(),
+        chatSilent = new Set(),
+        analysers = new Map(),
+        talking = new Set();
+
+      // Important: only call connect() here. loadSavedUsername() runs after ws.onopen.
+      connect();
+
+      function connect() {
+        ws = new WebSocket(WS_URL);
+
+        ws.onopen = () => {
+          statusEl.textContent = "Connected";
+          sys("Connected. Enter a username to chat.");
+
+          // WebSocket is open now, so auto-setting the saved username is safe.
+          loadSavedUsername();
+        };
+
+        ws.onmessage = (e) => onMsg(e.data);
+
+        ws.onclose = () => {
+          statusEl.textContent = "Disconnected";
+          msg.disabled = true;
+          $("send").disabled = true;
+          err("Disconnected from server.");
+        };
+
+        ws.onerror = () => err("WebSocket error.");
+      }
+
+      function loadSavedUsername() {
+        try {
+          const savedUsername = localStorage.getItem(USERNAME_KEY);
+
+          if (savedUsername) {
+            nameIn.value = savedUsername;
+            setName();
+
+            setTimeout(() => {
+              msg.focus();
+              msg.select();
+            }, 0);
+          } else {
+            nameIn.focus();
+          }
+        } catch {
+          nameIn.focus();
+        }
+      }
+
+      function onMsg(raw) {
+        let d;
+        try {
+          d = JSON.parse(raw);
+        } catch {
+          sys(raw);
+          return;
+        }
+
+        if (d.type === "welcome") {
+          myId = d.clientId;
+          isAdmin = !!d.isAdmin;
+          sys(isAdmin ? "Welcome admin." : "Welcome.");
+        } else if (d.type === "chat") {
+          if (!chatSilent.has(d.clientId)) addChat(d.username, d.text, d.ip);
+        } else if (d.type === "user_list") {
+          users = d.users || [];
+          renderUsers();
+          syncPeers();
+        } else if (d.type === "admin_result") {
+          sys(d.message || "Admin command completed.");
+        } else if (d.type === "error") {
+          err(d.message || "Server error.");
+        } else if (d.type === "voice_offer") {
+          voiceOffer(d);
+        } else if (d.type === "voice_answer") {
+          voiceAnswer(d);
+        } else if (d.type === "ice_candidate") {
+          iceCandidate(d);
+        }
+      }
+
+      function sendJson(o) {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(o));
+        } else {
+          err("Not connected.");
+        }
+      }
+
+      function setName() {
+        let v = nameIn.value.trim();
+
+        if (!v) {
+          return err("You must enter a username before chatting.");
+        }
+
+        username = v.slice(0, 24);
+        nameIn.value = username;
+
+        try {
+          localStorage.setItem(USERNAME_KEY, username);
+        } catch {
+          // Ignore localStorage save errors.
+        }
+
+        msg.disabled = false;
+        $("send").disabled = false;
+
+        sendJson({ type: "set_username", username });
+
+        msg.focus();
+        msg.select();
+      }
+
+      function sendText() {
+        let t = msg.value.trim();
+        if (!username) return err("You must enter a username before chatting.");
+        if (!t) return;
+        if (t.length > MAX_MSG) return err("Message too long.");
+        sendJson({ type: "chat", text: t });
+        msg.value = "";
+        updCount();
+      }
+
+      async function joinVoice() {
+        if (voiceJoined) return;
+        try {
+          rawStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          audioCtx = new (AudioContext || webkitAudioContext)();
+
+          let src = audioCtx.createMediaStreamSource(rawStream),
+            dest = audioCtx.createMediaStreamDestination();
+
+          micGain = audioCtx.createGain();
+          micGain.gain.value = +$("micVol").value;
+          src.connect(micGain).connect(dest);
+          sendStream = dest.stream;
+
+          startVAD(myId, rawStream);
+          voiceJoined = true;
+
+          $("join").disabled = true;
+          $("leave").disabled = false;
+          $("mic").disabled = false;
+          $("micVol").disabled = false;
+          $("vstat").textContent = "Voice: on";
+
+          sendJson({ type: "voice_state", voiceJoined: true, micMuted });
+          syncPeers();
+          sys("Voice joined.");
+        } catch (e) {
+          err("Could not access microphone: " + e.message);
+        }
+      }
+
+      function leaveVoice() {
+        voiceJoined = false;
+        sendJson({ type: "voice_state", voiceJoined: false, micMuted });
+        stopVAD(myId);
+        closeAll();
+
+        if (rawStream) rawStream.getTracks().forEach((t) => t.stop());
+        rawStream = sendStream = null;
+
+        if (audioCtx) audioCtx.close().catch(() => {});
+        audioCtx = micGain = null;
+
+        $("join").disabled = false;
+        $("leave").disabled = true;
+        $("mic").disabled = true;
+        $("micVol").disabled = true;
+        $("vstat").textContent = "Voice: off";
+        sys("Voice left.");
+      }
+
+      function toggleMic() {
+        micMuted = !micMuted;
+        if (rawStream) rawStream.getAudioTracks().forEach((t) => (t.enabled = !micMuted));
+        $("mic").textContent = micMuted ? "Unmute Mic" : "Mute Mic";
+        sendJson({ type: "voice_state", voiceJoined, micMuted });
+      }
+
+      function syncPeers() {
+        if (!voiceJoined || !myId || !sendStream) return;
+
+        let vu = users.filter((u) => u.clientId !== myId && u.voiceJoined);
+
+        vu.forEach((u) => {
+          if (!peers.has(u.clientId) && myId < u.clientId) mkPeer(u.clientId, true);
+        });
+
+        [...peers.keys()].forEach((id) => {
+          if (!vu.some((u) => u.clientId === id)) closePeer(id);
+        });
+      }
+
+      async function mkPeer(id, init) {
+        let pc = new RTCPeerConnection({ iceServers: ICE });
+        peers.set(id, pc);
+
+        sendStream.getTracks().forEach((t) => pc.addTrack(t, sendStream));
+
+        pc.onicecandidate = (e) => {
+          if (e.candidate) {
+            sendJson({ type: "ice_candidate", targetClientId: id, candidate: e.candidate });
+          }
+        };
+
+        pc.ontrack = (e) => attachAudio(id, e.streams[0]);
+
+        pc.onconnectionstatechange = () => {
+          if (["closed", "failed", "disconnected"].includes(pc.connectionState)) closePeer(id);
+        };
+
+        if (init) {
+          let offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+          sendJson({ type: "voice_offer", targetClientId: id, sdp: pc.localDescription });
+        }
+
+        return pc;
+      }
+
+      async function voiceOffer(d) {
+        if (!voiceJoined || !sendStream) return;
+
+        let pc = peers.get(d.fromClientId) || (await mkPeer(d.fromClientId, false));
+        await pc.setRemoteDescription(new RTCSessionDescription(d.sdp));
+
+        let ans = await pc.createAnswer();
+        await pc.setLocalDescription(ans);
+
+        sendJson({ type: "voice_answer", targetClientId: d.fromClientId, sdp: pc.localDescription });
+      }
+
+      async function voiceAnswer(d) {
+        let pc = peers.get(d.fromClientId);
+        if (pc) await pc.setRemoteDescription(new RTCSessionDescription(d.sdp));
+      }
+
+      async function iceCandidate(d) {
+        let pc = peers.get(d.fromClientId);
+        if (pc && d.candidate) {
+          try {
+            await pc.addIceCandidate(new RTCIceCandidate(d.candidate));
+          } catch {}
+        }
+      }
+
+      function attachAudio(id, stream) {
+        let a = audios.get(id);
+        if (!a) {
+          a = document.createElement("audio");
+          a.autoplay = true;
+          a.playsInline = true;
+          document.body.appendChild(a);
+          audios.set(id, a);
+        }
+        a.srcObject = stream;
+        a.volume = voiceMuted.has(id) ? 0 : +$("spkVol").value;
+        startVAD(id, stream);
+      }
+
+      function startVAD(id, stream) {
+        if (!id || !stream) return;
+        stopVAD(id);
+
+        let ctx = new (AudioContext || webkitAudioContext)(),
+          src = ctx.createMediaStreamSource(stream),
+          an = ctx.createAnalyser();
+
+        an.fftSize = 512;
+        an.smoothingTimeConstant = 0.65;
+        src.connect(an);
+
+        let arr = new Uint8Array(an.frequencyBinCount),
+          obj = { ctx, an, arr, raf: null, last: false };
+
+        analysers.set(id, obj);
+
+        function loop() {
+          an.getByteFrequencyData(arr);
+          let avg = arr.reduce((a, b) => a + b, 0) / arr.length,
+            on = avg > 12;
+
+          if (on !== obj.last) {
+            obj.last = on;
+            on ? talking.add(id) : talking.delete(id);
+            renderUsers();
+          }
+
+          obj.raf = requestAnimationFrame(loop);
+        }
+
+        loop();
+      }
+
+      function stopVAD(id) {
+        let o = analysers.get(id);
+        if (!o) return;
+        if (o.raf) cancelAnimationFrame(o.raf);
+        if (o.ctx) o.ctx.close().catch(() => {});
+        analysers.delete(id);
+        talking.delete(id);
+        renderUsers();
+      }
+
+      function closePeer(id) {
+        stopVAD(id);
+
+        let pc = peers.get(id);
+        if (pc) pc.close();
+        peers.delete(id);
+
+        let a = audios.get(id);
+        if (a) {
+          a.srcObject = null;
+          a.remove();
+        }
+        audios.delete(id);
+      }
+
+      function closeAll() {
+        [...peers.keys()].forEach(closePeer);
+      }
+
+      function renderUsers() {
+        usersEl.innerHTML = "";
+        ucount.textContent = users.length;
+
+        users.forEach((u) => {
+          let el = document.createElement("div"),
+            cn = u.isAdmin ? "user admin" : "user";
+
+          if (voiceMuted.has(u.clientId) || chatSilent.has(u.clientId)) cn += " muted";
+          if (talking.has(u.clientId)) cn += " talking";
+
+          el.className = cn;
+          el.innerHTML = `
+            <div class="username">${esc(u.username || "client:" + u.clientId)}</div>
+            <div class="flags">${u.voiceJoined ? "voice on" : "voice off"}${u.micMuted ? " · mic muted" : ""}</div>
+          `;
+
+          if (isAdmin && u.ip) {
+            el.innerHTML += `<div class="uip">ip: ${esc(u.ip)}</div>`;
+          }
+
+          if (u.clientId !== myId) {
+            let c = document.createElement("div");
+            c.className = "uctrl";
+
+            let b = document.createElement("button");
+            b.textContent = voiceMuted.has(u.clientId) ? "Unmute Audio" : "Mute Audio";
+            b.onclick = () => {
+              voiceMuted.has(u.clientId) ? voiceMuted.delete(u.clientId) : voiceMuted.add(u.clientId);
+              let a = audios.get(u.clientId);
+              if (a) a.volume = voiceMuted.has(u.clientId) ? 0 : +$("spkVol").value;
+              renderUsers();
+            };
+
+            let s = document.createElement("button");
+            s.textContent = chatSilent.has(u.clientId) ? "Unsilence Chat" : "Silence Chat";
+            s.onclick = () => {
+              chatSilent.has(u.clientId) ? chatSilent.delete(u.clientId) : chatSilent.add(u.clientId);
+              renderUsers();
+            };
+
+            c.append(b, s);
+            el.appendChild(c);
+          }
+
+          el.oncontextmenu = (e) => {
+            if (!isAdmin || !u.ip) return;
+            e.preventDefault();
+            selected = u;
+            menu.style.left = e.clientX + "px";
+            menu.style.top = e.clientY + "px";
+            menu.style.display = "block";
+          };
+
+          usersEl.appendChild(el);
+        });
+      }
+
+      function addChat(n, t, ip) {
+        let r = document.createElement("div");
+        r.className = "row";
+        r.innerHTML = `
+          <span class="meta">${esc(n || "Unknown")}:</span>
+          ${isAdmin && ip ? `<span class="ip">[${esc(ip)}]</span> ` : ""}
+          ${esc(t || "")}
+        `;
+        append(r);
+      }
+
+      function sys(t) {
+        let r = document.createElement("div");
+        r.className = "row system";
+        r.textContent = t;
+        append(r);
+      }
+
+      function err(t) {
+        let r = document.createElement("div");
+        r.className = "row error";
+        r.textContent = t;
+        append(r);
+      }
+
+      function append(r) {
+        chat.appendChild(r);
+        while (chat.children.length > MAX_ROWS) chat.removeChild(chat.firstChild);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function esc(s) {
+        return String(s).replace(/[&<>'"]/g, (c) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;",
+        }[c]));
+      }
+
+      function updCount() {
+        count.textContent = msg.value.length + " / " + MAX_MSG;
+      }
+
+      $("set").onclick = setName;
+
+      nameIn.onkeydown = (e) => {
+        if (e.key === "Enter") setName();
+      };
+
+      $("send").onclick = sendText;
+
+      msg.onkeydown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          sendText();
+        }
+      };
+
+      msg.oninput = updCount;
+      $("join").onclick = joinVoice;
+      $("leave").onclick = leaveVoice;
+      $("mic").onclick = toggleMic;
+
+      $("micVol").oninput = () => {
+        if (micGain) micGain.gain.value = +$("micVol").value;
+      };
+
+      $("spkVol").oninput = () => {
+        for (let [id, a] of audios) {
+          a.volume = voiceMuted.has(id) ? 0 : +$("spkVol").value;
+        }
+      };
+
+      document.onclick = () => (menu.style.display = "none");
+
+      $("ban").onclick = () => {
+        if (selected?.ip) {
+          sendJson({ type: "admin_command", command: "banip", ip: selected.ip });
+        }
+        menu.style.display = "none";
+      };
+
+      $("unban").onclick = () => {
+        if (selected?.ip) {
+          sendJson({ type: "admin_command", command: "unbanip", ip: selected.ip });
+        }
+        menu.style.display = "none";
+      };
+    </script>
+  </body>
+</html>
