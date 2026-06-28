@@ -189,9 +189,62 @@ comments_li.addEventListener("click", CommentsLesson);
 function CommentsLesson(){
   console.log("Comments");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Comments`;
+  leasonDiv.textContent = `Comments
+  
+  Comments are ignored and will not be executed by the compiler/interpreter. In JavaScript comments are indicated by two slashes // at the beginning of the line. Comments can explain what a section of code is doing, can be a title, note, or date when a line of code is changed. Comments are also good for debugging. If you want to see if a line of code is the cause for a bug, just comment out the line instead of deleting it.
+  `;
 
   editor.setValue(`// Comments
+
+// #!#!# Comments Title #!#!#
+
+// This is a note about notes about comments.
+
+// This line of code was changed on 06/28/2026.
+
+// console.log("This line will NOT execute!");
+console.log("This line will execute!");
+
+
+//This line is being tested to see if it is the bug.
+// consol.log(1 / 0);
+
+`);
+}
+
+const debugging_li = document.getElementById("debugging_li");
+debugging_li.addEventListener("click", DebuggingLesson);
+function DebuggingLesson(){
+  console.log("Debugging");
+  leasonDiv.style.whiteSpace = "pre-line";
+  leasonDiv.textContent = `Debugging
+  
+The term “debugging” means finding and fixing problems in code.
+A bug is a flaw in the code that causes software to behave incorrectly or not as intended.
+
+Example: An app crashes every time you tap “Submit.”
+
+Fun fact: The term bug in computing started when a real moth was found inside a Harvard computer in 1947, causing trouble. So “debugging” means finding and fixing those problems.
+
+  `;
+
+
+
+  editor.setValue(`// Debugging
+
+// Missing closing quote → "Alex should be "Alex".
+let name = "Alex;
+
+//Undefined variable → age was never created.
+console.log(age);
+
+//String + number bug → gives "105" instead of 15.
+let total = 10 + "5";
+
+//Reassigning a const → const values can’t be changed.
+const score = 100; score = 200;
+
+
 `);
 }
 
@@ -200,9 +253,50 @@ dataTypes_li.addEventListener("click", DataTypesLesson);
 function DataTypesLesson(){
   console.log("Data Types");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Data Types`;
+  leasonDiv.textContent = `Data Types
+
+Data types are categories that tell a programming language what kind of value something is. For example, a value might be text, a number, a true/false value, or a more complex group of information. Programming languages use data types so they know what operations make sense — like adding numbers, joining text, or checking whether something is true. Different languages may have different built-in data types, but the idea is similar across programming languages.
+  
+  
+  `;
 
   editor.setValue(`// Data Types
+
+  // 1. String: text inside quotes
+let username = "Alex";
+console.log("Hello, " + username); // Uses the string in a message
+
+// 2. Number: regular numbers, including decimals
+let price = 19.99;
+console.log(price * 2); // Uses the number in math
+
+// 3. Boolean: true or false
+let isLoggedIn = true;
+console.log(isLoggedIn); // Used for yes/no logic
+
+// 4. Undefined: declared but not given a value yet
+let favoriteColor;
+console.log(favoriteColor); // undefined
+
+// 5. Null: intentionally empty or “nothing”
+let selectedItem = null;
+console.log(selectedItem); // null means no item selected
+
+// 6. BigInt: very large whole numbers
+let hugeNumber = 9007199254740993n;
+console.log(hugeNumber + 2n); // BigInt math uses n
+
+// 7. Symbol: a unique value, often used as a special object key
+let id = Symbol("id");
+console.log(id); // Creates a unique identifier
+
+// 8. Objects: store related data in key-value pairs
+let person1 = { name: "Steve", age: 28 };
+let person2 = { name: "Alex", age: 23 };
+console.log(person1.name + " is " + person1.age + " years old."); // Prints Steve's name and age
+console.log(person2.name + " is " + person2.age + " years old."); // Prints Alex's name and age
+
+    
 `);
 }
 
@@ -211,9 +305,48 @@ variables_li.addEventListener("click", VariablesLesson);
 function VariablesLesson(){
   console.log("Variables");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Variables`;
+  leasonDiv.textContent = `Variables
+  
+A variable is a named place to store information in a program. You can think of it like a labeled container: the label is the variable name, and the value inside is the data. Programs use variables to remember information, update it, and use it later. For example, a variable might store a person’s name, a player’s score, whether something is true or false, a list of items, or a group of related information. Different programming languages create variables in different ways, but the main idea is the same: variables let you save values and reuse them in your code.
+  `;
 
   editor.setValue(`// Variables
+
+// 1. String: stores text inside quotes
+let username = "Alex";
+console.log("Hello, " + username); // Uses the string variable in a message
+
+// 2. Number: stores regular numbers, including decimals
+let price = 19.99;
+let quantity = 2;
+console.log(price * quantity); // Uses number variables in math
+
+// 3. Boolean: stores true or false
+let isLoggedIn = true;
+console.log("Logged in:", isLoggedIn); // Uses a boolean variable
+
+// 4. Undefined: a variable declared but not given a value yet
+let favoriteColor;
+console.log(favoriteColor); // Prints undefined
+
+// 5. Null: intentionally stores “nothing”
+let selectedItem = null;
+console.log(selectedItem); // Means no item is selected
+
+// 6. BigInt: stores very large whole numbers
+let hugeNumber = 9007199254740993n;
+console.log(hugeNumber + 2n); // BigInt math uses n
+
+// 7. Symbol: creates a unique value
+let id = Symbol("id");
+console.log(id); // Uses a unique identifier
+
+// 8. Object: stores related data in key-value pairs
+let person1 = { name: "Steve", age: 25 };
+let person2 = { name: "Alex", age: 23 };
+
+console.log(person1.name + " is " + person1.age + " years old."); // Uses object values together
+console.log(person2.name + " is " + person2.age + " years old."); // Uses object values together
 `);
 }
 
