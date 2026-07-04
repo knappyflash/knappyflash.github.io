@@ -53,6 +53,18 @@ body {
    Lessons Box Layout
 ========================== */
 
+#pcVidLink{
+  text-decoration: underline;
+  font-weight: bold;
+  color: #9f9d6d;
+  font-family: "Press Start 2P", monospace;
+  font-size: 15px;
+  line-height: 1.6;
+}
+#pcVidLink:hover {
+  color: #ffd27a;
+}
+
 #leasons-box {
   margin: 30px 15px;
   border: 5px solid #e0943b;
