@@ -355,9 +355,63 @@ conditional_li.addEventListener("click", ConditionalLesson);
 function ConditionalLesson(){
   console.log("Conditional Statements");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Conditional Statements`;
+  leasonDiv.textContent = `Conditional Statements
+  
+  Conditional statements help with branching logic. IF THIS THEN THAT. You use conditional statements when you want the program to do different things based on a condition. This can be thought of as the very basics of AI. People do this all the time naturally without thinking about it. If it rains, I will bring an umbrella. If it is dark, I will turn on the light. If it is late, I will go to bed. If it is cold, I will turn on the heater.
+  `;
 
   editor.setValue(`// Conditional Statements
+
+const WEATHER = {
+  RAINING: "RAINING",
+  SUNNY: "SUNNY"
+};
+
+const VISIBILITY = {
+  BRIGHT: "BRIGHT",
+  DARK: "DARK"
+};
+
+const TIME  = {
+  LATE : "LATE ",
+  EARLY: "EARLY"
+};
+
+const TEMPERATURE  = {
+  HOT : "HOT ",
+  COLD: "COLD"
+};
+
+let current_wather = WEATHER.RAINING;
+let current_visibility = VISIBILITY.DARK
+let current_time = TIME.LATE
+let current_temperature = TEMPERATURE.COLD
+
+if (current_wather == WEATHER.RAINING) {
+  console.log("Bring an umbrella.");
+} else {
+  console.log("You do not need an umbrella.");
+}
+
+if (current_visibility == VISIBILITY.DARK) {
+  console.log("Turn on the light.");
+} else {
+  console.log("Turn off the light.");
+}
+
+if (current_time == TIME.LATE) {
+  console.log("Go to bed.");
+} else {
+  console.log("Stay awake.");
+}
+
+if (current_temperature == TEMPERATURE.COLD) {
+  console.log("Turn on the heater.");
+} else {
+  console.log("Turn off the heater.");
+}
+
+
 `);
 }
 
@@ -369,6 +423,39 @@ function FunctionsLesson(){
   leasonDiv.textContent = `Functions & Subroutines`;
 
   editor.setValue(`// Functions & Subroutines
+
+let person1 = { name: "Steve", age: 28 };
+let person2 = { name: "Alex", age: 23 };
+
+//The PrintPerson subroutine has a parameter “person”, 
+// which accepts a person object as an argument. 
+// The PrintPerson subroutine prints the persons name 
+// and age to the console.
+function PrintPerson(person) {
+  console.log("Name: " + person.name);
+  console.log("Age: " + person.age);
+}
+
+//The GetAge function has a parameter “person”, which 
+// accepts a person object as an argument.
+//The GetAge function returns the persons age.
+function GetAge(person) {
+  console.log("Getting " + person.name + "'s age.");
+  return person.age
+}
+
+//The AgeDifference function has two parameters “age1” & “age2”,
+// which accepts two age arguments as integers. 
+//The function returns the difference in age.
+function AgeDifference(age1, age2) {
+  return age1 - age2;
+}
+
+
+PrintPerson(person1); //Prints Steve's info
+PrintPerson(person2); //Prints Alex's info
+let age_diff = AgeDifference(GetAge(person1), GetAge(person2)); //Assigns the age difference to the age_diff integer variable.
+console.log("Steve & Alex are " + age_diff + " years apart from each other.");
 `);
 }
 
@@ -377,9 +464,41 @@ loops_li.addEventListener("click", LoopsLesson);
 function LoopsLesson(){
   console.log("Loops");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Loops`;
+  leasonDiv.textContent = `Loops
+  
+  Loops are awesome! Loops let you do the same thing many times. Like if you needed to print 2 persons names to the console, you could just write two lines to print those names. Not a big deal. But what if you wanted to print 1,000 names? Or a million names? You would not want to have to write a million lines of code just to print those names! This is where the loop becomes the hero of the day. Each loop is called an iteration. Three common loops are “While Loops”, “For Loops”, and “For Each Loops”. “While loops” will keep executing while a condition is true. “For Loops” will execute for a specific number of iterations. A “For Each Loop” will iterate through a list.
+  `;
 
   editor.setValue(`// Loops
+
+let my_counter = 0;
+let names = ["Steve", "Alex", "Creeper", "Cow", "Chicken"];
+
+// (While loop) While my_counter integer is less than 5 print;
+while (my_counter < 5) {
+  console.log("While Loop Iteration: " + my_counter);
+  my_counter++;
+}
+
+// (For loop) While i is less than 5 print;
+for (let i = 0; i < 5; i++) {
+  console.log("For Loop Iteration: " + i);
+}
+
+// (For Each Loop) For each name in names print the name;
+names.forEach((name, index) => {
+  console.log("For Each Iteration: " + index, name)
+})
+
+
+// (2nd While Loop) While temp_name does not equal "Creeper", iterate through the names.
+let temp_name;
+my_counter = 0;
+while (temp_name != "Creeper"){
+  temp_name = names[my_counter];
+  console.log("2nd While Loop Iteration: " + my_counter + " " + temp_name);
+  my_counter++;
+}
 `);
 }
 
