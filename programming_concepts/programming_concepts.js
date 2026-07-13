@@ -420,7 +420,14 @@ functions_li.addEventListener("click", FunctionsLesson);
 function FunctionsLesson(){
   console.log("Functions & Subroutines");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Functions & Subroutines`;
+  leasonDiv.textContent = `Functions & Subroutines
+  
+  Functions & Subroutines are named sections in a module that can run a code. 
+  Functions can return a value and subroutines cannot. Besides that, 
+  functions and subroutines are essentially the same thing,
+  so I will just call them functions.  
+  Functions can be called from other parts of the code. You can pass variables called arguments into a function. 
+  These functions inputs are called parameters.`;
 
   editor.setValue(`// Functions & Subroutines
 
