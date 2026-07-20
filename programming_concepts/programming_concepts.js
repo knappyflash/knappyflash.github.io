@@ -514,9 +514,22 @@ binary_li.addEventListener("click", BinaryLesson);
 function BinaryLesson(){
   console.log("Binary");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Binary`;
+  leasonDiv.textContent = `Binary
+  
+  Computers hardware runs on binary. Binary is a counting system from 0 to 1. Instead of 0 to 9 like our normal decimal system. One of the main reasons binary was chosen as the counting system for computers is electricity has two states (on / off). CPUs (central processing unit) are the brain of the computer. CPUs can do math on binary numbers and execute binary commands. The CPU’s design architecture tells the CPU what sequence or code of binary numbers mean what command. In CPU x86 00000000 11011000 tells the CPU to add two binary numbers together.`;
 
   editor.setValue(`// Binary
+
+console.log("Add binary numbers ten and eleven together")
+let binAdd = (BigInt("0b" + "1010") + BigInt("0b" + "1011")).toString(2);
+console.log("21, " + binAdd)
+
+// Count in Binary 0 to 8
+console.log("")
+console.log("Count in Binary 0 to 8:")
+for (let i = 0; i <= 8; i++) {
+    console.log(i.toString(2));
+}
 `);
 }
 
@@ -528,6 +541,8 @@ function BooleanLesson(){
   leasonDiv.textContent = `Boolean Logic`;
 
   editor.setValue(`// Boolean Logic
+
+    
 `);
 }
 
