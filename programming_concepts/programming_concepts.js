@@ -520,7 +520,7 @@ function BinaryLesson(){
 
   editor.setValue(`// Binary
 
-console.log("Add binary numbers ten and eleven together")
+console.log("Add binary numbers ten (1010) and eleven (1011) together")
 let binAdd = (BigInt("0b" + "1010") + BigInt("0b" + "1011")).toString(2);
 console.log("21, " + binAdd)
 
@@ -538,9 +538,27 @@ boolean_li.addEventListener("click", BooleanLesson);
 function BooleanLesson(){
   console.log("Boolean Logic");
   leasonDiv.style.whiteSpace = "pre-line";
-  leasonDiv.textContent = `Boolean Logic`;
+  leasonDiv.textContent = `Boolean Logic
+  
+  Boolean Logic was introduced by George Boole in his first book The Mathematical Analysis of Logic in 1847. Then in the 1930s Claude Shannon discovered Boole’s math can be applied to electrical circuits. Boolean algebra is about mathematically demonstrating what is true or false (1 or 0 binary). For instance, if it is Saturday or Monday, I can go to the store (True or False = True) (False or True = True). If it is Monday and not a holiday I can go to school (True and not(False) = True), but if it is Monday and a holiday I cannot go to school (True and False = False).
+  `;
 
   editor.setValue(`// Boolean Logic
+
+// Boolean Operators:
+//      not: !
+//      or: ||
+//      and: &&
+//      xor: ^
+
+let isWeekday = false;
+let isHoliday = true;
+
+let canGoToStore = isWeekday || !isWeekday;
+let canGoToSchool = isWeekday && !isHoliday;
+
+console.log("canGoToStore: " + canGoToStore)
+console.log("canGoToSchool: " + canGoToSchool)
 
     
 `);
