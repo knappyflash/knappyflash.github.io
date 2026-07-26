@@ -540,7 +540,7 @@ function BooleanLesson(){
   leasonDiv.style.whiteSpace = "pre-line";
   leasonDiv.textContent = `Boolean Logic
   
-  Boolean Logic was introduced by George Boole in his first book The Mathematical Analysis of Logic in 1847. Then in the 1930s Claude Shannon discovered Boole’s math can be applied to electrical circuits. Boolean algebra is about mathematically demonstrating what is true or false (1 or 0 binary). For instance, if it is Saturday or Monday, I can go to the store (True or False = True) (False or True = True). If it is Monday and not a holiday I can go to school (True and not(False) = True), but if it is Monday and a holiday I cannot go to school (True and False = False).
+  Boolean Logic was introduced by George Boole in his first book The Mathematical Analysis of Logic in 1847. Then in the 1930s Claude Shannon discovered Boole’s math can be applied to electrical circuits. Boolean algebra is about mathematically demonstrating what is true or false, 1 or 0, on or off, binary. For instance, if it is Saturday or Monday, I can go to the store (True or False = True) (False or True = True). If it is Monday and not a holiday I can go to school (True and not(False) = True), but if it is Monday and a holiday I cannot go to school (True and False = False).
   `;
 
   editor.setValue(`// Boolean Logic
