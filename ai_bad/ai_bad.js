@@ -1,6 +1,6 @@
 let allPosts = [];
 
-const pageTitle = "ai_bad";
+const pageTitle = "ai bad";
 window.addEventListener("load", function () {
     console.log(pageTitle + " Page is loaded");
     changeTitle();
